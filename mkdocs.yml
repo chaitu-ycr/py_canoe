@@ -5,10 +5,10 @@ site_author: chaitu-ycr
 
 repo_name: chaitu-ycr/py_canoe
 repo_url: https://github.com/chaitu-ycr/py_canoe
-edit_uri: blob/master/docs/
+edit_uri: blob/main/docs/
 
 theme:
-  name: "mkdocs"
+  name: "readthedocs"
 
 nav:
   - Home: index.md
