@@ -477,14 +477,14 @@ CanoeApp        </code>
       <p>Class for controlling CANoe via python COM</p>
 
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># Import CANoe application</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># Import CANoe application</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">py_canoe</span> <span class="kn">import</span> <span class="n">CanoeApp</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span> <span class="o">=</span> <span class="n">CanoeApp</span><span class="p">()</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">CanoeApp</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CanoeApp</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class for controlling CANoe via python COM</span>
 
 <span class="sd">    Examples:</span>
@@ -640,7 +640,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.check_simulation_running">
-<code class="codehilite language-python"><span class="n">check_simulation_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">check_simulation_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
 </h3>
@@ -665,12 +665,12 @@ CanoeApp        </code>
   </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">check_simulation_running</span><span class="p">()</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">check_simulation_running</span><span class="p">()</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">check_simulation_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">check_simulation_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Method for checking CANoe simulation running.</span>
 
 <span class="sd">    Returns:</span>
@@ -693,7 +693,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.close_cfg">
-<code class="codehilite language-python"><span class="n">close_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_cfg_before_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">close_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_cfg_before_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 
 </h3>
@@ -722,12 +722,12 @@ CanoeApp        </code>
   </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">close_cfg</span><span class="p">()</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">close_cfg</span><span class="p">()</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">close_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_cfg_before_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">close_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_cfg_before_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Method for closing CANoe application.</span>
 
 <span class="sd">    Args:</span>
@@ -756,7 +756,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.open_cfg">
-<code class="codehilite language-python"><span class="n">open_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_name</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">open_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_name</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 
 </h3>
@@ -791,12 +791,12 @@ CanoeApp        </code>
   </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">open_cfg</span><span class="p">(</span><span class="n">cfg_name</span><span class="o">=</span><span class="s1">&#39;demo_canoe.cfg&#39;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">open_cfg</span><span class="p">(</span><span class="n">cfg_name</span><span class="o">=</span><span class="s1">&#39;demo_canoe.cfg&#39;</span><span class="p">)</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">open_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">open_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Method to open CANoe configuration.</span>
 
 <span class="sd">    Args:</span>
@@ -828,7 +828,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.save_configuration">
-<code class="codehilite language-python"><span class="n">save_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">save_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
 </h3>
@@ -838,12 +838,12 @@ CanoeApp        </code>
       <p>Method for saving CANoe configuration.</p>
 
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">save_configuration</span><span class="p">()</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">save_configuration</span><span class="p">()</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">save_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">save_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Method for saving CANoe configuration.</span>
 
 <span class="sd">    Examples:</span>
@@ -865,7 +865,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.set_replay_block_file">
-<code class="codehilite language-python"><span class="n">set_replay_block_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">set_replay_block_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="p">)</span></code>
 
 
 </h3>
@@ -900,12 +900,12 @@ CanoeApp        </code>
   </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">set_replay_block_file</span><span class="p">(</span><span class="n">block_name</span><span class="o">=</span><span class="s1">&#39;replay block name&#39;</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="o">=</span><span class="s1">&#39;replay file includding path&#39;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">set_replay_block_file</span><span class="p">(</span><span class="n">block_name</span><span class="o">=</span><span class="s1">&#39;replay block name&#39;</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="o">=</span><span class="s1">&#39;replay file includding path&#39;</span><span class="p">)</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">set_replay_block_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_replay_block_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Method for setting CANoe replay block file.</span>
 
@@ -941,7 +941,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.start_simulation">
-<code class="codehilite language-python"><span class="n">start_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">start_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
 </h3>
@@ -951,12 +951,12 @@ CanoeApp        </code>
       <p>Method for starting CANoe simulation</p>
 
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">start_simulation</span><span class="p">()</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">start_simulation</span><span class="p">()</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">start_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">start_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Method for starting CANoe simulation</span>
 
 <span class="sd">    Examples:</span>
@@ -987,7 +987,7 @@ CanoeApp        </code>
 
 
 <h3 class="doc doc-heading" id="src.py_canoe.CanoeApp.stop_simulation">
-<code class="codehilite language-python"><span class="n">stop_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">stop_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
 </h3>
@@ -997,12 +997,12 @@ CanoeApp        </code>
       <p>Method for stopping CANoe simulation</p>
 
 <p><strong>Examples:</strong></p>
-    <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">stop_simulation</span><span class="p">()</span>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_app</span><span class="o">.</span><span class="n">stop_simulation</span><span class="p">()</span>
 </code></pre></div>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">stop_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">stop_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Method for stopping CANoe simulation</span>
 
 <span class="sd">    Examples:</span>
