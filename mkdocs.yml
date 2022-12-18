@@ -8,7 +8,7 @@ repo_url: https://github.com/chaitu-ycr/py_canoe
 edit_uri: blob/main/docs/
 
 theme:
-  name: "readthedocs"
+  name: readthedocs
 
 nav:
   - Home: index.md
