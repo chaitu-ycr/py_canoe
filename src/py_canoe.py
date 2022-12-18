@@ -41,14 +41,14 @@ class CanoeApp:
         self.canoe_cfg_name = cfg_name
         print('CANoe cfg opened and ready to use')
 
-    def close(self, save_cfg_before_close=True) -> None:
-        """Method for closing CANoe application
-
+    def close_cfg(self, save_cfg_before_close=True) -> None:
+        """Method for closing CANoe application.
+        
         Args:
-            save_cfg_before_close (bool): saves CANoe configuration if True. Default value True.
+            save_cfg_before_close (bool): Saves CANoe configuration if True
             
         Examples:
-            >>> canoe_app.close()
+            >>> canoe_app.close_cfg()
         """
         if self.check_simulation_running():
             self.stop_simulation()
@@ -59,7 +59,7 @@ class CanoeApp:
         print('CANoe Closed')
 
     def save_configuration(self) -> None:
-        """Method for saving CANoe configuration
+        """Method for saving CANoe configuration.
 
         Examples:
             >>> canoe_app.save_configuration()
@@ -105,11 +105,11 @@ class CanoeApp:
         print('CANoe simulation stopped')
 
     def check_simulation_running(self) -> bool:
-        """Method for checking CANoe simulation running
-
+        """Method for checking CANoe simulation running.
+        
         Returns:
             simulation status. `True` if simulation running.
-
+            
         Examples:
             >>> canoe_app.check_simulation_running()
         """
