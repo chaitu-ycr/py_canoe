@@ -1,2 +1,4 @@
 pywin32
 mkdocs
+mkdocstrings[python]
+mkdocs-material

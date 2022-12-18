@@ -7,8 +7,18 @@ repo_name: chaitu-ycr/py_canoe
 repo_url: https://github.com/chaitu-ycr/py_canoe
 edit_uri: blob/main/docs/
 
-theme:
-  name: readthedocs
 
 nav:
-  - Home: index.md
+  - user_guide: index.md
+  - reference: reference.md
+
+theme:
+  name: material
+
+plugins:
+  - mkdocstrings
+
+markdown_extensions:
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
