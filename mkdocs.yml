@@ -20,9 +20,6 @@ plugins:
   - search
 
 markdown_extensions:
-  - admonition
-  - codehilite
-  - pymdownx.superfences
   - def_list
   - pymdownx.tasklist:
       custom_checkbox: true
