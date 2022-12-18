@@ -1,0 +1,14 @@
+site_name: py_canoe
+site_url: https://chaitu-ycr.github.io/py_canoe/
+site_description: Python Library for controlling Vector CANoe tool
+site_author: chaitu-ycr
+
+repo_name: chaitu-ycr/py_canoe
+repo_url: https://github.com/chaitu-ycr/py_canoe
+edit_uri: blob/master/docs/
+
+theme:
+  name: "readthedocs"
+
+nav:
+  - Home: index.md
