@@ -26,7 +26,7 @@ if exist %python_venv_path% (
 	echo.
 	echo "installing/upgrading pip dependencies"
 	%python_exe% -m pip install  -r %root_folder%\requirements.txt --upgrade
-	echo "completed installing ConTest and project pip dependencies..."
+	echo "completed installing project pip dependencies..."
 ) else (
     GOTO :VENV_ERROR
 )
