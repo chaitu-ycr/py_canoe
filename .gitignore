@@ -169,3 +169,9 @@ poetry.toml
 
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# pycharm settings
+.idea/
+# CANoe Files
+*.cbf
+*.stcfg

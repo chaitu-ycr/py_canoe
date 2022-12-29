@@ -1,0 +1,7 @@
+include *.txt
+include *.yml
+include LICENSE
+recursive-include docs *.md
+recursive-include scripts *.bat
+recursive-include src *.py
+recursive-include tests *.py

@@ -1,0 +1,24 @@
+/*@!Encoding:1252*/
+
+variables
+{
+  msTimer t_1s;
+}
+
+on start
+{
+  setTimerCyclic(t_1s, 100);
+}
+
+on timer t_1s
+{
+  if(@sys_var_demo::speed == 360)
+  {
+    @sys_var_demo::speed = 0;
+  }
+  else
+  {
+    @sys_var_demo::speed += 1;
+  }
+}
+

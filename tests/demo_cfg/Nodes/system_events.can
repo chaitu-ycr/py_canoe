@@ -1,0 +1,65 @@
+/*@!Encoding:1252*/
+
+variables
+{
+  timer t_5s;
+  msTimer t_1s;
+  msTimer t_2s;
+}
+
+on preStart
+{
+  write("message from preStart");
+  @demo::sys_var1 = 20;
+  write("sys_var1 = %d", @demo::sys_var1);
+}
+
+on start
+{
+  write("message from start");
+  @demo::sys_var1 = 25;
+  write("sys_var1 = %d", @demo::sys_var1);
+  setTimer(t_5s, 5);
+  setTimer(t_1s, 1000);
+  setTimerCyclic(t_2s, 2000);
+}
+
+on preStop
+{
+  write("message from preStop");
+  @demo::sys_var1 = 30;
+  write("sys_var1 = %d", @demo::sys_var1);
+}
+
+on stopMeasurement
+{
+  write("message from stopMeasurement");
+  @demo::sys_var1 = 1;
+  write("sys_var1 = %d", @demo::sys_var1);
+}
+
+on timer t_5s
+{
+  write("message from t_5s");
+}
+
+on timer t_1s
+{
+  write("message from t_1s");
+}
+
+on timer t_2s
+{
+  write("message from t_2s");
+}
+
+on key 's'
+{
+  cancelTimer(t_2s);
+}
+
+on key *
+{
+  write("message from key *");
+}
+

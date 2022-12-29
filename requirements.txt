@@ -1,4 +1,6 @@
 pywin32
+pipenv
+pytest
 mkdocs
-mkdocstrings[python]
+mkdocstrings
 mkdocs-material
