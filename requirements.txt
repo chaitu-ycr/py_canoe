@@ -1,4 +1,5 @@
 pywin32
+flit
 pytest
 mkdocs
 mkdocstrings
