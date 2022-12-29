@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              user_guide
+              Documentation
             
           </span>
         </div>
@@ -222,12 +222,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          user_guide
+          Documentation
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="." class="md-nav__link md-nav__link--active">
-        user_guide
+        Documentation
       </a>
       
         
@@ -260,26 +260,73 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-documentation" class="md-nav__link">
-    Project Documentation
+  <a href="#installation" class="md-nav__link">
+    Installation
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#src.py_canoe" class="md-nav__link">
-    src.py_canoe
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#src.py_canoe.CANoe" class="md-nav__link">
-    CANoe
-  </a>
-  
-    <nav class="md-nav" aria-label="CANoe">
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-virtual-environment" class="md-nav__link">
+    Create Virtual environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-py_canoe-module" class="md-nav__link">
+    Install py_canoe module
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#import-canoe-module" class="md-nav__link">
+    Import CANoe module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    Example use cases
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canoe-class-reference-list" class="md-nav__link">
+    CANoe class reference list
+  </a>
+  
+    <nav class="md-nav" aria-label="CANoe class reference list">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#src.py_canoe.CANoe" class="md-nav__link">
+    src.py_canoe.CANoe
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#src.py_canoe.CANoe.break_measurement_in_offline_mode" class="md-nav__link">
@@ -558,57 +605,73 @@
 
 
 <h1 id="py_canoe">py_canoe</h1>
-<p>Python 🐍 Module for controlling Vector CANoe 🛶 Tool</p>
+<p>Python 🐍 Package for controlling Vector CANoe 🛶 Tool</p>
 <h2 id="acknowledgements">Acknowledgements</h2>
-<p>I want to thank plants for providing me oxygen each day.
-Also, I want to thank the sun for providing more than half of their nourishment free of charge.</p>
+<p>I want to thank plants 🎋 for providing me oxygen each day.
+Also, I want to thank the sun 🌄 for providing more than half of their nourishment free of charge.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Python(&gt;=3.6)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Install Python PIP dependenceies. Run <code>scripts/install_dependencies.bat</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Vector CANoe software(&gt;=v11)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Windows PC(recomended win 10 os)</li>
 </ul>
-<h2 id="project-documentation">Project Documentation</h2>
+<h2 id="installation">Installation</h2>
+<h3 id="create-virtual-environment">Create Virtual environment</h3>
+<pre><code class="language-bat">python -m venv venv
+</code></pre>
+<p>Activate virtual environment and upgrade pip</p>
+<pre><code class="language-bat">venv\Scripts\activate
+pip install pip --upgrade
+</code></pre>
+<h3 id="install-py_canoe-module">Install py_canoe module</h3>
+<pre><code class="language-bat">pip install py_canoe
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="import-canoe-module">Import CANoe module</h3>
+<pre><code class="language-python"># Import CANoe module
+from py_canoe import CANoe
 
+# create CANoe object
+canoe_inst = CANoe()
+</code></pre>
+<h3 id="example-use-cases">Example use cases</h3>
+<pre><code class="language-python"># open CANoe configuration. Replace canoe_cfg with yours.
+canoe_inst.open(canoe_cfg=r'C:\Users\Public\Documents\Vector\CANoe\Sample Configurations 11.0.81\.\CAN\Diagnostics\UDSBasic\UDSBasic.cfg')
 
-  <div class="doc doc-object doc-module">
+# print installed CANoe application version
+canoe_inst.get_canoe_version_info()
 
-<a id="src.py_canoe"></a>
-    <div class="doc doc-contents first">
+# Start CANoe measurement
+canoe_inst.start_measurement()
 
+# get signal value. Replace arguments with your message and signal data.
+sig_val = canoe_inst.get_signal_value('CAN', 1, 'LightState', 'FlashLight')
+print(sig_val)
 
+# set signal value. Replace arguments with your message and signal data.
+canoe_inst.set_signal_value('CAN', 1, 'LightState', 'FlashLight', 1)
 
+# send diagnostic request. Replace arguments with your diagnostics data.
+resp = canoe_inst.send_diag_request('CAN', 'Door', '10 01')
+print(resp)
 
-  <div class="doc doc-children">
+# Stop CANoe Measurement
+canoe_inst.stop_measurement()
 
-
-
-
-
-
-
-
-
-
+# Quit / Close CANoe configuration
+canoe_inst.quit()
+</code></pre>
+<h2 id="canoe-class-reference-list">CANoe class reference list</h2>
 
 
   <div class="doc doc-object doc-class">
 
-
-
-<h2 class="doc doc-heading" id="src.py_canoe.CANoe">
-        <code>
-CANoe        </code>
-
-
-
-</h2>
-
-    <div class="doc doc-contents ">
+<a id="src.py_canoe.CANoe"></a>
+    <div class="doc doc-contents first">
 
       <p>The CANoe class represents the CANoe application.
-The CANoe object is the foundation for the object hierarchy.
-You can reach all other objects from the CANoe object.</p>
+The CANoe class is the foundation for the object hierarchy.
+You can reach all other methods from the CANoe class instance.</p>
 
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># Example to open CANoe configuration, start measurement, stop measurement and close configuration.</span>
@@ -624,8 +687,8 @@ You can reach all other objects from the CANoe object.</p>
           <summary>Source code in <code>src\py_canoe.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CANoe</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The CANoe class represents the CANoe application.</span>
-<span class="sd">    The CANoe object is the foundation for the object hierarchy.</span>
-<span class="sd">    You can reach all other objects from the CANoe object.</span>
+<span class="sd">    The CANoe class is the foundation for the object hierarchy.</span>
+<span class="sd">    You can reach all other methods from the CANoe class instance.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; # Example to open CANoe configuration, start measurement, stop measurement and close configuration.</span>
@@ -1197,10 +1260,10 @@ You can reach all other objects from the CANoe object.</p>
                         <span class="s1">&#39;major&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Major</span><span class="p">,</span>
                         <span class="s1">&#39;minor&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Minor</span><span class="p">,</span>
                         <span class="s1">&#39;patch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Patch</span><span class="p">}</span>
-        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">========CANoe Application.Version========&#39;</span><span class="p">)</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;========CANoe Application.Version========&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">version_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;=========================================</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;=========================================&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">version_info</span>
 
     <span class="k">def</span> <span class="nf">ui_activate_desktop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1956,10 +2019,10 @@ You can reach all other objects from the CANoe object.</p>
                     <span class="s1">&#39;major&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Major</span><span class="p">,</span>
                     <span class="s1">&#39;minor&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Minor</span><span class="p">,</span>
                     <span class="s1">&#39;patch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Patch</span><span class="p">}</span>
-    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">========CANoe Application.Version========&#39;</span><span class="p">)</span>
+    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;========CANoe Application.Version========&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">version_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;=========================================</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;=========================================&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">version_info</span>
 </code></pre></div>
         </details>
@@ -4002,18 +4065,6 @@ False if The measurement is not running.</p></td>
     </div>
 
   </div>
-
-
-
-
-
-  </div>
-
-    </div>
-
-  </div>
-
-
 
 
 
