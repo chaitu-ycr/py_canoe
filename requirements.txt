@@ -1,8 +1,5 @@
 pywin32
-pipenv
 pytest
-twine
 mkdocs
 mkdocstrings
 mkdocs-material
-check-manifest

@@ -1,3 +1,7 @@
+"""Python package for controlling Vector CANoe tool"""
+
+__version__ = "0.0.2"
+
 # Import Python Libraries here
 import os
 import sys
@@ -25,8 +29,8 @@ canoe_log.addHandler(fh)
 
 class CANoe:
     r"""The CANoe class represents the CANoe application.
-    The CANoe object is the foundation for the object hierarchy.
-    You can reach all other objects from the CANoe object.
+    The CANoe class is the foundation for the object hierarchy.
+    You can reach all other methods from the CANoe class instance.
 
     Examples:
         >>> # Example to open CANoe configuration, start measurement, stop measurement and close configuration.
