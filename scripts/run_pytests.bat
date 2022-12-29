@@ -29,7 +29,7 @@ if exist %python_venv_path% (
 	%python_exe% -m pip install pip --upgrade
 	echo.
     echo "installing pytest and pywin32"
-	%python_exe% -m pip install pytest, pywin32
+	%python_exe% -m pip install pytest pywin32
 	echo "completed installing pytest and pywin32"
     echo.
     echo "activating virtual env"
