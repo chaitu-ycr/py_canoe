@@ -1,6 +1,6 @@
 """Python package for controlling Vector CANoe tool"""
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 # Import Python Libraries here
 import os
@@ -602,10 +602,10 @@ class CANoe:
                         'major': self.__canoe_app_obj.Application.Version.Major,
                         'minor': self.__canoe_app_obj.Application.Version.Minor,
                         'patch': self.__canoe_app_obj.Application.Version.Patch}
-        canoe_log.info('\n========CANoe Application.Version========')
+        canoe_log.info('========CANoe Application.Version========')
         for k, v in version_info.items():
             canoe_log.info(f'{k:<10}: {v}')
-        canoe_log.info('=========================================\n')
+        canoe_log.info('=========================================')
         return version_info
 
     def ui_activate_desktop(self, name: str) -> None:

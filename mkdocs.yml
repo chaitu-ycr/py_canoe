@@ -9,7 +9,7 @@ edit_uri: blob/main/docs/
 
 
 nav:
-  - user_guide: index.md
+  - Documentation: index.md
 
 theme:
   name: material
