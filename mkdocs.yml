@@ -10,10 +10,11 @@ edit_uri: blob/main/docs/
 
 nav:
   - user_guide: index.md
-  - reference: reference.md
 
 theme:
   name: material
+  features:
+    - toc.integrate
 
 plugins:
   - mkdocstrings
