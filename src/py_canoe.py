@@ -22,7 +22,7 @@ log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-5.5s]  %(m
 ch = logging.StreamHandler(sys.stdout)
 ch.setFormatter(log_format)
 canoe_log.addHandler(ch)
-fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=(1048576*5), backupCount=7)
+fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=(1048576 * 5), backupCount=7)
 fh.setFormatter(log_format)
 canoe_log.addHandler(fh)
 
@@ -46,8 +46,9 @@ class CANoe:
         self.__canoe_app_obj = None
         self.CANOE_COM_APP_NAME = 'CANoe.Application'
         self.APP_DELAY = 2
+        self.BUS_TYPES = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
 
-    def __dispatch_canoe(self):
+    def __dispatch_canoe(self) -> None:
         if self.__canoe_app_obj is None:
             pythoncom.CoInitialize()
             self.__canoe_app_obj = win32com.client.Dispatch(self.CANOE_COM_APP_NAME)
@@ -109,7 +110,7 @@ class CANoe:
         self.__canoe_app_obj.Quit()
         canoe_log.info('CANoe Closed without saving.')
 
-    def start_measurement_in_animation_mode(self, animation_delay=100):
+    def start_measurement_in_animation_mode(self, animation_delay=100) -> None:
         r"""Starts the measurement in Animation mode.
 
         Args:
@@ -126,7 +127,7 @@ class CANoe:
             self.__canoe_app_obj.Measurement.Animate()
             canoe_log.info(f'Started the measurement in Animation mode with animation delay = {animation_delay}.')
 
-    def break_measurement_in_offline_mode(self):
+    def break_measurement_in_offline_mode(self) -> None:
         r"""Interrupts the playback in Offline mode.
 
         Examples:
@@ -139,7 +140,7 @@ class CANoe:
             self.__canoe_app_obj.Measurement.Break()
             canoe_log.info('Interrupted the playback in Offline mode.')
 
-    def reset_measurement_in_offline_mode(self):
+    def reset_measurement_in_offline_mode(self) -> None:
         r"""Resets the measurement in Offline mode.
 
         Examples:
@@ -153,6 +154,9 @@ class CANoe:
 
     def start_measurement(self) -> bool:
         r"""Starts the measurement.
+
+        Returns:
+            True if measurement started. else Flase.
 
         Examples:
             >>> # The following example starts the measurement
@@ -168,7 +172,7 @@ class CANoe:
             canoe_log.info(f'CANoe Measurement Running Status: {self.__canoe_app_obj.Measurement.Running}')
         return self.__canoe_app_obj.Measurement.Running
 
-    def step_measurement_event_in_single_step(self):
+    def step_measurement_event_in_single_step(self) -> None:
         r"""Processes a measurement event in single step.
 
         Examples:
@@ -183,6 +187,9 @@ class CANoe:
 
     def stop_measurement(self) -> bool:
         r"""Stops the measurement.
+
+        Returns:
+            True if measurement stopped. else Flase.
 
         Examples:
             >>> # The following example stops the measurement
@@ -204,6 +211,9 @@ class CANoe:
 
     def reset_measurement(self) -> bool:
         r"""reset the measurement.
+
+        Returns:
+            Measurement running status(True/False).
 
         Examples:
             >>> # The following example resets the measurement
@@ -251,8 +261,11 @@ class CANoe:
     def set_measurement_index(self, index: int) -> int:
         r"""sets the measurement index for the next measurement.
 
+        Args:
+            index (int): index value to set.
+
         Returns:
-            Measurement Index.
+            Measurement Index value.
 
         Examples:
             >>> # The following example sets the measurement index for the next measurement to 15
@@ -451,7 +464,8 @@ class CANoe:
         canoe_log.info(f'value of signal({bus}{channel}.{message}.{signal})={signal_value}.')
         return signal_value
 
-    def set_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int, value: Union[float, int], raw_value=False) -> None:
+    def set_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int, value: Union[float, int],
+                               raw_value=False) -> None:
         r"""get_j1939_signal Returns a Signal object.
 
         Args:
@@ -568,7 +582,7 @@ class CANoe:
         if diag_req.Responses.Count == 0:
             canoe_log.info("Diagnostic Response Not Received.")
         else:
-            for k in range(1, diag_req.Responses.Count+1):
+            for k in range(1, diag_req.Responses.Count + 1):
                 diag_res = diag_req.Responses(k)
                 if diag_res.Positive:
                     canoe_log.info(f"+ve response received.")
@@ -577,36 +591,6 @@ class CANoe:
                 diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
             canoe_log.info(f'Diag Res --> {diag_response_data}')
         return diag_response_data
-
-    def get_canoe_version_info(self) -> dict:
-        r"""The Version class represents the version of the CANoe application.
-
-        Returns:
-            "full_name" - The complete CANoe version.
-            "name" - The CANoe version.
-            "build" - The build number of the CANoe application.
-            "major" - The major version number of the CANoe application.
-            "minor" - The minor version number of the CANoe application.
-            "patch" - The patch number of the CANoe application.
-
-        Examples:
-            >>> # The following example returns CANoe application version relevant information.
-            >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_version_info = canoe_inst.get_canoe_version_info()
-            >>> print(canoe_version_info)
-        """
-        version_info = {'full_name': self.__canoe_app_obj.Application.Version.FullName,
-                        'name': self.__canoe_app_obj.Application.Version.Name,
-                        'build': self.__canoe_app_obj.Application.Version.Build,
-                        'major': self.__canoe_app_obj.Application.Version.Major,
-                        'minor': self.__canoe_app_obj.Application.Version.Minor,
-                        'patch': self.__canoe_app_obj.Application.Version.Patch}
-        canoe_log.info('========CANoe Application.Version========')
-        for k, v in version_info.items():
-            canoe_log.info(f'{k:<10}: {v}')
-        canoe_log.info('=========================================')
-        return version_info
 
     def ui_activate_desktop(self, name: str) -> None:
         r"""Activates the desktop with the given name.
@@ -766,3 +750,157 @@ class CANoe:
                 else:
                     self.__canoe_app_obj.Bus.ReplayCollection.Item(i).Stop()
                 canoe_log.info(f'Replay block "{block_name}" {"Started" if start_stop else "Stopped"}.')
+
+    def get_can_bus_statistics(self, channel: int) -> dict:
+        r"""Returns CAN Bus Statistics.
+
+        Args:
+            channel (int): The channel of the statistic that is to be returned.
+
+        Returns:
+            CAN bus statistics.
+
+        Examples:
+            >>> # The following example prints CAN channel 1 statistics
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> print(canoe_inst.get_can_bus_statistics(channel=1))
+        """
+        bus_statistics_obj = self.__canoe_app_obj.Configuration.OnlineSetup.BusStatistics.BusStatistic(self.BUS_TYPES['CAN'], channel)
+        statistics_info = {
+            # The bus load
+            'bus_load': bus_statistics_obj.BusLoad,
+            # The controller status
+            'chip_state': bus_statistics_obj.ChipState,
+            # The number of Error Frames per second
+            'Error': bus_statistics_obj.Error,
+            # The total number of Error Frames
+            'ErrorTotal': bus_statistics_obj.ErrorTotal,
+            # The number of messages with extended identifier per second
+            'Extended': bus_statistics_obj.Extended,
+            # The number of remote messages with extended identifier per second
+            'ExtendedRemote': bus_statistics_obj.ExtendedRemote,
+            # The total number of remote messages with extended identifier
+            'ExtendedRemoteTotal': bus_statistics_obj.ExtendedRemoteTotal,
+            # The number of overload frames per second
+            'Overload': bus_statistics_obj.Overload,
+            # The total number of overload frames
+            'OverloadTotal': bus_statistics_obj.OverloadTotal,
+            # The maximum bus load in 0.01 %
+            'PeakLoad': bus_statistics_obj.PeakLoad,
+            # Returns the current number of the Rx error counter
+            'RxErrorCount': bus_statistics_obj.RxErrorCount,
+            # The number of messages with standard identifier per second
+            'Standard': bus_statistics_obj.Standard,
+            # The total number of remote messages with standard identifier
+            'StandardTotal': bus_statistics_obj.StandardTotal,
+            # The number of remote messages with standard identifier per second
+            'StandardRemote': bus_statistics_obj.StandardRemote,
+            # The total number of remote messages with standard identifier
+            'StandardRemoteTotal': bus_statistics_obj.StandardRemoteTotal,
+            # The current number of the Tx error counter
+            'TxErrorCount': bus_statistics_obj.TxErrorCount,
+        }
+        return statistics_info
+
+    def get_canoe_configuration_details(self) -> dict:
+        r"""Returns Loaded CANoe configuration details.
+
+        Returns:
+            Returns Loaded CANoe configuration details.
+
+        Examples:
+            >>> # The following example returns CANoe application version relevant information.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_version_info = canoe_inst.get_canoe_configuration_details()
+            >>> print(canoe_version_info)
+        """
+        # bus_obj = self.__canoe_app_obj.Bus
+        # capl_obj = self.__canoe_app_obj.CAPL
+        configuration_obj = self.__canoe_app_obj.Configuration
+        # environment_obj = self.__canoe_app_obj.Environment
+        # measurement_obj = self.__canoe_app_obj.Measurement
+        networks_obj = self.__canoe_app_obj.Networks
+        # performance_obj = self.__canoe_app_obj.Performance
+        # simulation_obj = self.__canoe_app_obj.Simulation
+        # system_obj = self.__canoe_app_obj.System
+        # system_namespaces_obj = system_obj.Namespaces
+        # ui_obj = self.__canoe_app_obj.UI
+        # version_obj = self.__canoe_app_obj.Version
+
+        simulation_setup_nodes_list = []
+        replay_blocks_list = []
+        for n in range(1, configuration_obj.SimulationSetup.Nodes.Count + 1):
+            simulation_setup_nodes_list.append(configuration_obj.SimulationSetup.Nodes.Item(n).Name)
+        for r in range(1, configuration_obj.SimulationSetup.ReplayCollection.Count + 1):
+            replay_blocks_list.append(configuration_obj.SimulationSetup.ReplayCollection.Item(r).Name)
+        networks_list = []
+        diagnostic_nodes_list = []
+        for n in range(1, networks_obj.Count + 1):
+            networks_list.append(networks_obj.Item(n).Name)
+            devices_obj = networks_obj.Item(n).Devices
+            for d in range(1, devices_obj.Count):
+                diagnostic_nodes_list.append(devices_obj.Item(d).Name)
+        configuration_details = {
+            'canoe_app_full_name': self.__canoe_app_obj.Application.Version.FullName,
+            'canoe_app_full_name_with_sp': self.__canoe_app_obj.Application.Version.Name,
+            # The complete path to the currently loaded configuration
+            'canoe_cfg': configuration_obj.FullName,
+            # CANoe Mode(online/offline)
+            'canoe_mode': 'online' if configuration_obj.Mode == 0 else 'offline',
+            # Configuration ReadOnly ?
+            'cfg_read_only': configuration_obj.ReadOnly,
+            # CANoe configuration Networks count and Names List
+            'networks_count': networks_obj.Count,
+            'networks_list': networks_list,
+            # CANoe Simulation Setup Nodes count and Names List
+            'simulation_setup_nodes_count': configuration_obj.SimulationSetup.Nodes.Count,
+            'simulation_setup_nodes_list': simulation_setup_nodes_list,
+            # CANoe Replay Blocks count and Names List
+            'simulation_setup_replay_blocks_count': configuration_obj.SimulationSetup.ReplayCollection.Count,
+            'simulation_setup_replay_blocks_list': replay_blocks_list,
+            # The number of buses count
+            'simulation_setup_buses_count': configuration_obj.SimulationSetup.Buses.Count,
+            # The number of generators contained
+            'simulation_setup_generators_count': configuration_obj.SimulationSetup.Generators.Count,
+            # The number of interactive generators contained
+            'simulation_setup_interactive_generators_count': configuration_obj.SimulationSetup.InteractiveGenerators.Count,
+            # CANoe Diagnostic Node Names List
+            'diagnostic_nodes_list': diagnostic_nodes_list,
+        }
+        canoe_log.info('> CANoe Configuration Details <'.center(100, '='))
+        for k, v in configuration_details.items():
+            canoe_log.info(f'{k:<50}: {v}')
+        canoe_log.info(''.center(100, '='))
+        return configuration_details
+
+    def get_canoe_version_info(self) -> dict:
+        r"""The Version class represents the version of the CANoe application.
+
+        Returns:
+            "full_name" - The complete CANoe version.
+            "name" - The CANoe version.
+            "build" - The build number of the CANoe application.
+            "major" - The major version number of the CANoe application.
+            "minor" - The minor version number of the CANoe application.
+            "patch" - The patch number of the CANoe application.
+
+        Examples:
+            >>> # The following example returns CANoe application version relevant information.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_version_info = canoe_inst.get_canoe_version_info()
+            >>> print(canoe_version_info)
+        """
+        version_info = {'full_name': self.__canoe_app_obj.Application.Version.FullName,
+                        'name': self.__canoe_app_obj.Application.Version.Name,
+                        'build': self.__canoe_app_obj.Application.Version.Build,
+                        'major': self.__canoe_app_obj.Application.Version.Major,
+                        'minor': self.__canoe_app_obj.Application.Version.Minor,
+                        'patch': self.__canoe_app_obj.Application.Version.Patch}
+        canoe_log.info('> CANoe Application.Version <'.center(100, '='))
+        for k, v in version_info.items():
+            canoe_log.info(f'{k:<10}: {v}')
+        canoe_log.info(''.center(100, '='))
+        return version_info

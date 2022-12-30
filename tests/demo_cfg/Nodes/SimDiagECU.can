@@ -1,0 +1,105 @@
+/*@!Encoding:1252*/
+// --------------------------------------------------
+// Simple diagnostics ECU simulation.
+// For the sake of simplicity, this example omits 
+// security access mechanisms, especially for the
+// write services. In many cases, return parameters
+// are not checked at all.
+// Only a subset of services will be answered with
+// a positive response, for the rest a negative
+// response "Subfunction not supported" will be
+// returned.
+//
+// CANoe 10.0 and higher
+// --------------------------------------------------
+
+includes
+{
+  // From CANoe 10.0, neither including the CAPL callback interface nor adding
+  // the corresponding transport protocol node layer DLL is necessary, because 
+  // the "built-in" diagnostic channel of CANoe can be used.  
+}
+
+variables
+{
+  // Global initial Parameter values for ECU simulation ("internal ECU memory")
+  int gVehicleSpeedToLockDoor=15; // vehicle speed for locking the doors in km/h
+  byte gEcuIdentification[13]={0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D};
+  int gVehicleType=2; // Sedan
+  
+  // Access modes for reading and writing diagnostic parameters
+  const cAccessModeNumerical=0;
+  const cAccessModePhysical=1;
+  const cAccessModeCoded=2;
+}
+
+on diagRequest Door.Variant_Coding_Write
+{
+  diagResponse this resp; // response corresponding to the service handled by this "on diagRequest" handler (Variant_Coding_Write)
+  int newSpeed;
+  int newVehicleType;
+  
+  // read parameter (default=physical) and store it for later use
+  newVehicleType=(int)this.GetParameter("Codingstring.VehicleType"); 
+  
+  // "this" refers to the LockConfiguration_Write request
+  newSpeed=(int)this.GetParameter(cAccessModePhysical, "Codingstring.VehicleSpeedToLockDoor"); 
+  
+  if(newSpeed>250 || newSpeed <0 || gVehicleType<=0 || gVehicleType>3) {
+    // Negative Response Code (NRC): Request out of Range (as example)
+    // Equivalent syntax: DiagSendNegativeResponse(resp,0x31);
+    resp.SendNegativeResponse(0x31); 
+  }    
+  else
+  {
+    // Save the speed and car type into internal ECU memory for next read access
+    gVehicleSpeedToLockDoor=newSpeed; 
+    gVehicleType=newVehicleType;
+    
+    // send positive response, value has been written
+    resp.SendPositiveResponse(); 
+  }
+}
+
+on diagrequest Door.EcuIdentification_Write
+{
+  diagResponse this resp;
+  
+  // read parameter in raw format as it is 13 bytes long
+  this.GetParameterRaw("Part_Number",gEcuIdentification,elcount(gEcuIdentification)); 
+  
+  // send positive response, value has been written
+  resp.SendPositiveResponse(); 
+}
+
+on diagRequest Door.Variant_Coding_Read
+{
+  diagResponse this resp;    
+
+  // set parameter for response (numerical format)
+  resp.SetParameter("Codingstring.VehicleType",gVehicleType); 
+  
+  // set other parameter for response (physical format)
+  resp.SetParameter(cAccessModePhysical, "VehicleSpeedToLockDoor",gVehicleSpeedToLockDoor);   
+  
+  // send positive response, values have been set in response
+  resp.SendPositiveResponse();   
+}
+
+on diagRequest Door.EcuIdentification_Read
+{
+  diagResponse this resp;
+  
+  // set parameter in raw format (size = 13 bytes) for response
+  resp.SetParameterRaw("Part_Number",gEcuIdentification,elcount(gEcuIdentification)); 
+  
+  // send positive response, value has been set in response
+  resp.SendPositiveResponse();   
+}
+
+on diagRequest Door.SeedLevel_0x01_Request
+{
+  // Respond with a negative response using a dedicated negative response code (just for demonstration purposes).
+  // NRC 0x22 = "Conditions not correct or request sequence error"
+  this.SendNegativeResponse(0x22); 
+}
