@@ -378,6 +378,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#src.py_canoe.CANoe.get_can_bus_statistics" class="md-nav__link">
+    get_can_bus_statistics()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src.py_canoe.CANoe.get_canoe_configuration_details" class="md-nav__link">
+    get_canoe_configuration_details()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#src.py_canoe.CANoe.get_canoe_version_info" class="md-nav__link">
     get_canoe_version_info()
   </a>
@@ -704,8 +718,9 @@ You can reach all other methods from the CANoe class instance.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">CANOE_COM_APP_NAME</span> <span class="o">=</span> <span class="s1">&#39;CANoe.Application&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">APP_DELAY</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BUS_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CAN&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;J1939&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;TTP&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;LIN&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;MOST&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;Kline&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">__dispatch_canoe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__dispatch_canoe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pythoncom</span><span class="o">.</span><span class="n">CoInitialize</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span> <span class="o">=</span> <span class="n">win32com</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CANOE_COM_APP_NAME</span><span class="p">)</span>
@@ -767,7 +782,7 @@ You can reach all other methods from the CANoe class instance.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Quit</span><span class="p">()</span>
         <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;CANoe Closed without saving.&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">start_measurement_in_animation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation_delay</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">start_measurement_in_animation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation_delay</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Starts the measurement in Animation mode.</span>
 
 <span class="sd">        Args:</span>
@@ -784,7 +799,7 @@ You can reach all other methods from the CANoe class instance.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Measurement</span><span class="o">.</span><span class="n">Animate</span><span class="p">()</span>
             <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Started the measurement in Animation mode with animation delay = </span><span class="si">{</span><span class="n">animation_delay</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">break_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">break_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Interrupts the playback in Offline mode.</span>
 
 <span class="sd">        Examples:</span>
@@ -797,7 +812,7 @@ You can reach all other methods from the CANoe class instance.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Measurement</span><span class="o">.</span><span class="n">Break</span><span class="p">()</span>
             <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Interrupted the playback in Offline mode.&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">reset_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reset_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Resets the measurement in Offline mode.</span>
 
 <span class="sd">        Examples:</span>
@@ -811,6 +826,9 @@ You can reach all other methods from the CANoe class instance.</p>
 
     <span class="k">def</span> <span class="nf">start_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Starts the measurement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if measurement started. else Flase.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; # The following example starts the measurement</span>
@@ -826,7 +844,7 @@ You can reach all other methods from the CANoe class instance.</p>
             <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;CANoe Measurement Running Status: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Measurement</span><span class="o">.</span><span class="n">Running</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Measurement</span><span class="o">.</span><span class="n">Running</span>
 
-    <span class="k">def</span> <span class="nf">step_measurement_event_in_single_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">step_measurement_event_in_single_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Processes a measurement event in single step.</span>
 
 <span class="sd">        Examples:</span>
@@ -841,6 +859,9 @@ You can reach all other methods from the CANoe class instance.</p>
 
     <span class="k">def</span> <span class="nf">stop_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Stops the measurement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if measurement stopped. else Flase.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; # The following example stops the measurement</span>
@@ -862,6 +883,9 @@ You can reach all other methods from the CANoe class instance.</p>
 
     <span class="k">def</span> <span class="nf">reset_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;reset the measurement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Measurement running status(True/False).</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; # The following example resets the measurement</span>
@@ -909,8 +933,11 @@ You can reach all other methods from the CANoe class instance.</p>
     <span class="k">def</span> <span class="nf">set_measurement_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;sets the measurement index for the next measurement.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            index (int): index value to set.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            Measurement Index.</span>
+<span class="sd">            Measurement Index value.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; # The following example sets the measurement index for the next measurement to 15</span>
@@ -1109,7 +1136,8 @@ You can reach all other methods from the CANoe class instance.</p>
         <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;value of signal(</span><span class="si">{</span><span class="n">bus</span><span class="si">}{</span><span class="n">channel</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">signal</span><span class="si">}</span><span class="s1">)=</span><span class="si">{</span><span class="n">signal_value</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">signal_value</span>
 
-    <span class="k">def</span> <span class="nf">set_j1939_signal_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_j1939_signal_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+                               <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;get_j1939_signal Returns a Signal object.</span>
 
 <span class="sd">        Args:</span>
@@ -1226,7 +1254,7 @@ You can reach all other methods from the CANoe class instance.</p>
         <span class="k">if</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="o">.</span><span class="n">Count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Diagnostic Response Not Received.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="o">.</span><span class="n">Count</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">diag_res</span> <span class="o">=</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">diag_res</span><span class="o">.</span><span class="n">Positive</span><span class="p">:</span>
                     <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+ve response received.&quot;</span><span class="p">)</span>
@@ -1235,36 +1263,6 @@ You can reach all other methods from the CANoe class instance.</p>
                 <span class="n">diag_response_data</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">diag_res</span><span class="o">.</span><span class="n">Stream</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
             <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Diag Res --&gt; </span><span class="si">{</span><span class="n">diag_response_data</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">diag_response_data</span>
-
-    <span class="k">def</span> <span class="nf">get_canoe_version_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The Version class represents the version of the CANoe application.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            &quot;full_name&quot; - The complete CANoe version.</span>
-<span class="sd">            &quot;name&quot; - The CANoe version.</span>
-<span class="sd">            &quot;build&quot; - The build number of the CANoe application.</span>
-<span class="sd">            &quot;major&quot; - The major version number of the CANoe application.</span>
-<span class="sd">            &quot;minor&quot; - The minor version number of the CANoe application.</span>
-<span class="sd">            &quot;patch&quot; - The patch number of the CANoe application.</span>
-
-<span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; # The following example returns CANoe application version relevant information.</span>
-<span class="sd">            &gt;&gt;&gt; canoe_inst = CANoe()</span>
-<span class="sd">            &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
-<span class="sd">            &gt;&gt;&gt; canoe_version_info = canoe_inst.get_canoe_version_info()</span>
-<span class="sd">            &gt;&gt;&gt; print(canoe_version_info)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">version_info</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;full_name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">FullName</span><span class="p">,</span>
-                        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
-                        <span class="s1">&#39;build&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Build</span><span class="p">,</span>
-                        <span class="s1">&#39;major&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Major</span><span class="p">,</span>
-                        <span class="s1">&#39;minor&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Minor</span><span class="p">,</span>
-                        <span class="s1">&#39;patch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Patch</span><span class="p">}</span>
-        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;========CANoe Application.Version========&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">version_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;=========================================&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">version_info</span>
 
     <span class="k">def</span> <span class="nf">ui_activate_desktop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Activates the desktop with the given name.</span>
@@ -1424,6 +1422,160 @@ You can reach all other methods from the CANoe class instance.</p>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Bus</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
                 <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Replay block &quot;</span><span class="si">{</span><span class="n">block_name</span><span class="si">}</span><span class="s1">&quot; </span><span class="si">{</span><span class="s2">&quot;Started&quot;</span> <span class="k">if</span> <span class="n">start_stop</span> <span class="k">else</span> <span class="s2">&quot;Stopped&quot;</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_can_bus_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns CAN Bus Statistics.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            channel (int): The channel of the statistic that is to be returned.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            CAN bus statistics.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; # The following example prints CAN channel 1 statistics</span>
+<span class="sd">            &gt;&gt;&gt; canoe_inst = CANoe()</span>
+<span class="sd">            &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(canoe_inst.get_can_bus_statistics(channel=1))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bus_statistics_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">OnlineSetup</span><span class="o">.</span><span class="n">BusStatistics</span><span class="o">.</span><span class="n">BusStatistic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BUS_TYPES</span><span class="p">[</span><span class="s1">&#39;CAN&#39;</span><span class="p">],</span> <span class="n">channel</span><span class="p">)</span>
+        <span class="n">statistics_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="c1"># The bus load</span>
+            <span class="s1">&#39;bus_load&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">BusLoad</span><span class="p">,</span>
+            <span class="c1"># The controller status</span>
+            <span class="s1">&#39;chip_state&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ChipState</span><span class="p">,</span>
+            <span class="c1"># The number of Error Frames per second</span>
+            <span class="s1">&#39;Error&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span>
+            <span class="c1"># The total number of Error Frames</span>
+            <span class="s1">&#39;ErrorTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ErrorTotal</span><span class="p">,</span>
+            <span class="c1"># The number of messages with extended identifier per second</span>
+            <span class="s1">&#39;Extended&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Extended</span><span class="p">,</span>
+            <span class="c1"># The number of remote messages with extended identifier per second</span>
+            <span class="s1">&#39;ExtendedRemote&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ExtendedRemote</span><span class="p">,</span>
+            <span class="c1"># The total number of remote messages with extended identifier</span>
+            <span class="s1">&#39;ExtendedRemoteTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ExtendedRemoteTotal</span><span class="p">,</span>
+            <span class="c1"># The number of overload frames per second</span>
+            <span class="s1">&#39;Overload&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Overload</span><span class="p">,</span>
+            <span class="c1"># The total number of overload frames</span>
+            <span class="s1">&#39;OverloadTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">OverloadTotal</span><span class="p">,</span>
+            <span class="c1"># The maximum bus load in 0.01 %</span>
+            <span class="s1">&#39;PeakLoad&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">PeakLoad</span><span class="p">,</span>
+            <span class="c1"># Returns the current number of the Rx error counter</span>
+            <span class="s1">&#39;RxErrorCount&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">RxErrorCount</span><span class="p">,</span>
+            <span class="c1"># The number of messages with standard identifier per second</span>
+            <span class="s1">&#39;Standard&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Standard</span><span class="p">,</span>
+            <span class="c1"># The total number of remote messages with standard identifier</span>
+            <span class="s1">&#39;StandardTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">StandardTotal</span><span class="p">,</span>
+            <span class="c1"># The number of remote messages with standard identifier per second</span>
+            <span class="s1">&#39;StandardRemote&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">StandardRemote</span><span class="p">,</span>
+            <span class="c1"># The total number of remote messages with standard identifier</span>
+            <span class="s1">&#39;StandardRemoteTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">StandardRemoteTotal</span><span class="p">,</span>
+            <span class="c1"># The current number of the Tx error counter</span>
+            <span class="s1">&#39;TxErrorCount&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">TxErrorCount</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">statistics_info</span>
+
+    <span class="k">def</span> <span class="nf">get_canoe_configuration_details</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns Loaded CANoe configuration details.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Returns Loaded CANoe configuration details.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; # The following example returns CANoe application version relevant information.</span>
+<span class="sd">            &gt;&gt;&gt; canoe_inst = CANoe()</span>
+<span class="sd">            &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; canoe_version_info = canoe_inst.get_canoe_configuration_details()</span>
+<span class="sd">            &gt;&gt;&gt; print(canoe_version_info)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># bus_obj = self.__canoe_app_obj.Bus</span>
+        <span class="c1"># capl_obj = self.__canoe_app_obj.CAPL</span>
+        <span class="n">configuration_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Configuration</span>
+        <span class="c1"># environment_obj = self.__canoe_app_obj.Environment</span>
+        <span class="c1"># measurement_obj = self.__canoe_app_obj.Measurement</span>
+        <span class="n">networks_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Networks</span>
+        <span class="c1"># performance_obj = self.__canoe_app_obj.Performance</span>
+        <span class="c1"># simulation_obj = self.__canoe_app_obj.Simulation</span>
+        <span class="c1"># system_obj = self.__canoe_app_obj.System</span>
+        <span class="c1"># system_namespaces_obj = system_obj.Namespaces</span>
+        <span class="c1"># ui_obj = self.__canoe_app_obj.UI</span>
+        <span class="c1"># version_obj = self.__canoe_app_obj.Version</span>
+
+        <span class="n">simulation_setup_nodes_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">replay_blocks_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Nodes</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">simulation_setup_nodes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Nodes</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">replay_blocks_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+        <span class="n">networks_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">diagnostic_nodes_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">networks_obj</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">networks_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">networks_obj</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+            <span class="n">devices_obj</span> <span class="o">=</span> <span class="n">networks_obj</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">Devices</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">devices_obj</span><span class="o">.</span><span class="n">Count</span><span class="p">):</span>
+                <span class="n">diagnostic_nodes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">devices_obj</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+        <span class="n">configuration_details</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;canoe_app_full_name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">FullName</span><span class="p">,</span>
+            <span class="s1">&#39;canoe_app_full_name_with_sp&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+            <span class="c1"># The complete path to the currently loaded configuration</span>
+            <span class="s1">&#39;canoe_cfg&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">FullName</span><span class="p">,</span>
+            <span class="c1"># CANoe Mode(online/offline)</span>
+            <span class="s1">&#39;canoe_mode&#39;</span><span class="p">:</span> <span class="s1">&#39;online&#39;</span> <span class="k">if</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">Mode</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;offline&#39;</span><span class="p">,</span>
+            <span class="c1"># Configuration ReadOnly ?</span>
+            <span class="s1">&#39;cfg_read_only&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">ReadOnly</span><span class="p">,</span>
+            <span class="c1"># CANoe configuration Networks count and Names List</span>
+            <span class="s1">&#39;networks_count&#39;</span><span class="p">:</span> <span class="n">networks_obj</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+            <span class="s1">&#39;networks_list&#39;</span><span class="p">:</span> <span class="n">networks_list</span><span class="p">,</span>
+            <span class="c1"># CANoe Simulation Setup Nodes count and Names List</span>
+            <span class="s1">&#39;simulation_setup_nodes_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Nodes</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+            <span class="s1">&#39;simulation_setup_nodes_list&#39;</span><span class="p">:</span> <span class="n">simulation_setup_nodes_list</span><span class="p">,</span>
+            <span class="c1"># CANoe Replay Blocks count and Names List</span>
+            <span class="s1">&#39;simulation_setup_replay_blocks_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+            <span class="s1">&#39;simulation_setup_replay_blocks_list&#39;</span><span class="p">:</span> <span class="n">replay_blocks_list</span><span class="p">,</span>
+            <span class="c1"># The number of buses count</span>
+            <span class="s1">&#39;simulation_setup_buses_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Buses</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+            <span class="c1"># The number of generators contained</span>
+            <span class="s1">&#39;simulation_setup_generators_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Generators</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+            <span class="c1"># The number of interactive generators contained</span>
+            <span class="s1">&#39;simulation_setup_interactive_generators_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">InteractiveGenerators</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+            <span class="c1"># CANoe Diagnostic Node Names List</span>
+            <span class="s1">&#39;diagnostic_nodes_list&#39;</span><span class="p">:</span> <span class="n">diagnostic_nodes_list</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&gt; CANoe Configuration Details &lt;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">configuration_details</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;50</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">configuration_details</span>
+
+    <span class="k">def</span> <span class="nf">get_canoe_version_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The Version class represents the version of the CANoe application.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            &quot;full_name&quot; - The complete CANoe version.</span>
+<span class="sd">            &quot;name&quot; - The CANoe version.</span>
+<span class="sd">            &quot;build&quot; - The build number of the CANoe application.</span>
+<span class="sd">            &quot;major&quot; - The major version number of the CANoe application.</span>
+<span class="sd">            &quot;minor&quot; - The minor version number of the CANoe application.</span>
+<span class="sd">            &quot;patch&quot; - The patch number of the CANoe application.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; # The following example returns CANoe application version relevant information.</span>
+<span class="sd">            &gt;&gt;&gt; canoe_inst = CANoe()</span>
+<span class="sd">            &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; canoe_version_info = canoe_inst.get_canoe_version_info()</span>
+<span class="sd">            &gt;&gt;&gt; print(canoe_version_info)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">version_info</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;full_name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">FullName</span><span class="p">,</span>
+                        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                        <span class="s1">&#39;build&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Build</span><span class="p">,</span>
+                        <span class="s1">&#39;major&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Major</span><span class="p">,</span>
+                        <span class="s1">&#39;minor&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Minor</span><span class="p">,</span>
+                        <span class="s1">&#39;patch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Patch</span><span class="p">}</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&gt; CANoe Application.Version &lt;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">version_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">version_info</span>
 </code></pre></div>
         </details>
 
@@ -1463,7 +1615,7 @@ You can reach all other methods from the CANoe class instance.</p>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">break_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">break_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Interrupts the playback in Offline mode.</span>
 
 <span class="sd">    Examples:</span>
@@ -1955,6 +2107,240 @@ You can reach all other methods from the CANoe class instance.</p>
 
 
 
+<h3 class="doc doc-heading" id="src.py_canoe.CANoe.get_can_bus_statistics">
+<code class="highlight language-python"><span class="n">get_can_bus_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns CAN Bus Statistics.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>channel</code></td>
+        <td><code>int</code></td>
+        <td><p>The channel of the statistic that is to be returned.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>dict</code></td>
+      <td><p>CAN bus statistics.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># The following example prints CAN channel 1 statistics</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">canoe_inst</span><span class="o">.</span><span class="n">get_can_bus_statistics</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+        <details class="quote">
+          <summary>Source code in <code>src\py_canoe.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_can_bus_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns CAN Bus Statistics.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        channel (int): The channel of the statistic that is to be returned.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CAN bus statistics.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; # The following example prints CAN channel 1 statistics</span>
+<span class="sd">        &gt;&gt;&gt; canoe_inst = CANoe()</span>
+<span class="sd">        &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(canoe_inst.get_can_bus_statistics(channel=1))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bus_statistics_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">OnlineSetup</span><span class="o">.</span><span class="n">BusStatistics</span><span class="o">.</span><span class="n">BusStatistic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BUS_TYPES</span><span class="p">[</span><span class="s1">&#39;CAN&#39;</span><span class="p">],</span> <span class="n">channel</span><span class="p">)</span>
+    <span class="n">statistics_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># The bus load</span>
+        <span class="s1">&#39;bus_load&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">BusLoad</span><span class="p">,</span>
+        <span class="c1"># The controller status</span>
+        <span class="s1">&#39;chip_state&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ChipState</span><span class="p">,</span>
+        <span class="c1"># The number of Error Frames per second</span>
+        <span class="s1">&#39;Error&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span>
+        <span class="c1"># The total number of Error Frames</span>
+        <span class="s1">&#39;ErrorTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ErrorTotal</span><span class="p">,</span>
+        <span class="c1"># The number of messages with extended identifier per second</span>
+        <span class="s1">&#39;Extended&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Extended</span><span class="p">,</span>
+        <span class="c1"># The number of remote messages with extended identifier per second</span>
+        <span class="s1">&#39;ExtendedRemote&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ExtendedRemote</span><span class="p">,</span>
+        <span class="c1"># The total number of remote messages with extended identifier</span>
+        <span class="s1">&#39;ExtendedRemoteTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">ExtendedRemoteTotal</span><span class="p">,</span>
+        <span class="c1"># The number of overload frames per second</span>
+        <span class="s1">&#39;Overload&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Overload</span><span class="p">,</span>
+        <span class="c1"># The total number of overload frames</span>
+        <span class="s1">&#39;OverloadTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">OverloadTotal</span><span class="p">,</span>
+        <span class="c1"># The maximum bus load in 0.01 %</span>
+        <span class="s1">&#39;PeakLoad&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">PeakLoad</span><span class="p">,</span>
+        <span class="c1"># Returns the current number of the Rx error counter</span>
+        <span class="s1">&#39;RxErrorCount&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">RxErrorCount</span><span class="p">,</span>
+        <span class="c1"># The number of messages with standard identifier per second</span>
+        <span class="s1">&#39;Standard&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">Standard</span><span class="p">,</span>
+        <span class="c1"># The total number of remote messages with standard identifier</span>
+        <span class="s1">&#39;StandardTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">StandardTotal</span><span class="p">,</span>
+        <span class="c1"># The number of remote messages with standard identifier per second</span>
+        <span class="s1">&#39;StandardRemote&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">StandardRemote</span><span class="p">,</span>
+        <span class="c1"># The total number of remote messages with standard identifier</span>
+        <span class="s1">&#39;StandardRemoteTotal&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">StandardRemoteTotal</span><span class="p">,</span>
+        <span class="c1"># The current number of the Tx error counter</span>
+        <span class="s1">&#39;TxErrorCount&#39;</span><span class="p">:</span> <span class="n">bus_statistics_obj</span><span class="o">.</span><span class="n">TxErrorCount</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">statistics_info</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="src.py_canoe.CANoe.get_canoe_configuration_details">
+<code class="highlight language-python"><span class="n">get_canoe_configuration_details</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns Loaded CANoe configuration details.</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>dict</code></td>
+      <td><p>Returns Loaded CANoe configuration details.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># The following example returns CANoe application version relevant information.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_version_info</span> <span class="o">=</span> <span class="n">canoe_inst</span><span class="o">.</span><span class="n">get_canoe_configuration_details</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">canoe_version_info</span><span class="p">)</span>
+</code></pre></div>
+
+        <details class="quote">
+          <summary>Source code in <code>src\py_canoe.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_canoe_configuration_details</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns Loaded CANoe configuration details.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Returns Loaded CANoe configuration details.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; # The following example returns CANoe application version relevant information.</span>
+<span class="sd">        &gt;&gt;&gt; canoe_inst = CANoe()</span>
+<span class="sd">        &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; canoe_version_info = canoe_inst.get_canoe_configuration_details()</span>
+<span class="sd">        &gt;&gt;&gt; print(canoe_version_info)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># bus_obj = self.__canoe_app_obj.Bus</span>
+    <span class="c1"># capl_obj = self.__canoe_app_obj.CAPL</span>
+    <span class="n">configuration_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Configuration</span>
+    <span class="c1"># environment_obj = self.__canoe_app_obj.Environment</span>
+    <span class="c1"># measurement_obj = self.__canoe_app_obj.Measurement</span>
+    <span class="n">networks_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Networks</span>
+    <span class="c1"># performance_obj = self.__canoe_app_obj.Performance</span>
+    <span class="c1"># simulation_obj = self.__canoe_app_obj.Simulation</span>
+    <span class="c1"># system_obj = self.__canoe_app_obj.System</span>
+    <span class="c1"># system_namespaces_obj = system_obj.Namespaces</span>
+    <span class="c1"># ui_obj = self.__canoe_app_obj.UI</span>
+    <span class="c1"># version_obj = self.__canoe_app_obj.Version</span>
+
+    <span class="n">simulation_setup_nodes_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">replay_blocks_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Nodes</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">simulation_setup_nodes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Nodes</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">replay_blocks_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    <span class="n">networks_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">diagnostic_nodes_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">networks_obj</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">networks_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">networks_obj</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+        <span class="n">devices_obj</span> <span class="o">=</span> <span class="n">networks_obj</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">Devices</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">devices_obj</span><span class="o">.</span><span class="n">Count</span><span class="p">):</span>
+            <span class="n">diagnostic_nodes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">devices_obj</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    <span class="n">configuration_details</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;canoe_app_full_name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">FullName</span><span class="p">,</span>
+        <span class="s1">&#39;canoe_app_full_name_with_sp&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="c1"># The complete path to the currently loaded configuration</span>
+        <span class="s1">&#39;canoe_cfg&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">FullName</span><span class="p">,</span>
+        <span class="c1"># CANoe Mode(online/offline)</span>
+        <span class="s1">&#39;canoe_mode&#39;</span><span class="p">:</span> <span class="s1">&#39;online&#39;</span> <span class="k">if</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">Mode</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;offline&#39;</span><span class="p">,</span>
+        <span class="c1"># Configuration ReadOnly ?</span>
+        <span class="s1">&#39;cfg_read_only&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">ReadOnly</span><span class="p">,</span>
+        <span class="c1"># CANoe configuration Networks count and Names List</span>
+        <span class="s1">&#39;networks_count&#39;</span><span class="p">:</span> <span class="n">networks_obj</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+        <span class="s1">&#39;networks_list&#39;</span><span class="p">:</span> <span class="n">networks_list</span><span class="p">,</span>
+        <span class="c1"># CANoe Simulation Setup Nodes count and Names List</span>
+        <span class="s1">&#39;simulation_setup_nodes_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Nodes</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+        <span class="s1">&#39;simulation_setup_nodes_list&#39;</span><span class="p">:</span> <span class="n">simulation_setup_nodes_list</span><span class="p">,</span>
+        <span class="c1"># CANoe Replay Blocks count and Names List</span>
+        <span class="s1">&#39;simulation_setup_replay_blocks_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">ReplayCollection</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+        <span class="s1">&#39;simulation_setup_replay_blocks_list&#39;</span><span class="p">:</span> <span class="n">replay_blocks_list</span><span class="p">,</span>
+        <span class="c1"># The number of buses count</span>
+        <span class="s1">&#39;simulation_setup_buses_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Buses</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+        <span class="c1"># The number of generators contained</span>
+        <span class="s1">&#39;simulation_setup_generators_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">Generators</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+        <span class="c1"># The number of interactive generators contained</span>
+        <span class="s1">&#39;simulation_setup_interactive_generators_count&#39;</span><span class="p">:</span> <span class="n">configuration_obj</span><span class="o">.</span><span class="n">SimulationSetup</span><span class="o">.</span><span class="n">InteractiveGenerators</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
+        <span class="c1"># CANoe Diagnostic Node Names List</span>
+        <span class="s1">&#39;diagnostic_nodes_list&#39;</span><span class="p">:</span> <span class="n">diagnostic_nodes_list</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&gt; CANoe Configuration Details &lt;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">configuration_details</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;50</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">configuration_details</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 class="doc doc-heading" id="src.py_canoe.CANoe.get_canoe_version_info">
 <code class="highlight language-python"><span class="n">get_canoe_version_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
@@ -2019,10 +2405,10 @@ You can reach all other methods from the CANoe class instance.</p>
                     <span class="s1">&#39;major&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Major</span><span class="p">,</span>
                     <span class="s1">&#39;minor&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Minor</span><span class="p">,</span>
                     <span class="s1">&#39;patch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">Version</span><span class="o">.</span><span class="n">Patch</span><span class="p">}</span>
-    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;========CANoe Application.Version========&#39;</span><span class="p">)</span>
+    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&gt; CANoe Application.Version &lt;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">version_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;=========================================&#39;</span><span class="p">)</span>
+    <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">version_info</span>
 </code></pre></div>
         </details>
@@ -2784,6 +3170,21 @@ False if The measurement is not running.</p></td>
 
       <p>reset the measurement.</p>
 
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>Measurement running status(True/False).</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># The following example resets the measurement</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">()</span>
@@ -2796,6 +3197,9 @@ False if The measurement is not running.</p></td>
           <summary>Source code in <code>src\py_canoe.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reset_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;reset the measurement.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Measurement running status(True/False).</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; # The following example resets the measurement</span>
@@ -2840,7 +3244,7 @@ False if The measurement is not running.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reset_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reset_measurement_in_offline_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Resets the measurement in Offline mode.</span>
 
 <span class="sd">    Examples:</span>
@@ -3152,7 +3556,7 @@ False if The measurement is not running.</p></td>
     <span class="k">if</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="o">.</span><span class="n">Count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Diagnostic Response Not Received.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="o">.</span><span class="n">Count</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="o">.</span><span class="n">Count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">diag_res</span> <span class="o">=</span> <span class="n">diag_req</span><span class="o">.</span><span class="n">Responses</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">diag_res</span><span class="o">.</span><span class="n">Positive</span><span class="p">:</span>
                 <span class="n">canoe_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+ve response received.&quot;</span><span class="p">)</span>
@@ -3269,7 +3673,8 @@ False if The measurement is not running.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_j1939_signal_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_j1939_signal_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+                           <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;get_j1939_signal Returns a Signal object.</span>
 
 <span class="sd">    Args:</span>
@@ -3320,6 +3725,25 @@ False if The measurement is not running.</p></td>
 
       <p>sets the measurement index for the next measurement.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>index</code></td>
+        <td><code>int</code></td>
+        <td><p>index value to set.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
 <p><strong>Returns:</strong></p>
 <table>
   <thead>
@@ -3331,7 +3755,7 @@ False if The measurement is not running.</p></td>
   <tbody>
     <tr>
       <td><code>int</code></td>
-      <td><p>Measurement Index.</p></td>
+      <td><p>Measurement Index value.</p></td>
     </tr>
   </tbody>
 </table>
@@ -3349,8 +3773,11 @@ False if The measurement is not running.</p></td>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">set_measurement_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;sets the measurement index for the next measurement.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        index (int): index value to set.</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        Measurement Index.</span>
+<span class="sd">        Measurement Index value.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; # The following example sets the measurement index for the next measurement to 15</span>
@@ -3648,6 +4075,21 @@ False if The measurement is not running.</p></td>
 
       <p>Starts the measurement.</p>
 
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if measurement started. else Flase.</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># The following example starts the measurement</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">()</span>
@@ -3659,6 +4101,9 @@ False if The measurement is not running.</p></td>
           <summary>Source code in <code>src\py_canoe.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">start_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Starts the measurement.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if measurement started. else Flase.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; # The following example starts the measurement</span>
@@ -3723,7 +4168,7 @@ False if The measurement is not running.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">start_measurement_in_animation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation_delay</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">start_measurement_in_animation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation_delay</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Starts the measurement in Animation mode.</span>
 
 <span class="sd">    Args:</span>
@@ -3770,7 +4215,7 @@ False if The measurement is not running.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src\py_canoe.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">step_measurement_event_in_single_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">step_measurement_event_in_single_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Processes a measurement event in single step.</span>
 
 <span class="sd">    Examples:</span>
@@ -3849,6 +4294,21 @@ False if The measurement is not running.</p></td>
 
       <p>Stops the measurement.</p>
 
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if measurement stopped. else Flase.</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># The following example stops the measurement</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">()</span>
@@ -3861,6 +4321,9 @@ False if The measurement is not running.</p></td>
           <summary>Source code in <code>src\py_canoe.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">stop_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Stops the measurement.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if measurement stopped. else Flase.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; # The following example stops the measurement</span>
