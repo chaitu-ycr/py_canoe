@@ -635,10 +635,10 @@ Also, I want to thank the sun 🌄 for providing more than half of their nourish
 </code></pre>
 <p>Activate virtual environment and upgrade pip</p>
 <pre><code class="language-bat">venv\Scripts\activate
-pip install pip --upgrade
+python -m pip install pip --upgrade
 </code></pre>
 <h3 id="install-py_canoe-module">Install py_canoe module</h3>
-<pre><code class="language-bat">pip install py_canoe
+<pre><code class="language-bat">pip install py_canoe --upgrade
 </code></pre>
 <h2 id="usage">Usage</h2>
 <h3 id="import-canoe-module">Import CANoe module</h3>
@@ -1171,8 +1171,8 @@ You can reach all other methods from the CANoe class instance.</p>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;get_system_variable_value Returns a system variable value.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            namespace (str): The Bus on which the signal is sent.</span>
-<span class="sd">            variable (str): The channel on which the signal is sent.</span>
+<span class="sd">            namespace (str): The name of the namespace.</span>
+<span class="sd">            variable (str): The name of the variable.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            System Variable value.</span>
@@ -2819,13 +2819,13 @@ False if The measurement is not running.</p></td>
       <tr>
         <td><code>namespace</code></td>
         <td><code>str</code></td>
-        <td><p>The Bus on which the signal is sent.</p></td>
+        <td><p>The name of the namespace.</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>variable</code></td>
         <td><code>str</code></td>
-        <td><p>The channel on which the signal is sent.</p></td>
+        <td><p>The name of the variable.</p></td>
         <td><em>required</em></td>
       </tr>
   </tbody>
@@ -2860,8 +2860,8 @@ False if The measurement is not running.</p></td>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;get_system_variable_value Returns a system variable value.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        namespace (str): The Bus on which the signal is sent.</span>
-<span class="sd">        variable (str): The channel on which the signal is sent.</span>
+<span class="sd">        namespace (str): The name of the namespace.</span>
+<span class="sd">        variable (str): The name of the variable.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        System Variable value.</span>
