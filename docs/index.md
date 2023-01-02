@@ -25,13 +25,13 @@ Activate virtual environment and upgrade pip
 
 ```bat
 venv\Scripts\activate
-pip install pip --upgrade
+python -m pip install pip --upgrade
 ```
 
 ### Install py_canoe module
 
 ```bat
-pip install py_canoe
+pip install py_canoe --upgrade
 ```
 
 ## Usage
