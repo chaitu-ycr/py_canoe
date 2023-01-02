@@ -499,8 +499,8 @@ class CANoe:
         r"""get_system_variable_value Returns a system variable value.
 
         Args:
-            namespace (str): The Bus on which the signal is sent.
-            variable (str): The channel on which the signal is sent.
+            namespace (str): The name of the namespace.
+            variable (str): The name of the variable.
 
         Returns:
             System Variable value.
