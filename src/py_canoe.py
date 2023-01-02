@@ -436,7 +436,8 @@ class CANoe:
         canoe_log.info(f'signal({bus}{channel}.{message}.{signal}) state = {sig_state}.')
         return sig_state
 
-    def get_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int, raw_value=False) -> Union[float, int]:
+    def get_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int,
+                               raw_value=False) -> Union[float, int]:
         r"""get_j1939_signal Returns a Signal object.
 
         Args:
@@ -536,11 +537,11 @@ class CANoe:
         variable_obj.Value = value
         canoe_log.info(f'system variable({namespace}::{variable}) value set to {value}.')
 
-    def send_diag_request(self, bus: str, diag_node: str, request: str, request_in_bytes=True) -> str:
+    def send_diag_request(self, network_bus_name: str, diag_node: str, request: str, request_in_bytes=True) -> str:
         r"""The send_diag_request method represents the query of a diagnostic tester (client) to an ECU (server) in CANoe.
 
         Args:
-            bus (str): The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the request is sent.
+            network_bus_name (str): The network name on which the request is sent.
             diag_node (str): Diagnostic Node Name configured in "Diagnostic/ISO TP Configuration".
             request (str): Diagnostic request in bytes or diagnostic node qualifier name.
             request_in_bytes: True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.
@@ -551,10 +552,10 @@ class CANoe:
         Examples:
             >>> # Example 1 - The following example sends diagnostic request "10 01"
             >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(canoe_cfg=r'C:\Users\Public\Documents\Vector\CANoe\Sample Configurations 11.0.81\.\CAN\Diagnostics\UDSBasic\UDSBasic.cfg')
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.start_measurement()
             >>> wait(1)
-            >>> resp = canoe_inst.send_diag_request('CAN', 'Door', '10 01')
+            >>> resp = canoe_inst.send_diag_request('CAN1', 'Door', '10 01')
             >>> print(resp)
             >>> canoe_inst.stop_measurement()
             >>> # Example 2 - The following example sends diagnostic request "DefaultSession_Start"
@@ -573,9 +574,9 @@ class CANoe:
             request = ''.join(request.split(' '))
             for i in range(0, len(request), 2):
                 diag_req_in_bytes.append(int(request[i:i + 2], 16))
-            diag_req = self.__canoe_app_obj.Networks(bus).Devices(diag_node).Diagnostic.CreateRequestFromStream(diag_req_in_bytes)
+            diag_req = self.__canoe_app_obj.Networks(network_bus_name).Devices(diag_node).Diagnostic.CreateRequestFromStream(diag_req_in_bytes)
         else:
-            diag_req = self.__canoe_app_obj.Networks(bus).Devices(diag_node).Diagnostic.CreateRequest(request)
+            diag_req = self.__canoe_app_obj.Networks(network_bus_name).Devices(diag_node).Diagnostic.CreateRequest(request)
         diag_req.Send()
         while diag_req.Pending:
             wait(0.1)
@@ -836,12 +837,8 @@ class CANoe:
         for r in range(1, configuration_obj.SimulationSetup.ReplayCollection.Count + 1):
             replay_blocks_list.append(configuration_obj.SimulationSetup.ReplayCollection.Item(r).Name)
         networks_list = []
-        diagnostic_nodes_list = []
         for n in range(1, networks_obj.Count + 1):
             networks_list.append(networks_obj.Item(n).Name)
-            devices_obj = networks_obj.Item(n).Devices
-            for d in range(1, devices_obj.Count):
-                diagnostic_nodes_list.append(devices_obj.Item(d).Name)
         configuration_details = {
             'canoe_app_full_name': self.__canoe_app_obj.Application.Version.FullName,
             'canoe_app_full_name_with_sp': self.__canoe_app_obj.Application.Version.Name,
@@ -866,8 +863,6 @@ class CANoe:
             'simulation_setup_generators_count': configuration_obj.SimulationSetup.Generators.Count,
             # The number of interactive generators contained
             'simulation_setup_interactive_generators_count': configuration_obj.SimulationSetup.InteractiveGenerators.Count,
-            # CANoe Diagnostic Node Names List
-            'diagnostic_nodes_list': diagnostic_nodes_list,
         }
         canoe_log.info('> CANoe Configuration Details <'.center(100, '='))
         for k, v in configuration_details.items():
