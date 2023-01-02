@@ -521,8 +521,8 @@ class CANoe:
         r"""set_system_variable_value sets a value to system variable.
 
         Args:
-            namespace (str): The Bus on which the signal is sent.
-            variable (str): The channel on which the signal is sent.
+            namespace (str): The name of the namespace.
+            variable (str): The name of the variable.
             value (Union[int, float, str]): variable value.
 
         Examples:
