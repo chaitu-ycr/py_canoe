@@ -666,7 +666,7 @@ print(sig_val)
 canoe_inst.set_signal_value('CAN', 1, 'LightState', 'FlashLight', 1)
 
 # send diagnostic request. Replace arguments with your diagnostics data.
-resp = canoe_inst.send_diag_request('CAN', 'Door', '10 01')
+resp = canoe_inst.send_diag_request('Door', '10 01')
 print(resp)
 
 # Stop CANoe Measurement
