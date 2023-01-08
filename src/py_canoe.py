@@ -1,6 +1,6 @@
 """Python package for controlling Vector CANoe tool"""
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 # Import Python Libraries here
 import os
