@@ -329,6 +329,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#src.py_canoe.CANoe.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#src.py_canoe.CANoe.break_measurement_in_offline_mode" class="md-nav__link">
     break_measurement_in_offline_mode()
   </a>
@@ -689,7 +696,7 @@ You can reach all other methods from the CANoe class instance.</p>
 
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># Example to open CANoe configuration, start measurement, stop measurement and close configuration.</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">(</span><span class="n">py_canoe_log_dir</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\.py_canoe&#39;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">canoe_inst</span><span class="o">.</span><span class="n">start_measurement</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -706,7 +713,7 @@ You can reach all other methods from the CANoe class instance.</p>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; # Example to open CANoe configuration, start measurement, stop measurement and close configuration.</span>
-<span class="sd">        &gt;&gt;&gt; canoe_inst = CANoe()</span>
+<span class="sd">        &gt;&gt;&gt; canoe_inst = CANoe(py_canoe_log_dir=r&#39;D:\.py_canoe&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; canoe_inst.open(r&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; canoe_inst.start_measurement()</span>
 <span class="sd">        &gt;&gt;&gt; wait(10)</span>
@@ -714,13 +721,17 @@ You can reach all other methods from the CANoe class instance.</p>
 <span class="sd">        &gt;&gt;&gt; canoe_inst.quit()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_canoe_log_dir</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\.py_canoe&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            py_canoe_log_dir (str): directory to store py_canoe log. default &#39;D:\\.py_canoe&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__CANOE_COM_APP_NAME</span> <span class="o">=</span> <span class="s1">&#39;CANoe.Application&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__BUS_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CAN&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;J1939&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;TTP&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;LIN&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;MOST&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;Kline&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">APP_DELAY</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;CANOE_LOG&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__py_canoe_log_initialisation</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__py_canoe_log_initialisation</span><span class="p">(</span><span class="n">py_canoe_log_dir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__sys_vars_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__networks_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__network_devices_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
@@ -728,10 +739,9 @@ You can reach all other methods from the CANoe class instance.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">__replay_blocks_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__simulation_nodes_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">__py_canoe_log_initialisation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">py_canoe_log_dir</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;D:\.py_canoe&#39;</span>
+    <span class="k">def</span> <span class="nf">__py_canoe_log_initialisation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_canoe_log_dir</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\.py_canoe&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">py_canoe_log_dir</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">py_canoe_log_dir</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">py_canoe_log_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
         <span class="n">log_format</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> [CANOE_LOG] [</span><span class="si">%(levelname)-5.5s</span><span class="s2">]  </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
@@ -1621,6 +1631,67 @@ You can reach all other methods from the CANoe class instance.</p>
 
 
 
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 class="doc doc-heading" id="src.py_canoe.CANoe.__init__">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_canoe_log_dir</span><span class="o">=</span><span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">.py_canoe&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>py_canoe_log_dir</code></td>
+        <td><code>str</code></td>
+        <td><p>directory to store py_canoe log. default 'D:.py_canoe'</p></td>
+        <td><code>&#39;D:\\.py_canoe&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>src\py_canoe.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_canoe_log_dir</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\.py_canoe&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        py_canoe_log_dir (str): directory to store py_canoe log. default &#39;D:\\.py_canoe&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__canoe_app_obj</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__CANOE_COM_APP_NAME</span> <span class="o">=</span> <span class="s1">&#39;CANoe.Application&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__BUS_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CAN&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;J1939&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;TTP&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;LIN&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;MOST&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;Kline&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">APP_DELAY</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;CANOE_LOG&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__py_canoe_log_initialisation</span><span class="p">(</span><span class="n">py_canoe_log_dir</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__sys_vars_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__networks_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__network_devices_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__diag_ecu_qualifiers_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__replay_blocks_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__simulation_nodes_obj_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
