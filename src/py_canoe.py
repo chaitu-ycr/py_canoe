@@ -1,6 +1,6 @@
 """Python package for controlling Vector CANoe tool"""
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 # Import Python Libraries here
 import os
@@ -20,7 +20,7 @@ class CANoe:
 
     Examples:
         >>> # Example to open CANoe configuration, start measurement, stop measurement and close configuration.
-        >>> canoe_inst = CANoe()
+        >>> canoe_inst = CANoe(py_canoe_log_dir=r'D:\.py_canoe')
         >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
         >>> canoe_inst.start_measurement()
         >>> wait(10)
@@ -28,13 +28,17 @@ class CANoe:
         >>> canoe_inst.quit()
     """
 
-    def __init__(self) -> None:
+    def __init__(self, py_canoe_log_dir=r'D:\.py_canoe') -> None:
+        """
+        Args:
+            py_canoe_log_dir (str): directory to store py_canoe log. default 'D:\\.py_canoe'
+        """
         self.__canoe_app_obj = None
         self.__CANOE_COM_APP_NAME = 'CANoe.Application'
         self.__BUS_TYPES = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
         self.APP_DELAY = 1
         self.log = logging.getLogger('CANOE_LOG')
-        self.__py_canoe_log_initialisation()
+        self.__py_canoe_log_initialisation(py_canoe_log_dir)
         self.__sys_vars_obj_dictionary = {}
         self.__networks_obj_dictionary = {}
         self.__network_devices_obj_dictionary = {}
@@ -42,10 +46,9 @@ class CANoe:
         self.__replay_blocks_obj_dictionary = {}
         self.__simulation_nodes_obj_dictionary = {}
 
-    def __py_canoe_log_initialisation(self):
-        py_canoe_log_dir = r'D:\.py_canoe'
+    def __py_canoe_log_initialisation(self, py_canoe_log_dir=r'D:\.py_canoe'):
         if not os.path.exists(py_canoe_log_dir):
-            os.mkdir(py_canoe_log_dir)
+            os.makedirs(py_canoe_log_dir, exist_ok=True)
         self.log.setLevel(logging.DEBUG)
         log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-5.5s]  %(message)s")
         ch = logging.StreamHandler(sys.stdout)
