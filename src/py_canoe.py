@@ -45,6 +45,8 @@ class CANoe:
         self.__diag_ecu_qualifiers_dictionary = {}
         self.__replay_blocks_obj_dictionary = {}
         self.__simulation_nodes_obj_dictionary = {}
+        self.__test_environments_obj_dictionary = {}
+        self.__test_modules_obj_dictionary = {}
 
     def __py_canoe_log_initialisation(self, py_canoe_log_dir=r'D:\.py_canoe'):
         if not os.path.exists(py_canoe_log_dir):
@@ -68,8 +70,9 @@ class CANoe:
 
     def __fetch_canoe_cfg_general_data(self):
         system_namespaces_obj = self.__canoe_app_obj.System.Namespaces
+        test_environments_obj = self.__canoe_app_obj.Configuration.TestSetup.TestEnvironments
         self.__ui_obj = self.__canoe_app_obj.UI
-        # self.__version_obj = self.__canoe_app_obj.Version
+        self.__version_obj = self.__canoe_app_obj.Application.Version
 
         def fetch_variables(namespace_obj, namespace_name):
             variables_obj = namespace_obj.Variables
@@ -97,8 +100,13 @@ class CANoe:
             self.__replay_blocks_obj_dictionary[rb.Name] = rb
         for sn in self.__canoe_app_obj.Configuration.SimulationSetup.Nodes:
             self.__simulation_nodes_obj_dictionary[sn.Name] = sn
+        for te in test_environments_obj:
+            self.__test_environments_obj_dictionary[te.Name] = te
+            self.__test_modules_obj_dictionary[te.Name] = {}
+            for tm in te.TestModules:
+                self.__test_modules_obj_dictionary[te.Name][tm.Name] = CanoeTestModule(tm, self.log)
 
-    def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
+    def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> bool:
         r"""Loads CANoe configuration.
 
         Args:
@@ -106,7 +114,7 @@ class CANoe:
             visible (bool): True if you want to see CANoe UI. Defaults to True.
             auto_save (bool, optional): A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to False.
             prompt_user (bool, optional): A boolean value that indicates whether the user should intervene in error situations. Defaults to False.
-        
+
         Examples:
             >>> # The following example opens a configuration
             >>> canoe_inst = CANoe()
@@ -120,8 +128,10 @@ class CANoe:
             self.log.info(f'loaded CANoe config "{canoe_cfg}"')
             self.__fetch_canoe_cfg_general_data()
             self.log.info('Fetched CANoe System Variables.')
+            return True
         else:
             self.log.info(f'CANoe cfg "{canoe_cfg}" not found.')
+            return False
 
     def new(self, auto_save=False, prompt_user=False) -> None:
         """Creates a new configuration.
@@ -871,7 +881,7 @@ class CANoe:
             # The complete path to the currently loaded configuration
             'canoe_cfg': self.__canoe_app_obj.Configuration.FullName,
             # CANoe Mode(online/offline)
-            'canoe_mode': 'online' if self.__canoe_app_obj.Configuration.Mode == 0 else 'offline',
+            'canoe_mode': 'online' if self.__canoe_app_obj.Configuration.mode == 0 else 'offline',
             # Configuration ReadOnly ?
             'cfg_read_only': self.__canoe_app_obj.Configuration.ReadOnly,
             # CANoe configuration Networks count and Names List
@@ -889,6 +899,9 @@ class CANoe:
             'simulation_setup_generators_count': self.__canoe_app_obj.Configuration.SimulationSetup.Generators.Count,
             # The number of interactive generators contained
             'simulation_setup_interactive_generators_count': self.__canoe_app_obj.Configuration.SimulationSetup.InteractiveGenerators.Count,
+            # CANoe Test Environments Count and Names List
+            'test_environments_count': len(self.__test_environments_obj_dictionary.keys()),
+            'test_environments_list': list(self.__test_environments_obj_dictionary.keys()),
         }
         self.log.info('> CANoe Configuration Details <'.center(100, '='))
         for k, v in configuration_details.items():
@@ -917,11 +930,383 @@ class CANoe:
         version_info = {'full_name': self.__canoe_app_obj.Application.Version.FullName,
                         'name': self.__canoe_app_obj.Application.Version.Name,
                         'build': self.__canoe_app_obj.Application.Version.Build,
-                        'major': self.__canoe_app_obj.Application.Version.Major,
-                        'minor': self.__canoe_app_obj.Application.Version.Minor,
+                        'major': self.__canoe_app_obj.Application.Version.major,
+                        'minor': self.__canoe_app_obj.Application.Version.minor,
                         'patch': self.__canoe_app_obj.Application.Version.Patch}
         self.log.info('> CANoe Application.Version <'.center(100, '='))
         for k, v in version_info.items():
             self.log.info(f'{k:<10}: {v}')
         self.log.info(''.center(100, '='))
         return version_info
+
+    def get_test_environments(self):
+        r"""Get the list of Test Environments
+
+        Returns:
+            Returns Test Environments object
+
+        Examples:
+            >>> # The following example is to get the Test Environments objects.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+        """
+        self.log.info('> List of Test Environments <'.center(100, '='))
+        if len(self.__test_environments_obj_dictionary) > 0:
+            for te in self.__test_environments_obj_dictionary.keys():
+                self.log.info("Environment : " + te)
+        else:
+            self.log.info("No Test Environment Found !!!")
+        self.log.info(''.center(100, '='))
+        return list(self.__test_environments_obj_dictionary)
+
+    def get_test_modules(self, test_env_name: str):
+        r"""Get the list of Test Modules of an environment
+
+        Returns:
+            Returns Test Modules
+
+        Examples:
+            >>> # The following example is to get the list of Test Modules of an environment.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+            >>> if len(envs) > 0:
+            >>>      canoe_inst.get_test_modules(envs[0])
+        """
+        if test_env_name in self.__test_environments_obj_dictionary.keys():
+            self.log.info(('> List of Test Modules : ' + test_env_name + ' <').center(100, '='))
+            for test_module in self.__test_modules_obj_dictionary[test_env_name].keys():
+                self.log.info("Test Module   : " + test_module)
+            self.log.info(''.center(100, '='))
+            return list(self.__test_modules_obj_dictionary[test_env_name])
+        else:
+            self.log.warning("Invalid Test Environment: " + test_env_name)
+        return {}
+
+    def start_test_environment(self, test_env_name: str) -> bool:
+        r"""Execute all test modules sequentially in the given test environment
+
+        Args:
+            Test Environment object
+
+        Returns:
+            True if the execution started, else return False
+
+        Examples:
+            >>> # The following example is to start all the tests in an first available environment.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+            >>> if len(envs) > 0:
+            >>>      canoe_inst.start_test_environment(envs[0])
+        """
+        try:
+            if test_env_name in self.__test_environments_obj_dictionary.keys():
+                self.log.info("Triggerred Test Environment Execution: " + test_env_name)
+                self.__test_environments_obj_dictionary[test_env_name].ExecuteAll()
+            else:
+                self.log.warning("Invalid Test Environment : " + test_env_name)
+                return False
+        except Exception as e:
+            self.log.warning(e)
+            return False
+        return True
+
+    def stop_test_environment(self, test_env_name: str) -> bool:
+        r"""Stop the execution of a test environment
+
+        Args:
+            Test Environment object
+
+        Returns:
+            True if the execution stopped, else return False
+
+        Examples:
+            >>> # The following example is to start and stop the first available test environment.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+            >>> if len(envs) > 0:
+            >>>      canoe_inst.start_test_environment(envs[0])
+            >>>      canoe_inst.stop_test_environment(envs[0])
+        """
+        try:
+            if test_env_name in self.__test_environments_obj_dictionary.keys():
+                self.log.info("Stopping Test Environment: " + test_env_name)
+                self.__test_environments_obj_dictionary[test_env_name].StopSequence()
+            else:
+                self.log.warning("Invalid Test Environment : " + test_env_name)
+                return False
+        except Exception as e:
+            self.log.warning(e)
+            return False
+        return True
+
+    def execute_all_test_environments(self):
+        r"""Perform all test sequences in the configuration
+
+        Returns:
+            True if the execution started, else return False
+
+        Examples:
+            >>> # The following example to start all the test sequences of all the environments.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> canoe_inst.execute_all_test_environments()
+        """
+        test_envs = self.get_test_environments()
+        for test_env in test_envs:
+            self.start_test_environment(test_env)
+
+    def stop_all_test_environments(self):
+        r"""Stop all the test environment sequences in the configuration
+
+        Returns:
+            True if the execution stopped, else return False
+
+        Examples:
+            >>> # The following example to stop all the test sequences of all the environments.
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> canoe_inst.execute_all_test_environments()
+            >>> wait(10)
+            >>> canoe_inst.stop_all_test_environments()
+        """
+        test_envs = self.get_test_environments()
+        for test_env in test_envs:
+            self.stop_test_environment(test_env)
+
+    def start_all_test_modules(self, env_name: str, wait_for_completion: bool) -> bool:
+        r"""Start all the Test Modules in an environment
+
+        Returns:
+            Returns True or False
+
+        Examples:
+            >>> # The following example is to start all test modules in the first test environment
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+            >>> if len(envs) > 0:
+            >>>      modules = canoe_inst.start_all_test_modules(envs[0], True)
+        """
+        modules = self.get_test_modules(env_name)
+        for mod in modules:
+            status = self.start_test_module(env_name, mod, wait_for_completion)
+            if status == False:
+                return False
+        return True
+
+    def start_test_module(self, env_name: str, module_name: str, wait_for_completion: bool) -> bool:
+        r"""Start the Execution of a Test Module in an environment
+
+        Returns:
+            Returns True or False
+
+        Examples:
+            >>> # The following example is to start the first available test module in the first test environment
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+            >>> if len(envs) > 0:
+            >>>      modules = canoe_inst.get_test_modules(envs[0])
+            >>>      if len(modules) > 0:
+            >>>          canoe_inst.start_test_module(envs[0], modules[0], True)
+        """
+        try:
+            if self.__is_testmodule_enabled(env_name, module_name):
+                self.log.info("======== Starting Test Module: " + module_name + " ========")
+                test_module = self.__get_test_module_object(env_name, module_name)
+                test_module.Start()
+
+                while not all([wait_for_completion and not test_module.Enabled or test_module.IsDone()]):
+                    DoEvents()
+                    test_module.GetStatus()
+        except Exception as e:
+            self.log.warning(e)
+            return False
+        return True
+
+    def stop_test_module(self, env_name: str, module_name: str) -> bool:
+        r"""Stop the Execution of a Test Module in an environment
+
+        Returns:
+            Returns True or False
+
+        Examples:
+            >>> # The following example is to start the first available test module in the first test environment
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> envs = canoe_inst.get_test_environments()
+            >>> if len(envs) > 0:
+            >>>      modules = canoe_inst.get_test_modules(envs[0])
+            >>>      if len(modules) > 0:
+            >>>          canoe_inst.start_test_module(envs[0], modules[0])
+            >>> wait(10)
+            >>>          canoe_inst.stop_test_module(envs[0], modules[0])
+        """
+        try:
+            self.log.info("Stopping Test Module: " + module_name)
+            if self.__is_testmodule_enabled(env_name, module_name):
+                test_module = self.__get_test_module_object(env_name, module_name)
+                test_module.Stop()
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.log.warning(e)
+            return False            
+    
+    def __get_test_module_object(self, env_name: str, module_name: str):
+        if not (env_name in self.__test_environments_obj_dictionary.keys()):
+            self.log.warning(f'Test Environment {env_name} not found !!!')
+            return None
+
+        if not (module_name in self.__test_modules_obj_dictionary[env_name].keys()):
+            self.log.warning(f'TestModule {module_name} not found in the environment {env_name} !!!')
+            return None
+        return self.__test_modules_obj_dictionary[env_name][module_name]
+
+    def __is_testmodule_enabled(self, env_name: str, module_name: str) -> bool:
+        status = False
+        tm = self.__get_test_module_object(env_name, module_name)
+        if tm != None:
+            status = tm.Enabled
+        self.log.info(f"TestModule '{module_name}' Enabled = {status}")
+        return status
+
+def DoEvents(): #in All waiting messages pop up under the current thread
+    pythoncom.PumpWaitingMessages()
+    wait(.1)
+
+def DoEventsUntil(cond):
+    while not cond():
+        DoEvents()
+
+class CanoeTestModule:
+    """ Wrapper class for CANoe TestModule object """
+    def __init__(self, tm, log):
+        self.tm = tm
+        self.log = log
+        self.Events = win32com.client.DispatchWithEvents(tm, CanoeTestModuleEvents)
+        self.Events.set_params(tm, log)
+        self.Name = tm.Name
+        self.IsDone = lambda : self.Events.stopped
+        self.Enabled = tm.Enabled
+        self.lastVerdict = tm.Verdict
+        self.__tests_running_obj_dictionary = {}
+
+    def Start(self):
+         if self.tm.Enabled:
+            self.tm.Start()
+            self.__tests_running_obj_dictionary.clear()
+            self.Events.WaitForStart()
+
+    def Stop(self):
+         if self.tm.Enabled:
+            self.tm.Stop()
+            self.Events.WaitForStop()
+
+    def __getVerdictText(self, verdict):
+        if (verdict == 0):
+            return "Not Available"
+        elif (verdict == 1):
+            return "Passed"
+        elif (verdict == 2):
+            return "Failed"
+        elif (verdict == 3):
+            return "Not Available for Modules"
+        elif (verdict == 4):
+            return "In Conclusive"
+        elif (verdict == 1):
+            return "Error in Test System"
+        else:
+            return ""
+
+    def GetStatus(self):    
+        self.__get_sequence_Status()
+        if ((self.lastVerdict != self.tm.Verdict)):
+            verdictText = self.__getVerdictText(self.tm.Verdict)
+            self.log.info("Test Result has changed for the module '"+  self.tm.Name + "'. Status: " + verdictText)
+            self.lastVerdict = self.tm.Verdict
+
+    def __get_sequence_Status(self):
+        for sequence in self.tm.Sequence:
+            sequence = win32com.client.CastTo(sequence, "ITestGroup")
+            self.__get_test_group_Status(sequence)
+
+    def __get_test_group_Status(self, test_item):
+        if "Sequence" in dir(test_item):
+            for sequence in test_item.Sequence:
+                if "Sequence" in dir(sequence):
+                    sequence = win32com.client.CastTo(sequence, "ITestGroup")
+                else:
+                    sequence = win32com.client.CastTo(sequence, "ITestCase")
+                self.__get_test_group_Status(sequence)
+        elif "Verdict" in dir(test_item):
+            if (test_item.Name in self.__tests_running_obj_dictionary.keys()):
+                if not self.__tests_running_obj_dictionary[test_item.Name] == str(test_item.Verdict):
+                    self.log.info("TestCase: " + test_item.Name + " Status: " + self.__getVerdictText(test_item.Verdict))
+            else:
+                self.log.info("TestCase: " + test_item.Name + " Status: " + self.__getVerdictText(test_item.Verdict))
+            self.__tests_running_obj_dictionary[test_item.Name] = str(test_item.Verdict)
+        else:
+            self.log.info("Test Sequence Item: " + test_item.Name)
+
+class CanoeTestModuleEvents(object):
+    """ Wrapper class for CANoe TestModule Events object """
+    def  __init__ (self):
+        self.started = False
+        self.stopped = False
+        self.WaitForStart = lambda : DoEventsUntil(lambda : self.started)
+        self.WaitForStop = lambda : DoEventsUntil(lambda : self.stopped)
+
+    def set_params(self, test_module, log):
+        self.test_module = test_module
+        self.log = log
+        self.test_status = "Initialized"
+
+    def OnReportGenerated(self, Success, SourceFullName, GeneratedFullName):
+        #self.test_status = "ReportGenerated"
+        self.log.info("Test Report has Generated for " + self.test_module.Name + ". Path: " + GeneratedFullName)
+
+    def OnStop(self, Reason):
+        self.started = False
+        self.stopped = True
+        if Reason == 0:
+            self.test_status = "Completed"
+            self.log.info("Test Execution Completed : " +  self.test_module.Name)
+        else:
+            if Reason== 1:
+                self.test_status = "Stopped By User"
+            else:
+                self.test_status = "Stopped By Measurement Stop"
+            self.log.info("Test Execution Stopped : " +  self.test_module.Name + ". Reason: " + self.test_status)
+
+    def OnStart(self):
+        self.test_status = "Running"
+        self.started = True
+        self.stopped = False
+        self.log.info("Test Execution Started : " +  self.test_module.Name)
+
+    def get_current_status(self) -> str:
+        return self.test_status
