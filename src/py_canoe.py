@@ -1,6 +1,6 @@
 """Python package for controlling Vector CANoe tool"""
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 
 # Import Python Libraries here
 import os
@@ -28,7 +28,7 @@ class CANoe:
         >>> canoe_inst.quit()
     """
 
-    def __init__(self, py_canoe_log_dir=r'D:\.py_canoe') -> None:
+    def __init__(self, py_canoe_log_dir='') -> None:
         """
         Args:
             py_canoe_log_dir (str): directory to store py_canoe log. default 'D:\\.py_canoe'
@@ -46,17 +46,18 @@ class CANoe:
         self.__replay_blocks_obj_dictionary = {}
         self.__simulation_nodes_obj_dictionary = {}
 
-    def __py_canoe_log_initialisation(self, py_canoe_log_dir=r'D:\.py_canoe'):
-        if not os.path.exists(py_canoe_log_dir):
-            os.makedirs(py_canoe_log_dir, exist_ok=True)
+    def __py_canoe_log_initialisation(self, py_canoe_log_dir):
         self.log.setLevel(logging.DEBUG)
         log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-5.5s]  %(message)s")
         ch = logging.StreamHandler(sys.stdout)
         ch.setFormatter(log_format)
         self.log.addHandler(ch)
-        fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=(1024 * 50), backupCount=20)
-        fh.setFormatter(log_format)
-        self.log.addHandler(fh)
+        if py_canoe_log_dir != '' and not os.path.exists(py_canoe_log_dir):
+            os.makedirs(py_canoe_log_dir, exist_ok=True)
+        if os.path.exists(py_canoe_log_dir):
+            fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=(1024 * 50), backupCount=20)
+            fh.setFormatter(log_format)
+            self.log.addHandler(fh)
 
     def __dispatch_canoe(self) -> None:
         if self.__canoe_app_obj is None:
