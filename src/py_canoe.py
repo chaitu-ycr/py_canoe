@@ -31,7 +31,7 @@ class CANoe:
     def __init__(self, py_canoe_log_dir='') -> None:
         """
         Args:
-            py_canoe_log_dir (str): directory to store py_canoe log. default 'D:\\.py_canoe'
+            py_canoe_log_dir (str): directory to store py_canoe log. example 'D:\\.py_canoe'
         """
         self.__canoe_app_obj = None
         self.__CANOE_COM_APP_NAME = 'CANoe.Application'
