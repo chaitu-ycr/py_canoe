@@ -4,7 +4,6 @@ __version__ = "0.1.1"
 
 # Import Python Libraries here
 import os
-import msvcrt
 import logging
 from typing import Union
 from logging import handlers
@@ -53,6 +52,7 @@ class CANoe:
         self.wait_for_stop = lambda: DoEventsUntil(lambda: CANoe.Stopped)
         self.__triggered_canoe_quit = False
         self.__BUS_TYPES = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
+        self.__diag_ecu_qualifiers_dictionary = {}
 
     def __py_canoe_log_initialisation(self, py_canoe_log_dir):
         self.log.setLevel(logging.DEBUG)
@@ -68,15 +68,14 @@ class CANoe:
             self.log.addHandler(fh)
 
     def __dispatch_canoe(self):
-        # pythoncom.CoInitialize()
         app = DispatchEx('CANoe.Application')
         app.Configuration.Modified = False
         ver = app.Version
         self.log.info(f'Dispatched CANoe Application {ver.major}.{ver.minor}.{ver.Build}...')
         self.__canoe_objects['Application'] = app
-        self.__canoe_objects['Application.Configuration'] = app.Configuration
-        self.__canoe_objects['Application.Measurement'] = app.Measurement
-        self.__canoe_objects['Application.Measurement.Running'] = app.Measurement.Running
+        self.__canoe_objects['Application.Configuration'] = self.__canoe_objects['Application'].Configuration
+        self.__canoe_objects['Application.Measurement'] = self.__canoe_objects['Application'].Measurement
+        self.__canoe_objects['Application.Measurement.Running'] = self.__canoe_objects['Application.Measurement'].Running
         self.wait_for_start = lambda: DoEventsUntil(lambda: CANoe.Started)
         self.wait_for_stop = lambda: DoEventsUntil(lambda: CANoe.Stopped)
         WithEvents(self.__canoe_objects['Application.Measurement'], CanoeMeasurementEvents)
@@ -102,6 +101,15 @@ class CANoe:
             self.__canoe_objects['Application'].Visible = visible
             self.__canoe_objects['Application'].Open(canoe_cfg, auto_save, prompt_user)
             self.log.info(f'loaded CANoe config "{canoe_cfg}"')
+            # self.__canoe_objects['Application.Bus'] = self.__canoe_objects['Application'].Bus
+            # self.__canoe_objects['Application.CAPL'] = self.__canoe_objects['Application'].CAPL
+            # self.__canoe_objects['Application.Environment'] = self.__canoe_objects['Application'].Environment
+            # self.__canoe_objects['Application.Networks'] = self.__canoe_objects['Application'].Networks
+            # self.__canoe_objects['Application.Performance'] = self.__canoe_objects['Application'].Performance
+            # self.__canoe_objects['Application.Simulation'] = self.__canoe_objects['Application'].Simulation
+            # self.__canoe_objects['Application.System'] = self.__canoe_objects['Application'].System
+            # self.__canoe_objects['Application.System.Namespaces'] = self.__canoe_objects['Application.System'].Namespaces
+            # self.__canoe_objects['Application.UI'] = self.__canoe_objects['Application'].UI
         else:
             self.log.info(f'CANoe cfg "{canoe_cfg}" not found.')
         self.__triggered_canoe_quit = False
@@ -727,6 +735,50 @@ class CANoe:
             self.log.info(f'{k:<10}: {v}')
         self.log.info(''.center(100, '='))
         return version_info
+
+    def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str]:
+        r"""get_system_variable_value Returns a system variable value.
+
+        Args:
+            sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
+
+        Returns:
+            System Variable value.
+
+        Examples:
+            >>> # The following example gets system variable value
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> sys_var_val = canoe_inst.get_system_variable_value('sys_var_demo::speed')
+            >>>print(sys_var_val)
+        """
+        namespace = '::'.join(sys_var_name.split('::')[:-1])
+        variable_name = sys_var_name.split('::')[-1]
+        namespace_object = self.__canoe_objects['Application'].System.Namespaces(namespace)
+        variable_value = namespace_object.Variables(variable_name).Value
+        self.log.info(f'system variable({sys_var_name}) value = {variable_value}.')
+        return variable_value
+
+    def set_system_variable_value(self, sys_var_name: str, value: Union[int, float, str]) -> None:
+        r"""set_system_variable_value sets a value to system variable.
+
+        Args:
+            sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
+            value (Union[int, float, str]): variable value.
+
+        Examples:
+            >>> # The following example sets system variable value to 1
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> canoe_inst.set_system_variable_value('sys_var_demo::speed', 1)
+        """
+        namespace = '::'.join(sys_var_name.split('::')[:-1])
+        variable_name = sys_var_name.split('::')[-1]
+        namespace_object = self.__canoe_objects['Application'].System.Namespaces(namespace)
+        namespace_object.Variables(variable_name).Value = value
+        self.log.info(f'system variable({sys_var_name}) value set to {value}.')
 
 
 class CanoeMeasurementEvents:
