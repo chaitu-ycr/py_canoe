@@ -30,14 +30,15 @@ def test_canoe_basic_measurement_methods():
     canoe_inst.reset_measurement()
     assert canoe_inst.stop_measurement()
     wait(2)
+    canoe_inst.quit()
 
-# def test_diag_request_methods():
-#     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
-#     assert canoe_inst.start_measurement()
-#     wait(1)
-#     resp = canoe_inst.send_diag_request('Door', '10 01')
-#     assert canoe_inst.stop_measurement()
-#     assert resp == '50 01 00 00 00 00'
+def test_diag_request_methods():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    assert canoe_inst.start_measurement()
+    wait(1)
+    resp = canoe_inst.send_diag_request('Door', '10 01')
+    assert canoe_inst.stop_measurement()
+    assert resp == '50 01 00 00 00 00'
 
 def test_signal_value_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -62,11 +63,6 @@ def test_system_variable_methods():
     assert canoe_inst.stop_measurement()
     assert sys_var_val == 20
     wait(2)
-
-# def test_get_canoe_configuration_details():
-#     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
-#     config_data = canoe_inst.get_canoe_configuration_details()
-#     assert config_data
 
 def test_canoe_open_close_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')

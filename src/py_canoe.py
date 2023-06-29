@@ -17,11 +17,6 @@ def DoEvents():
     wait(.1)
 
 
-def DoEventsUntil(cond):
-    while not cond():
-        DoEvents()
-
-
 class CANoe:
     r"""The CANoe class represents the CANoe application.
     The CANoe class is the foundation for the object hierarchy.
@@ -53,6 +48,7 @@ class CANoe:
         self.__triggered_canoe_quit = False
         self.__BUS_TYPES = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
         self.__diag_ecu_qualifiers_dictionary = {}
+        self.__replay_blocks_obj_dictionary = {}
 
     def __py_canoe_log_initialisation(self, py_canoe_log_dir):
         self.log.setLevel(logging.DEBUG)
@@ -100,6 +96,37 @@ class CANoe:
                     canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj'] = None
         return canoe_networks_dict
 
+    def __fetch_canoe_system_data(self) -> dict:
+        self.__canoe_objects['Application.System'] = self.__canoe_objects['Application'].System
+        self.__canoe_objects['Application.System.Namespaces'] = self.__canoe_objects['Application.System'].Namespaces
+        self.__canoe_objects['Application.System.VariablesFiles'] = self.__canoe_objects['Application.System'].VariablesFiles
+        canoe_system_dict = {'Namespaces': {},
+                             'VariablesFiles': {}}
+        namespaces_dict = {}
+        for namespace in self.__canoe_objects['Application.System.Namespaces']:
+            namespaces_dict[namespace.Name] = namespace
+        canoe_system_dict['Namespaces'] = namespaces_dict
+        variable_files_dict = {}
+        for variables_file in self.__canoe_objects['Application.System.VariablesFiles']:
+            variable_files_dict[variables_file.Name] = variables_file
+        canoe_system_dict['VariablesFiles'] = variable_files_dict
+        return canoe_system_dict
+
+    def __fetch_canoe_bus_data(self) -> dict:
+        self.__canoe_objects['Application.Bus'] = self.__canoe_objects['Application'].Bus
+        self.__canoe_objects['Application.Bus.ReplayCollection'] = self.__canoe_objects['Application.Bus'].ReplayCollection
+        self.__canoe_objects['Application.Bus.Nodes'] = self.__canoe_objects['Application.Bus'].Nodes
+        canoe_bus_dict = {}
+        replay_blocks_dict = {}
+        nodes_dict = {}
+        for replay_block in self.__canoe_objects['Application.Bus.ReplayCollection']:
+            replay_blocks_dict[replay_block.Name] = replay_block
+        for node in self.__canoe_objects['Application.Bus.Nodes']:
+            nodes_dict[node.Name] = node
+        canoe_bus_dict['replay_block_objs'] = self.__replay_blocks_obj_dictionary = replay_blocks_dict
+        canoe_bus_dict['node_objs'] = nodes_dict
+        return canoe_bus_dict
+
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
         r"""Loads CANoe configuration.
 
@@ -108,7 +135,7 @@ class CANoe:
             visible (bool): True if you want to see CANoe UI. Defaults to True.
             auto_save (bool, optional): A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to False.
             prompt_user (bool, optional): A boolean value that indicates whether the user should intervene in error situations. Defaults to False.
-        
+
         Examples:
             >>> # The following example opens a configuration
             >>> canoe_inst = CANoe()
@@ -122,6 +149,8 @@ class CANoe:
             self.__canoe_objects['Application'].Open(canoe_cfg, auto_save, prompt_user)
             self.log.info(f'loaded CANoe config "{canoe_cfg}"')
             self.__fetch_canoe_networks_data()
+            self.__fetch_canoe_system_data()
+            self.__fetch_canoe_bus_data()
         else:
             self.log.info(f'CANoe cfg "{canoe_cfg}" not found.')
         self.__triggered_canoe_quit = False
@@ -850,6 +879,49 @@ class CANoe:
             self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
         return diag_response_data
 
+    def set_replay_block_file(self, block_name: str, recording_file_path: str) -> None:
+        r"""Method for setting CANoe replay block file.
+
+        Args:
+            block_name: CANoe replay block name
+            recording_file_path: CANoe replay recording file including path.
+
+        Examples:
+            >>> # The following example sets replay block file
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.set_replay_block_file(block_name='replay block name', recording_file_path='replay file including path')
+            >>> canoe_inst.start_measurement()
+        """
+        if block_name in self.__replay_blocks_obj_dictionary.keys():
+            self.__replay_blocks_obj_dictionary[block_name].Path = recording_file_path
+            self.log.info(f'Replay block "{block_name}" updated with "{recording_file_path}" path.')
+        else:
+            self.log.warning(f'Replay block "{block_name}" not available.')
+
+    def control_replay_block(self, block_name: str, start_stop: bool) -> None:
+        r"""Method for setting CANoe replay block file.
+
+        Args:
+            block_name (str): CANoe replay block name
+            start_stop (bool): True to start replay block. False to Stop.
+
+        Examples:
+            >>> # The following example starts replay block
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.set_replay_block_file(block_name='replay block name', recording_file_path='replay file including path')
+            >>> canoe_inst.start_measurement()
+            >>> canoe_inst.control_replay_block('replay block name', True)
+        """
+        if block_name in self.__replay_blocks_obj_dictionary.keys():
+            if start_stop:
+                self.__replay_blocks_obj_dictionary[block_name].Start()
+            else:
+                self.__replay_blocks_obj_dictionary[block_name].Stop()
+            self.log.info(f'Replay block "{block_name}" {"Started" if start_stop else "Stopped"}.')
+        else:
+            self.log.warning(f'Replay block "{block_name}" not available.')
 
 class CanoeMeasurementEvents:
     """Handler for CANoe measurement events"""
@@ -863,3 +935,8 @@ class CanoeMeasurementEvents:
     def OnStop():
         CANoe.Started = False
         CANoe.Stopped = True
+
+
+def DoEventsUntil(cond):
+    while not cond():
+        DoEvents()
