@@ -80,6 +80,26 @@ class CANoe:
         self.wait_for_stop = lambda: DoEventsUntil(lambda: CANoe.Stopped)
         WithEvents(self.__canoe_objects['Application.Measurement'], CanoeMeasurementEvents)
 
+    def __fetch_canoe_networks_data(self) -> dict:
+        self.__canoe_objects['Application.Networks'] = self.__canoe_objects['Application'].Networks
+        canoe_networks_dict = {}
+        for network in self.__canoe_objects['Application.Networks']:
+            network_name = network.Name
+            canoe_networks_dict[network_name] = {}
+            canoe_networks_dict[network_name]['network_obj'] = network
+            # canoe_networks_dict[network_name]['BusType'] = network.BusType
+            canoe_networks_dict[network_name]['Devices'] = {}
+            for device in network.Devices:
+                device_name = device.Name
+                canoe_networks_dict[network_name]['Devices'][device_name] = {}
+                canoe_networks_dict[network_name]['Devices'][device_name]['device_obj'] = device
+                try:
+                    canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj'] = device.Diagnostic
+                    self.__diag_ecu_qualifiers_dictionary[device_name] = canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj']
+                except pythoncom.com_error:
+                    canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj'] = None
+        return canoe_networks_dict
+
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
         r"""Loads CANoe configuration.
 
@@ -101,15 +121,7 @@ class CANoe:
             self.__canoe_objects['Application'].Visible = visible
             self.__canoe_objects['Application'].Open(canoe_cfg, auto_save, prompt_user)
             self.log.info(f'loaded CANoe config "{canoe_cfg}"')
-            # self.__canoe_objects['Application.Bus'] = self.__canoe_objects['Application'].Bus
-            # self.__canoe_objects['Application.CAPL'] = self.__canoe_objects['Application'].CAPL
-            # self.__canoe_objects['Application.Environment'] = self.__canoe_objects['Application'].Environment
-            # self.__canoe_objects['Application.Networks'] = self.__canoe_objects['Application'].Networks
-            # self.__canoe_objects['Application.Performance'] = self.__canoe_objects['Application'].Performance
-            # self.__canoe_objects['Application.Simulation'] = self.__canoe_objects['Application'].Simulation
-            # self.__canoe_objects['Application.System'] = self.__canoe_objects['Application'].System
-            # self.__canoe_objects['Application.System.Namespaces'] = self.__canoe_objects['Application.System'].Namespaces
-            # self.__canoe_objects['Application.UI'] = self.__canoe_objects['Application'].UI
+            self.__fetch_canoe_networks_data()
         else:
             self.log.info(f'CANoe cfg "{canoe_cfg}" not found.')
         self.__triggered_canoe_quit = False
@@ -779,6 +791,64 @@ class CANoe:
         namespace_object = self.__canoe_objects['Application'].System.Namespaces(namespace)
         namespace_object.Variables(variable_name).Value = value
         self.log.info(f'system variable({sys_var_name}) value set to {value}.')
+
+    def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True) -> str:
+        r"""The send_diag_request method represents the query of a diagnostic tester (client) to an ECU (server) in CANoe.
+
+        Args:
+            diag_ecu_qualifier_name (str): Diagnostic Node ECU Qualifier Name configured in "Diagnostic/ISO TP Configuration".
+            request (str): Diagnostic request in bytes or diagnostic node qualifier name.
+            request_in_bytes: True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.
+
+        Returns:
+            diagnostic response stream. Ex- "50 01 00 00 00 00"
+
+        Examples:
+            >>> # Example 1 - The following example sends diagnostic request "10 01"
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> resp = canoe_inst.send_diag_request('Door', '10 01')
+            >>> print(resp)
+            >>> canoe_inst.stop_measurement()
+            >>> # Example 2 - The following example sends diagnostic request "DefaultSession_Start"
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(canoe_cfg=r'C:\Users\Public\Documents\Vector\CANoe\Sample Configurations 11.0.81\.\CAN\Diagnostics\UDSBasic\UDSBasic.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> wait(1)
+            >>> resp = canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
+            >>> print(resp)
+            >>> canoe_inst.stop_measurement()
+        """
+        diag_response_data = ""
+        if diag_ecu_qualifier_name in self.__diag_ecu_qualifiers_dictionary.keys():
+            self.log.info(f'Diag Req --> {request}')
+            if request_in_bytes:
+                diag_req_in_bytes = bytearray()
+                request = ''.join(request.split(' '))
+                for i in range(0, len(request), 2):
+                    diag_req_in_bytes.append(int(request[i:i + 2], 16))
+                diag_req = self.__diag_ecu_qualifiers_dictionary[diag_ecu_qualifier_name].CreateRequestFromStream(diag_req_in_bytes)
+            else:
+                diag_req = self.__diag_ecu_qualifiers_dictionary[diag_ecu_qualifier_name].CreateRequest(request)
+            diag_req.Send()
+            while diag_req.Pending:
+                wait(0.1)
+            if diag_req.Responses.Count == 0:
+                self.log.info("Diagnostic Response Not Received.")
+            else:
+                for k in range(1, diag_req.Responses.Count + 1):
+                    diag_res = diag_req.Responses(k)
+                    if diag_res.Positive:
+                        self.log.info(f"+ve response received.")
+                    else:
+                        self.log.info(f"-ve response received.")
+                    diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
+                self.log.info(f'Diag Res --> {diag_response_data}')
+        else:
+            self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
+        return diag_response_data
 
 
 class CanoeMeasurementEvents:
