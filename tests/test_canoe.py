@@ -29,8 +29,6 @@ def test_canoe_basic_measurement_methods():
     canoe_inst.get_measurement_running_status()
     canoe_inst.reset_measurement()
     assert canoe_inst.stop_measurement()
-    wait(2)
-    canoe_inst.quit()
 
 def test_diag_request_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
