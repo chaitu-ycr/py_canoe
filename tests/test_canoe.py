@@ -11,6 +11,10 @@ canoe_inst = CANoe()
 
 def test_canoe_open_new_save_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.quit()
+    wait(1)
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    wait(1)
     canoe_inst.new(auto_save=True)
     assert canoe_inst.save_configuration_as(fr'{file_path}\demo_cfg\demo_v10.cfg', 10, 0)
     wait(2)
@@ -85,13 +89,20 @@ def test_write_window_methods():
 
 def test_canoe_animation_mode_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo_offline.cfg')
-    canoe_inst.step_measurement_event_in_single_step()
-    wait(2)
     canoe_inst.start_measurement_in_animation_mode()
-    wait(2)
+    wait(1)
     canoe_inst.break_measurement_in_offline_mode()
-    wait(2)
+    wait(1)
+    canoe_inst.step_measurement_event_in_single_step()
+    wait(1)
     canoe_inst.reset_measurement_in_offline_mode()
-    wait(2)
+    wait(1)
     assert canoe_inst.stop_measurement()
-    wait(2)
+    wait(1)
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+
+def test_quit_canoe():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_offline.cfg')
+    wait(1)
+    canoe_inst.quit()
+    wait(5)
