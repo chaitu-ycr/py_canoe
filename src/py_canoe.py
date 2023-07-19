@@ -880,6 +880,7 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
         """
         diag_response_data = ""
+        diag_response_sender={}
         if diag_ecu_qualifier_name in self.__diag_ecu_qualifiers_dictionary.keys():
             self.log.info(f'Diag Req --> {request}')
             if request_in_bytes:
@@ -899,14 +900,16 @@ class CANoe:
                 for k in range(1, diag_req.Responses.Count + 1):
                     diag_res = diag_req.Responses(k)
                     if diag_res.Positive:
-                        self.log.info(f"+ve response received.")
+                        self.log.info(f"{diag_res.Sender}: +ve response received")
                     else:
-                        self.log.info(f"-ve response received.")
+                        self.log.info(f"{diag_res.Sender}: -ve response received.")
                     diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
+                    diag_response_sender[diag_res.Sender]=diag_response_data
+
                 self.log.info(f'Diag Res --> {diag_response_data}')
         else:
-            self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
-        return diag_response_data
+            self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.{diag_req}')
+        return diag_response_sender
 
     def set_replay_block_file(self, block_name: str, recording_file_path: str) -> None:
         r"""Method for setting CANoe replay block file.
