@@ -806,6 +806,40 @@ class CANoe:
         self.log.info(''.center(100, '='))
         return version_info
 
+    def define_system_namespace(self, sys_namespace: str):
+        """define_system_namespace Create a namespace for variables
+
+        Args:
+            sys_namespace (str): The name of the system namespace. Ex- "sys_var_demo"
+
+        Examples:
+            >>> # The following example gets system variable value
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.define_system_namespace('sys_var_demo')
+        """
+        self.__canoe_objects['Namespaces'].Add(sys_namespace)
+        self.log.info(f'namespace ({sys_namespace}) created.')
+
+    def define_system_variable(self, sys_var_name: str, value: Union[int, float, str]):
+        """define_system_variable Create a system variable with an initial value
+
+        Args:
+            sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
+            value (Union[int, float, str]): variable value.
+
+        Examples:
+            >>> # The following example gets system variable value
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.define_system_variable('sys_var_demo::speed', 1)
+        """
+        namespace = '::'.join(sys_var_name.split('::')[:-1])
+        variable_name = sys_var_name.split('::')[-1]
+        namespace_object = self.__canoe_objects['Namespaces'](namespace)
+        namespace_object.Variables.Add(variable_name, value)
+        self.log.info(f'system variable({sys_var_name}) created with value set to {value}.')
+
     def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str]:
         r"""get_system_variable_value Returns a system variable value.
 
