@@ -171,9 +171,10 @@ poetry.toml
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-# pycharm and vscode ettings
+# pycharm and vscode
 .idea/
 .vscode/
 # CANoe Files
 *.cbf
 *.stcfg
+.vs/
