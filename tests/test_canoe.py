@@ -64,6 +64,14 @@ def test_system_variable_methods():
     sys_var_val = canoe_inst.get_system_variable_value('demo::level_two_1::sys_var2')
     assert canoe_inst.stop_measurement()
     assert sys_var_val == 20
+    canoe_inst.define_system_namespace('sys_demo')
+    canoe_inst.define_system_variable('sys_demo::demo', 1)
+    canoe_inst.save_configuration()
+    assert canoe_inst.start_measurement()
+    wait(1)
+    sys_var_val = canoe_inst.get_system_variable_value('sys_demo::demo')
+    assert sys_var_val == 1
+    assert canoe_inst.stop_measurement()
     wait(2)
 
 def test_canoe_open_close_methods():
