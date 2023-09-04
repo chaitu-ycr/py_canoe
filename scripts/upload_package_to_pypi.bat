@@ -7,8 +7,8 @@ set file_dir=%~dp0
 cd %file_dir%
 cd ..
 set root_folder=%CD%
-set cmd_venv_activate=%root_folder%\venv\Scripts\activate.bat
-set cmd_venv_deactivate=%root_folder%\venv\Scripts\deactivate.bat
+set cmd_venv_activate=%root_folder%\.venv\Scripts\activate.bat
+set cmd_venv_deactivate=%root_folder%\.venv\Scripts\deactivate.bat
 
 cd %root_folder%
 

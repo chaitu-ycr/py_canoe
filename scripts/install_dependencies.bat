@@ -9,7 +9,7 @@ cd %file_dir%
 cd ..
 set root_folder=%CD%
 set working_dir=%root_folder%
-set python_venv_path=%working_dir%\venv
+set python_venv_path=%working_dir%\.venv
 set python_exe=%python_venv_path%\Scripts\python.exe
 
 :: checking if Python path exists
