@@ -1,13 +1,13 @@
 # Import Python Libraries here
 import win32com.client
 
-class Version():
+class Version:
     """The Version object represents the version of the CANoe application.
     """
-    def __init__(self, app) -> None:
-        self.app = app
-        self.log = self.app.log
-        self.ver_obj = win32com.client.Dispatch(self.app.app_com_obj.Version)
+    def __init__(self, app_obj) -> None:
+        self.app_obj = app_obj
+        self.log = self.app_obj.log
+        self.ver_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.Version)
     
     @property
     def build(self) -> int:

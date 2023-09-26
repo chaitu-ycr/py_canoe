@@ -3,22 +3,7 @@ import pythoncom
 import win32com.client
 from time import sleep as wait
 
-class CanoeConfigurationEvents:
-    """Handler for CANoe Configuration events"""
-
-    @staticmethod
-    def OnClose():
-        """Occurs when the configuration is closed.
-        """
-        print('configuration OnClose event triggered.')
-    
-    @staticmethod
-    def OnSystemVariablesDefinitionChanged():
-        """Occurs when system variable definitions are added, changed or removed.
-        """
-        print('configuration OnSystemVariablesDefinitionChanged event triggered.')
-
-class Configuration():
+class Configuration:
     """The Configuration object represents the active configuration.
     """
     def __init__(self, app) -> None:
@@ -194,3 +179,18 @@ class Configuration():
         """
         self.conf_obj.SaveAs(path, major, minor, prompt_user)
         self.log.info(f'Saved configuration as {path}.')
+
+class CanoeConfigurationEvents:
+    """Handler for CANoe Configuration events"""
+
+    @staticmethod
+    def OnClose():
+        """Occurs when the configuration is closed.
+        """
+        print('configuration OnClose event triggered.')
+    
+    @staticmethod
+    def OnSystemVariablesDefinitionChanged():
+        """Occurs when system variable definitions are added, changed or removed.
+        """
+        print('configuration OnSystemVariablesDefinitionChanged event triggered.')

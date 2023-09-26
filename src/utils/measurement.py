@@ -3,45 +3,6 @@ import pythoncom
 import win32com.client
 from time import sleep as wait
 
-def DoEvents():
-    pythoncom.PumpWaitingMessages()
-    wait(.1)
-
-def DoEventsUntil(cond):
-    while not cond():
-        DoEvents()
-
-class CanoeMeasurementEvents:
-    """Handler for CANoe Measurement events"""
-
-    @staticmethod
-    def OnInit():
-        """Occurs when the measurement is initialized.
-        """
-        print('measurement OnInit event triggered')
-
-    @staticmethod
-    def OnExit():
-        """Occurs when the measurement is exited.
-        """
-        print('measurement OnExit event triggered')
-
-    @staticmethod
-    def OnStart():
-        """Occurs when the measurement is started.
-        """
-        Measurement.STARTED = True
-        Measurement.STOPPED = False
-        print('measurement OnStart event triggered')
-
-    @staticmethod
-    def OnStop():
-        """Occurs when the measurement is stopped.
-        """
-        Measurement.STARTED = False
-        Measurement.STOPPED = True
-        print('measurement OnStop event triggered')
-
 class Measurement:
     """The Measurement object represents measurement functions of CANoe.
     """
@@ -160,3 +121,42 @@ class Measurement:
         else:
             self.log.info(f'CANoe Measurement Already Stopped. Measurement running status = {self.running}')
         return not self.running
+
+class CanoeMeasurementEvents:
+    """Handler for CANoe Measurement events"""
+
+    @staticmethod
+    def OnInit():
+        """Occurs when the measurement is initialized.
+        """
+        print('measurement OnInit event triggered')
+
+    @staticmethod
+    def OnExit():
+        """Occurs when the measurement is exited.
+        """
+        print('measurement OnExit event triggered')
+
+    @staticmethod
+    def OnStart():
+        """Occurs when the measurement is started.
+        """
+        Measurement.STARTED = True
+        Measurement.STOPPED = False
+        print('measurement OnStart event triggered')
+
+    @staticmethod
+    def OnStop():
+        """Occurs when the measurement is stopped.
+        """
+        Measurement.STARTED = False
+        Measurement.STOPPED = True
+        print('measurement OnStop event triggered')
+
+def DoEvents():
+    pythoncom.PumpWaitingMessages()
+    wait(.1)
+
+def DoEventsUntil(cond):
+    while not cond():
+        DoEvents()

@@ -1,25 +1,6 @@
 # Import Python Libraries here
 import os
 
-class ApplicationEvents:
-    """Handler for CANoe Application events"""
-
-    @staticmethod
-    def OnOpen():
-        """Occurs when a configuration is opened.
-        """
-        print('canoe opened')
-        Application.OPENED = True
-        Application.CLOSED = False
-
-    @staticmethod
-    def OnQuit():
-        """Occurs when CANoe is quit
-        """
-        print('canoe closed')
-        Application.OPENED = False
-        Application.CLOSED = True
-
 class Application:
     """The Application object represents the CANoe application.
     """
@@ -127,3 +108,22 @@ class Application:
         """
         self.app_com_obj.Quit()
         self.log.info('CANoe Application Closed.')
+
+class ApplicationEvents:
+    """Handler for CANoe Application events"""
+
+    @staticmethod
+    def OnOpen():
+        """Occurs when a configuration is opened.
+        """
+        print('canoe opened')
+        Application.OPENED = True
+        Application.CLOSED = False
+
+    @staticmethod
+    def OnQuit():
+        """Occurs when CANoe is quit
+        """
+        print('canoe closed')
+        Application.OPENED = False
+        Application.CLOSED = True

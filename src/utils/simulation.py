@@ -1,30 +1,7 @@
 # Import Python Libraries here
 import win32com.client
 
-class CanoeSimulationEvents:
-    """Handler for CANoe Simulation events"""
-
-    @staticmethod
-    def OnIdle(time_high: int, time: int) -> None:
-        """Occurs after a simulation step.
-
-        Args:
-            time_high (int): High-order 32 bit of the current simulation time.
-            time (int): Low-order 32 bit of the current simulation time.
-        """
-        print(f'Simulation OnIdle event triggered. time_high = {time_high} and time = {time}')
-    
-    @staticmethod
-    def OnIdleU(time_high: int, time: int) -> None:
-        """Occurs after a simulation step.
-
-        Args:
-            time_high (int): High-order 32 bit of the current simulation time.
-            time (int): Low-order 32 bit of the current simulation time.
-        """
-        print(f'Simulation OnIdleU event triggered. time_high = {time_high} and time = {time}')
-
-class Simulation():
+class Simulation:
     """The Simulation object represents CANoe's measurement functions in the Simulation mode.
     With the help of the Simulation object you can control the system time from an external source during the measurement.
     """
@@ -109,3 +86,26 @@ class Simulation():
         """
         self.sim_obj.IncrementTimeAndWait(ticks)
         self.log.info(f'Increased the system time to = {ticks} ticks.')
+
+class CanoeSimulationEvents:
+    """Handler for CANoe Simulation events"""
+
+    @staticmethod
+    def OnIdle(time_high: int, time: int) -> None:
+        """Occurs after a simulation step.
+
+        Args:
+            time_high (int): High-order 32 bit of the current simulation time.
+            time (int): Low-order 32 bit of the current simulation time.
+        """
+        print(f'Simulation OnIdle event triggered. time_high = {time_high} and time = {time}')
+    
+    @staticmethod
+    def OnIdleU(time_high: int, time: int) -> None:
+        """Occurs after a simulation step.
+
+        Args:
+            time_high (int): High-order 32 bit of the current simulation time.
+            time (int): Low-order 32 bit of the current simulation time.
+        """
+        print(f'Simulation OnIdleU event triggered. time_high = {time_high} and time = {time}')

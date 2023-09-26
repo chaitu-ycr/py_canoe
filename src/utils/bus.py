@@ -1,7 +1,7 @@
 # Import Python Libraries here
 import win32com.client
 
-class Bus():
+class Bus:
     """The Bus object represents a bus of the CANoe application.
     """
     def __init__(self, app, bus_type='CAN') -> None:

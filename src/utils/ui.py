@@ -1,7 +1,7 @@
 # Import Python Libraries here
 import win32com.client
 
-class Ui():
+class Ui:
     """The UI object represents the user interface in CANoe.
     """
     def __init__(self, app) -> None:
@@ -48,7 +48,7 @@ class Ui():
         self.ui_com_obj.OpenBaudrateDialog()
         self.log.info(f'baudrate dialog opened. Configure the bus parameters.')
 
-class Write():
+class Write:
     """The Write object represents the Write Window in CANoe.
     It is part of the user interface.
     """
