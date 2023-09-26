@@ -1,4 +1,4 @@
-# py_canoe
+# About [py_canoe](https://github.com/chaitu-ycr/py_canoe)
 
 Python 🐍 Package for controlling Vector CANoe 🛶 Tool
 
@@ -9,29 +9,35 @@ Also, I want to thank the sun 🌄 for providing more than half of their nourish
 
 ## Prerequisites
 
-- [X] Python(>=3.6)
+- [X] Python(>=3.9)
 - [X] Vector CANoe software(>=v11)
 - [X] Windows PC(recomended win 10 os)
+- [X] visual studio code
 
-## Installation
+## python environment setup
 
-### Create Virtual environment
+create python virtual environment
 
 ```bat
-python -m venv venv
+python -m venv .venv
 ```
 
-Activate virtual environment and upgrade pip
+activate virtual environment
 
 ```bat
-venv\Scripts\activate
+.venv\Scripts\activate
+```
+
+upgrade pip
+
+```bat
 python -m pip install pip --upgrade
 ```
 
-### Install py_canoe module
+install [py_canoe](https://pypi.org/project/py_canoe/) module
 
 ```bat
-pip install py_canoe
+pip install py_canoe --upgrade
 ```
 
 ## Usage
@@ -50,7 +56,7 @@ canoe_inst = CANoe()
 
 ```python
 # open CANoe configuration. Replace canoe_cfg with yours.
-canoe_inst.open(canoe_cfg=r'C:\Users\Public\Documents\Vector\CANoe\Sample Configurations 11.0.81\.\CAN\Diagnostics\UDSBasic\UDSBasic.cfg')
+canoe_inst.open(canoe_cfg=r'tests\demo_cfg\demo.cfg')
 
 # print installed CANoe application version
 canoe_inst.get_canoe_version_info()
