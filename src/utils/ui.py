@@ -48,6 +48,30 @@ class Ui:
         self.ui_com_obj.OpenBaudrateDialog()
         self.log.info(f'baudrate dialog opened. Configure the bus parameters.')
 
+    def get_write_window_text_content(self) -> str:
+        write_obj = Write(self)
+        return write_obj.text
+    
+    def clear_write_window_content(self) -> None:
+        write_obj = Write(self)
+        write_obj.clear()
+    
+    def copy_write_window_content_to_clipboard(self) -> None:
+        write_obj = Write(self)
+        write_obj.copy()
+    
+    def disable_write_window_logging(self, tab_index=None) -> None:
+        write_obj = Write(self)
+        write_obj.disable_output_file(tab_index)
+    
+    def enable_write_window_logging(self, output_file: str, tab_index=None) -> None:
+        write_obj = Write(self)
+        write_obj.enable_output_file(output_file, tab_index)
+    
+    def send_text_to_write_window(self, text: str) -> None:
+        write_obj = Write(self)
+        write_obj.output(text)
+
 class Write:
     """The Write object represents the Write Window in CANoe.
     It is part of the user interface.
@@ -88,20 +112,20 @@ class Write:
             self.write_com_obj.DisableOutputFile(tab_index)
         else:
             self.write_com_obj.DisableOutputFile()
-        self.log.info(f'Disabled logging of outputs of the Write Window.')
+        self.log.info(f'Disabled logging of outputs of the Write Window. tab_index={tab_index}')
 
-    def enable_output_file(self, output_file=None, tab_index=None) -> None:
+    def enable_output_file(self, output_file: str, tab_index=None) -> None:
         """Enables logging of all outputs of the Write Window in the output file for the certain page.
 
         Args:
             output_file (str, optional): The complete path of the output file. Defaults to None.
             tab_index (int, optional): The index of the page, for which logging of the output is to be activated. Defaults to None.
         """
-        if output_file and tab_index:
+        if tab_index:
             self.write_com_obj.EnableOutputFile(output_file, tab_index)
         else:
-            self.write_com_obj.EnableOutputFile()
-        self.log.info(f'Enabled logging of outputs of the Write Window.')
+            self.write_com_obj.EnableOutputFile(output_file)
+        self.log.info(f'Enabled logging of outputs of the Write Window. output_file={output_file} and tab_index={tab_index}')
 
     def output(self, text: str) -> None:
         """Outputs a line of text in the Write Window.
