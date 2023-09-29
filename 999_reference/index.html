@@ -3602,7 +3602,7 @@ You can reach all other methods from the CANoe class instance.</p>
 <span class="sd">        Args:</span>
 <span class="sd">            diag_ecu_qualifier_name (str): Diagnostic Node ECU Qualifier Name configured in &quot;Diagnostic/ISO TP Configuration&quot;.</span>
 <span class="sd">            request (str): Diagnostic request in bytes or diagnostic node qualifier name.</span>
-<span class="sd">            request_in_bytes: True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.</span>
+<span class="sd">            request_in_bytes (bool): True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            diagnostic response stream. Ex- &quot;50 01 00 00 00 00&quot;</span>
@@ -3714,14 +3714,14 @@ You can reach all other methods from the CANoe class instance.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Replay block &quot;</span><span class="si">{</span><span class="n">block_name</span><span class="si">}</span><span class="s1">&quot; not available.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">compile_all_capl_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;compiles all CAPL, XML and .NET nodes.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;compiles all CAPL, XML and .NET nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">capl_obj</span> <span class="o">=</span> <span class="n">Capl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
         <span class="n">capl_obj</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compiled all nodes successfully.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">call_capl_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls a CAPL function.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calls a CAPL function.</span>
 <span class="sd">        Please note that the number of parameters must agree with that of the CAPL function.</span>
 <span class="sd">        not possible to read return value of CAPL function at the moment. only execution status is returned.</span>
 
@@ -3992,7 +3992,7 @@ not possible to read return value of CAPL function at the moment. only execution
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># The following example starts replay block</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">canoe_inst</span> <span class="o">=</span> <span class="n">CANoe</span><span class="p">(</span><span class="n">user_capl_functions</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;addition_function&#39;</span><span class="p">,</span> <span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">canoe_inst</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;D:\_kms_localector_canoe\py_canoe\demo_cfg\demo.cfg&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">canoe_inst</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">canoe_inst</span><span class="o">.</span><span class="n">start_measurement</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">canoe_inst</span><span class="o">.</span><span class="n">call_capl_function</span><span class="p">(</span><span class="s1">&#39;addition_function&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">canoe_inst</span><span class="o">.</span><span class="n">stop_measurement</span><span class="p">()</span>
@@ -4024,7 +4024,7 @@ not possible to read return value of CAPL function at the moment. only execution
 <span class="normal">970</span>
 <span class="normal">971</span>
 <span class="normal">972</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call_capl_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calls a CAPL function.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calls a CAPL function.</span>
 <span class="sd">    Please note that the number of parameters must agree with that of the CAPL function.</span>
 <span class="sd">    not possible to read return value of CAPL function at the moment. only execution status is returned.</span>
 
@@ -4791,7 +4791,7 @@ not possible to read return value of CAPL function at the moment. only execution
 <span class="normal">945</span>
 <span class="normal">946</span>
 <span class="normal">947</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compile_all_capl_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;compiles all CAPL, XML and .NET nodes.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;compiles all CAPL, XML and .NET nodes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">capl_obj</span> <span class="o">=</span> <span class="n">Capl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
     <span class="n">capl_obj</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
@@ -7527,6 +7527,7 @@ Args:
         <tr>
           <td><code>request_in_bytes</code></td>
           <td>
+                <code>bool</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -7652,7 +7653,7 @@ Args:
 <span class="sd">    Args:</span>
 <span class="sd">        diag_ecu_qualifier_name (str): Diagnostic Node ECU Qualifier Name configured in &quot;Diagnostic/ISO TP Configuration&quot;.</span>
 <span class="sd">        request (str): Diagnostic request in bytes or diagnostic node qualifier name.</span>
-<span class="sd">        request_in_bytes: True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.</span>
+<span class="sd">        request_in_bytes (bool): True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        diagnostic response stream. Ex- &quot;50 01 00 00 00 00&quot;</span>
