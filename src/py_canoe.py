@@ -828,7 +828,7 @@ class CANoe:
         Args:
             diag_ecu_qualifier_name (str): Diagnostic Node ECU Qualifier Name configured in "Diagnostic/ISO TP Configuration".
             request (str): Diagnostic request in bytes or diagnostic node qualifier name.
-            request_in_bytes: True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.
+            request_in_bytes (bool): True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.
 
         Returns:
             diagnostic response stream. Ex- "50 01 00 00 00 00"
@@ -940,14 +940,14 @@ class CANoe:
             self.log.warning(f'Replay block "{block_name}" not available.')
 
     def compile_all_capl_nodes(self) -> None:
-        """compiles all CAPL, XML and .NET nodes.
+        r"""compiles all CAPL, XML and .NET nodes.
         """
         capl_obj = Capl(self.app)
         capl_obj.compile()
         self.log.info(f'compiled all nodes successfully.')
     
     def call_capl_function(self, name: str, *arguments) -> bool:
-        """Calls a CAPL function.
+        r"""Calls a CAPL function.
         Please note that the number of parameters must agree with that of the CAPL function.
         not possible to read return value of CAPL function at the moment. only execution status is returned.
 
@@ -957,7 +957,7 @@ class CANoe:
 
         Returns:
             bool: CAPL function execution status. True-success, False-failed.
-        
+
         Examples:
             >>> # The following example starts replay block
             >>> canoe_inst = CANoe(user_capl_functions=('addition_function', ))
