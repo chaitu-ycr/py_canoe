@@ -7,9 +7,8 @@ repo_name: chaitu-ycr/py_canoe
 repo_url: https://github.com/chaitu-ycr/py_canoe
 edit_uri: blob/main/docs/
 
-
 nav:
-  - about: 001_about.md
+  - about: index.md
   - prerequisites: 002_prerequisites.md
   - setup: 003_environment_setup.md
   - usage: 004_usage.md
@@ -17,6 +16,7 @@ nav:
 
 theme:
   name: material
+  logo: images/py_canoe_logo_transperent.png
   features:
     - toc.integrate
 
