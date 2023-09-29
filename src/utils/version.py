@@ -44,7 +44,7 @@ class Version:
         Returns:
             int: The major version number of the CANoe application.
         """
-        return self.ver_obj.Major
+        return self.ver_obj.major
 
     @property
     def minor(self) -> int:
@@ -53,7 +53,7 @@ class Version:
         Returns:
             int: The Minor version number of the CANoe application.
         """
-        return self.ver_obj.Minor
+        return self.ver_obj.minor
 
     @property
     def name(self) -> str:

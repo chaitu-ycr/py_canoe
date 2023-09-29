@@ -17,10 +17,8 @@ class VariablesFile:
         pass
 
 class Namespaces:
-    def __init__(self, sys_obj) -> None:
-        self.sys_obj = sys_obj
-        self.log = self.sys_obj.log
-        self.namespaces_com_obj = win32com.client.Dispatch(self.sys_obj.sys_com_obj.Namespaces)
+    def __init__(self, namespaces_com_obj: object) -> None:
+        self.namespaces_com_obj = namespaces_com_obj
 
     @property
     def count(self) -> int:
@@ -46,10 +44,8 @@ class Namespaces:
         self.namespaces_com_obj.Remove(name)
 
 class Namespace:
-    def __init__(self, namespaces_obj, namespace: Union[int, str]) -> None:
-        self.namespaces_obj = namespaces_obj
-        self.log = self.namespaces_obj.log
-        self.namespace_com_obj = self.namespaces_obj.namespaces_com_obj.Namespaces(namespace)
+    def __init__(self, namespace_com_obj: object) -> None:
+        self.namespace_com_obj = namespace_com_obj
     
     @property
     def comment(self) -> str:
@@ -77,12 +73,28 @@ class Namespace:
             str: The name of the namespace.
         """
         return self.namespace_com_obj.Name
+    
+    @property
+    def namespaces(self) -> object:
+        """Returns the Namespaces object.
+
+        Returns:
+            object: The Namespaces object.
+        """
+        return self.namespace_com_obj.Namespaces
+
+    @property
+    def variables(self) -> object:
+        """Returns the Variables object.
+
+        Returns:
+            object: The Variables object.
+        """
+        return self.namespace_com_obj.Variables
 
 class Variables:
-    def __init__(self, namespace_obj) -> None:
-        self.namespace_obj = namespace_obj
-        self.log = self.namespace_obj.log
-        self.variables_com_obj = self.namespace_obj.namespace_com_obj.Variables
+    def __init__(self, variables_com_obj) -> None:
+        self.variables_com_obj = variables_com_obj
 
     @property
     def count(self) -> int:
@@ -154,10 +166,8 @@ class Variables:
         self.variables_com_obj.Remove(variable)
 
 class Variable:
-    def __init__(self, variables_obj: object, variable: tuple[int, str]) -> None:        
-        self.variables_obj = variables_obj
-        self.log = self.variables_obj.log
-        self.variable_com_obj = self.variables_obj.variables_com_obj.Variables(variable)
+    def __init__(self, variable_com_obj) -> None:
+        self.variable_com_obj = variable_com_obj
     
     @property
     def analysis_only(self) -> bool:
@@ -223,7 +233,7 @@ class Variable:
         """
         return self.variable_com_obj.FullName
 
-    @property
+    @full_name.setter
     def full_name(self, full_name: str) -> None:
         """sets the complete path of the variable.
 

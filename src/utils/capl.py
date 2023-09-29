@@ -57,29 +57,29 @@ class Capl:
         """
         return capl_function_object.ParameterTypes
     
-    def call_capl_function(self, name: str, *arguments) -> int:
+    def call_capl_function(self, capl_function_obj: object, *arguments) -> bool:
         """Calls a CAPL function.
         Please note that the number of parameters must agree with that of the CAPL function.
         The return value is only available for CAPL functions whose CAPL programs are configured in the Measurement Setup.
         Only integers are allowed as a return type.
 
         Args:
-            name (str): The name of the CAPL function.
+            capl_function_obj (str): CAPL function object.
             arguments (tuple): Function parameters p1…p10 (optional).
 
         Returns:
-            int: The return value of the CAPL function.
+            bool: CAPL function execution status. True-success, False-failed.
         """
-        capl_function_obj = self.get_function(name)
+        return_value = False
         if len(arguments) == self.parameter_count(capl_function_obj):
             if len(arguments) > 0:
-                function_return_value = capl_function_obj.Call(*arguments)
+                capl_function_obj.Call(*arguments)
             else:
-                function_return_value = capl_function_obj.Call()
+                capl_function_obj.Call()
+            return_value = True
         else:
-            function_return_value = None
             print(fr'function arguments not matching with CAPL user function args.')
-        return function_return_value
+        return return_value
     
     def compile_result(self) -> dict:
         """The CompileResult object represents the result of the last compilation of the CAPL object.

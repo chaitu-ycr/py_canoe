@@ -22,3 +22,16 @@ on timer t_1s
   }
 }
 
+
+int addition_function(long var1, long var2)
+{
+  long return_value;
+  return_value = var1 + var2;
+  write("addition_function triggered. received argument values (%d, %d). calculated return value = %d", var1, var2, return_value);
+  return var1 + var2;
+}
+
+void hello_world(void)
+{
+  write("hello_world function triggered. this is only a test function to say hello world !");
+}

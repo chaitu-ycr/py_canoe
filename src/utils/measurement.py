@@ -9,9 +9,11 @@ class Measurement:
     STARTED = False
     STOPPED = False
 
-    def __init__(self, app) -> None:
+    def __init__(self, app, user_capl_function_names=tuple()) -> None:
         self.app = app
         self.log = self.app.log
+        CanoeMeasurementEvents.app_com_obj = self.app.app_com_obj
+        CanoeMeasurementEvents.user_capl_function_names = user_capl_function_names
         self.meas_obj = win32com.client.Dispatch(self.app.app_com_obj.Measurement)
         self.wait_for_canoe_meas_to_start = lambda: DoEventsUntil(lambda: Measurement.STARTED)
         self.wait_for_canoe_meas_to_stop = lambda: DoEventsUntil(lambda: Measurement.STOPPED)
@@ -64,6 +66,10 @@ class Measurement:
         """
         return self.meas_obj.Running
     
+    @property
+    def user_capl_function_obj_dict(self):
+        return CanoeMeasurementEvents.user_capl_function_obj_dict
+
     def animate(self) -> None:
         """Starts the measurement in Animation mode.
         """
@@ -124,11 +130,17 @@ class Measurement:
 
 class CanoeMeasurementEvents:
     """Handler for CANoe Measurement events"""
+    app_com_obj = object
+    user_capl_function_names = tuple()
+    user_capl_function_obj_dict = dict()
 
     @staticmethod
     def OnInit():
         """Occurs when the measurement is initialized.
         """
+        app_com_obj_loc = CanoeMeasurementEvents.app_com_obj
+        for fun in CanoeMeasurementEvents.user_capl_function_names:
+            CanoeMeasurementEvents.user_capl_function_obj_dict[fun] = app_com_obj_loc.CAPL.GetFunction(fun)
         print('measurement OnInit event triggered')
 
     @staticmethod
