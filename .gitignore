@@ -178,3 +178,6 @@ poetry.toml
 *.cbf
 *.stcfg
 .vs/
+
+# user defined
+.py_canoe_log

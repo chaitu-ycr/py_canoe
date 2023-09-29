@@ -2,5 +2,5 @@ pywin32
 flit
 pytest
 mkdocs
-mkdocstrings
+mkdocstrings[python]
 mkdocs-material

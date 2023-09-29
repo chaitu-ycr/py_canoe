@@ -9,7 +9,11 @@ edit_uri: blob/main/docs/
 
 
 nav:
-  - Documentation: index.md
+  - about: 001_about.md
+  - prerequisites: 002_prerequisites.md
+  - setup: 003_environment_setup.md
+  - usage: 004_usage.md
+  - reference: 999_reference.md
 
 theme:
   name: material

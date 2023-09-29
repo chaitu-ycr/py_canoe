@@ -1,52 +1,25 @@
 """Python package for controlling Vector CANoe tool"""
 
-__version__ = "0.1.3"
+__version__ = "2.0.0"
 
 # Import Python Libraries here
 import os
-import sys
-import logging
 import pythoncom
 import win32com.client
 from typing import Union
-from logging import handlers
 from time import sleep as wait
 
-def DoEvents():
-    pythoncom.PumpWaitingMessages()
-    wait(.1)
-
-def DoEventsUntil(cond):
-    while not cond():
-        DoEvents()
-
-class CanoeApplicationEvents:
-    """Handler for CANoe Application events"""
-
-    @staticmethod
-    def OnOpen():
-        print('canoe opened')
-        CANoe.CANOE_APP_OPENED = True
-        CANoe.CANOE_APP_CLOSED = False
-
-    @staticmethod
-    def OnQuit():
-        print('canoe closed')
-        CANoe.CANOE_APP_OPENED = False
-        CANoe.CANOE_APP_CLOSED = True
-
-class CanoeMeasurementEvents:
-    """Handler for CANoe Measurement events"""
-
-    @staticmethod
-    def OnStart():
-        CANoe.CANOE_MEAS_STARTED = True
-        CANoe.CANOE_MEAS_STOPPED = False
-
-    @staticmethod
-    def OnStop():
-        CANoe.CANOE_MEAS_STARTED = False
-        CANoe.CANOE_MEAS_STOPPED = True
+# import CANoe utils here
+from utils.py_canoe_logger import PyCanoeLogger
+from utils.application import Application
+from utils.bus import Bus, Signal
+from utils.capl import Capl
+from utils.configuration import Configuration
+from utils.measurement import Measurement
+from utils.networks import Networks
+from utils.system import System, Namespaces, Variables
+from utils.ui import Ui
+from utils.version import Version
 
 class CANoe:
     r"""The CANoe class represents the CANoe application.
@@ -62,85 +35,19 @@ class CANoe:
         >>> canoe_inst.stop_measurement()
         >>> canoe_inst.quit()
     """
-    CANOE_APP_OPENED = False
-    CANOE_APP_CLOSED = False
-    CANOE_MEAS_STARTED = False
-    CANOE_MEAS_STOPPED = False
-
-    def __init__(self, py_canoe_log_dir=''):
+    def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
         """
         Args:
             py_canoe_log_dir (str): directory to store py_canoe log. example 'D:\\.py_canoe'
+            user_capl_functions (tuple): user defined CAPL funtions to access.
         """
-        self.log = logging.getLogger('CANOE_LOG')
-        self.__py_canoe_log_initialisation(py_canoe_log_dir)
-        self.wait_for_canoe_app_to_open = None
-        self.wait_for_canoe_meas_to_start = None
-        self.wait_for_canoe_meas_to_stop = None
-        self.wait_for_canoe_app_to_close = None
-        self.__diag_ecu_qualifiers_dictionary = dict()
-        self.__replay_blocks_obj_dictionary = dict()
-        self.__canoe_objects = dict()
-        self.__canoe_info = dict()
-
-    def __py_canoe_log_initialisation(self, py_canoe_log_dir):
-        self.log.setLevel(logging.DEBUG)
-        log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-5.5s]  %(message)s")
-        ch = logging.StreamHandler(sys.stdout)
-        ch.setFormatter(log_format)
-        self.log.addHandler(ch)
-        if py_canoe_log_dir != '' and not os.path.exists(py_canoe_log_dir):
-            os.makedirs(py_canoe_log_dir, exist_ok=True)
-        if os.path.exists(py_canoe_log_dir):
-            fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=(1024 * 50), backupCount=20)
-            fh.setFormatter(log_format)
-            self.log.addHandler(fh)
-
-    def __fetch_canoe_networks_data(self) -> dict:
-        canoe_networks_dict = {}
-        for network in self.__canoe_objects['Networks']:
-            network_name = network.Name
-            canoe_networks_dict[network_name] = {}
-            canoe_networks_dict[network_name]['network_obj'] = network
-            canoe_networks_dict[network_name]['Devices'] = {}
-            for device in network.Devices:
-                device_name = device.Name
-                canoe_networks_dict[network_name]['Devices'][device_name] = {}
-                canoe_networks_dict[network_name]['Devices'][device_name]['device_obj'] = device
-                try:
-                    canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj'] = device.Diagnostic
-                    self.__diag_ecu_qualifiers_dictionary[device_name] = canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj']
-                except pythoncom.com_error:
-                    canoe_networks_dict[network_name]['Devices'][device_name]['diagnostic_obj'] = None
-        return canoe_networks_dict
-
-    def __fetch_canoe_bus_data(self) -> dict:
-        self.__canoe_objects['ReplayCollection'] = self.__canoe_objects['Bus'].ReplayCollection
-        self.__canoe_objects['Nodes'] = self.__canoe_objects['Bus'].Nodes
-        canoe_bus_dict = {}
-        replay_blocks_dict = {}
-        nodes_dict = {}
-        for replay_block in self.__canoe_objects['ReplayCollection']:
-            replay_blocks_dict[replay_block.Name] = replay_block
-        for node in self.__canoe_objects['Nodes']:
-            nodes_dict[node.Name] = node
-        canoe_bus_dict['replay_block_objs'] = self.__replay_blocks_obj_dictionary = replay_blocks_dict
-        canoe_bus_dict['node_objs'] = nodes_dict
-        return canoe_bus_dict
-
-    def __fetch_canoe_system_data(self) -> dict:
-        canoe_system_dict = {'Namespaces': {},
-                             'VariablesFiles': {}}
-        namespaces_dict = {}
-        for namespace in self.__canoe_objects['Namespaces']:
-            namespaces_dict[namespace.Name] = namespace
-        canoe_system_dict['Namespaces'] = namespaces_dict
-        variable_files_dict = {}
-        for variables_file in self.__canoe_objects['VariablesFiles']:
-            variable_files_dict[variables_file.Name] = variables_file
-        canoe_system_dict['VariablesFiles'] = variable_files_dict
-        return canoe_system_dict
-
+        pcl = PyCanoeLogger(py_canoe_log_dir)
+        self.log = pcl.log
+        self.app = Application(self.log)
+        self.meas = object
+        self.__diag_devices = dict()
+        self.user_capl_function_names = user_capl_functions
+    
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
         r"""Loads CANoe configuration.
 
@@ -156,34 +63,16 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
         """
         pythoncom.CoInitialize()
-        self.__canoe_objects['Application'] = win32com.client.Dispatch('CANoe.Application')
-        cav = self.__canoe_objects['Application'].Version
+        self.app.app_com_obj = win32com.client.Dispatch('CANoe.Application')
+        cav = self.app.app_com_obj.Version
         self.log.info(f'Dispatched Vector CANoe Application {cav.major}.{cav.minor}.{cav.Build}')
-        self.__canoe_objects['Application'].Visible = visible
-        self.__canoe_objects['Application'].Configuration.Modified = False
-        if os.path.isfile(canoe_cfg):
-            self.log.info(f'CANoe cfg "{canoe_cfg}" found.')
-            self.__canoe_objects['Application'].Open(canoe_cfg, auto_save, prompt_user)
-            self.log.info(f'loaded CANoe config "{canoe_cfg}"')
-            self.__canoe_objects['Bus'] = win32com.client.Dispatch(self.__canoe_objects['Application'].Bus)
-            self.__canoe_objects['Configuration'] = win32com.client.Dispatch(self.__canoe_objects['Application'].Configuration)
-            self.__canoe_objects['Environment'] = win32com.client.Dispatch(self.__canoe_objects['Application'].Environment)
-            self.__canoe_objects['Measurement'] = win32com.client.Dispatch(self.__canoe_objects['Application'].Measurement)
-            self.__canoe_objects['Networks'] = win32com.client.Dispatch(self.__canoe_objects['Application'].Networks)
-            self.__canoe_objects['System'] = win32com.client.Dispatch(self.__canoe_objects['Application'].System)
-            self.__canoe_objects['Namespaces'] = win32com.client.Dispatch(self.__canoe_objects['System'].Namespaces)
-            self.__canoe_objects['VariablesFiles'] = win32com.client.Dispatch(self.__canoe_objects['System'].VariablesFiles)
-            self.__canoe_objects['UI'] = win32com.client.Dispatch(self.__canoe_objects['Application'].UI)
-            self.wait_for_canoe_meas_to_start = lambda: DoEventsUntil(lambda: CANoe.CANOE_MEAS_STARTED)
-            self.wait_for_canoe_meas_to_stop = lambda: DoEventsUntil(lambda: CANoe.CANOE_MEAS_STOPPED)
-            win32com.client.WithEvents(self.__canoe_objects['Measurement'], CanoeMeasurementEvents)
-            self.__canoe_info['networks'] = self.__fetch_canoe_networks_data()
-            self.__canoe_info['bus'] = self.__fetch_canoe_bus_data()
-            self.__canoe_info['system'] = self.__fetch_canoe_system_data()
-        else:
-            self.log.info(f'CANoe cfg "{canoe_cfg}" not found.')
-            raise FileNotFoundError(f'CANoe cfg file "{canoe_cfg}" not found!')
-
+        self.app.app_com_obj.Configuration.Modified = False
+        self.app.visible = visible
+        self.app.open(path=canoe_cfg, auto_save=auto_save, prompt_user=prompt_user)
+        self.meas = Measurement(self.app, self.user_capl_function_names)
+        networks_obj = Networks(self.app)
+        self.__diag_devices = networks_obj.fetch_diag_devices()
+    
     def new(self, auto_save=False, prompt_user=False) -> None:
         """Creates a new configuration.
 
@@ -196,9 +85,8 @@ class CANoe:
             >>> canoe_inst = CANoe()
             >>> canoe_inst.new()
         """
-        self.__canoe_objects['Application'].New(auto_save, prompt_user)
-        self.log.info('created a new configuration...')
-
+        self.app.new(auto_save, prompt_user)
+    
     def quit(self):
         r"""Quits CANoe without saving changes in the configuration.
 
@@ -208,54 +96,7 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.quit()
         """
-        if self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].Stop()
-            self.wait_for_canoe_meas_to_stop()
-        self.__canoe_objects['Application'].Quit()
-        self.log.info('CANoe Application Closed.')
-
-    def start_measurement_in_animation_mode(self, animation_delay=100) -> None:
-        r"""Starts the measurement in Animation mode.
-
-        Args:
-            animation_delay (int): The animation delay during the measurement in Offline Mode.
-
-        Examples:
-            >>> # The following example starts the measurement in Animation mode
-            >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_inst.start_measurement_in_animation_mode()
-        """
-        if not self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].AnimationDelay = animation_delay
-            self.__canoe_objects['Measurement'].Animate()
-            self.wait_for_canoe_meas_to_start()
-            self.log.info(f'Started the measurement in Animation mode with animation delay = {animation_delay}.')
-
-    def break_measurement_in_offline_mode(self) -> None:
-        r"""Interrupts the playback in Offline mode.
-
-        Examples:
-            >>> # The following example interrupts the playback in Offline mode
-            >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_inst.break_measurement_in_offline_mode()
-        """
-        if self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].Break()
-            self.log.info('Interrupted the playback in Offline mode.')
-
-    def reset_measurement_in_offline_mode(self) -> None:
-        r"""Resets the measurement in Offline mode.
-
-        Examples:
-            >>> # The following example resets the measurement in Offline mode
-            >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_inst.reset_measurement_in_offline_mode()
-        """
-        self.__canoe_objects['Measurement'].Reset()
-        self.log.info('resetted measurement in offline mode.')
+        self.app.quit()
 
     def start_measurement(self) -> bool:
         r"""Starts the measurement.
@@ -269,29 +110,8 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.start_measurement()
         """
-        if not self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].Start()
-            if not self.__canoe_objects['Measurement'].Running:
-                self.log.info(f'waiting for measurement to start...')
-                self.wait_for_canoe_meas_to_start()
-            self.log.info(f'CANoe Measurement Started. Measurement running status = {self.__canoe_objects["Measurement"].Running}')
-        else:
-            self.log.info(f'CANoe Measurement Already Running. Measurement running status = {self.__canoe_objects["Measurement"].Running}')
-        return self.__canoe_objects['Measurement'].Running
-
-    def step_measurement_event_in_single_step(self) -> None:
-        r"""Processes a measurement event in single step.
-
-        Examples:
-            >>> # The following example processes a measurement event in single step
-            >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_inst.step_measurement_event_in_single_step()
-        """
-        if not self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].Step()
-            self.log.info('processed a measurement event in single step')
-
+        return self.meas.start()
+    
     def stop_measurement(self) -> bool:
         r"""Stops the measurement.
 
@@ -305,14 +125,23 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.stop_measurement()
         """
-        if self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].Stop()
-            self.wait_for_canoe_meas_to_stop()
-            self.log.info(f'CANoe Measurement Stopped. Measurement running status = {self.__canoe_objects["Measurement"].Running}')
-        else:
-            self.log.info(f'CANoe Measurement Already Stopped. Measurement running status = {self.__canoe_objects["Measurement"].Running}')
-        return not self.__canoe_objects['Measurement'].Running
+        return self.meas.stop()
+    
+    def stop_ex_measurement(self) -> bool:
+        r"""StopEx repairs differences in the behavior of the Stop method on deferred stops concerning simulated and real mode in CANoe.
 
+        Returns:
+            True if measurement stopped. else Flase.
+
+        Examples:
+            >>> # The following example full stops the measurement
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> canoe_inst.stop_ex_measurement()
+        """
+        return self.meas.stop_ex()
+    
     def reset_measurement(self) -> bool:
         r"""reset the measurement.
 
@@ -326,26 +155,60 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.reset_measurement()
         """
-        if self.__canoe_objects['Measurement'].Running:
-            self.stop_measurement()
-        self.start_measurement()
-        self.log.info(f'Resetted measurement. Measurement running status = {self.__canoe_objects["Measurement"].Running}')
-        return self.__canoe_objects['Measurement'].Running
+        if self.meas.running:
+            self.meas.stop()
+        self.meas.start()
+        self.log.info(f'Resetted measurement.')
+        return self.meas.running
+    
+    def start_measurement_in_animation_mode(self, animation_delay=100) -> None:
+        r"""Starts the measurement in Animation mode.
 
-    def stop_ex_measurement(self) -> None:
-        r"""StopEx repairs differences in the behavior of the Stop method on deferred stops concerning simulated and real mode in CANoe.
+        Args:
+            animation_delay (int): The animation delay during the measurement in Offline Mode.
 
         Examples:
-            >>> # The following example full stops the measurement
+            >>> # The following example starts the measurement in Animation mode
             >>> canoe_inst = CANoe()
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_inst.start_measurement()
-            >>> canoe_inst.stop_ex_measurement()
+            >>> canoe_inst.start_measurement_in_animation_mode()
         """
-        if self.__canoe_objects['Measurement'].Running:
-            self.__canoe_objects['Measurement'].StopEx()
-            self.log.info(f'Stopped measurement. Measurement running status = {self.__canoe_objects["Measurement"].Running}')
+        self.meas.animation_delay = animation_delay
+        self.meas.animate()
+    
+    def break_measurement_in_offline_mode(self) -> None:
+        r"""Interrupts the playback in Offline mode.
 
+        Examples:
+            >>> # The following example interrupts the playback in Offline mode
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.break_measurement_in_offline_mode()
+        """
+        self.meas.break_offline_mode()
+    
+    def reset_measurement_in_offline_mode(self) -> None:
+        r"""Resets the measurement in Offline mode.
+
+        Examples:
+            >>> # The following example resets the measurement in Offline mode
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.reset_measurement_in_offline_mode()
+        """
+        self.meas.reset_offline_mode()
+    
+    def step_measurement_event_in_single_step(self) -> None:
+        r"""Processes a measurement event in single step.
+
+        Examples:
+            >>> # The following example processes a measurement event in single step
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.step_measurement_event_in_single_step()
+        """
+        self.meas.step()
+    
     def get_measurement_index(self) -> int:
         r"""gets the measurement index for the next measurement.
 
@@ -360,9 +223,8 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
             >>> canoe_inst.get_measurement_index()
         """
-        measurement_index = self.__canoe_objects['Measurement'].MeasurementIndex
-        self.log.info(f'measurement_index value = {measurement_index}')
-        return measurement_index
+        self.log.info(f'measurement_index value = {self.meas.measurement_index}')
+        return self.meas.measurement_index
 
     def set_measurement_index(self, index: int) -> int:
         r"""sets the measurement index for the next measurement.
@@ -381,10 +243,9 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
             >>> canoe_inst.set_measurement_index(15)
         """
-        self.__canoe_objects['Measurement'].MeasurementIndex = index
-        self.log.info(f'CANoe measurement index set to {index}')
-        return self.__canoe_objects['Measurement'].MeasurementIndex
-
+        self.meas.measurement_index = index
+        return self.meas.measurement_index
+    
     def get_measurement_running_status(self) -> bool:
         r"""Returns the running state of the measurement.
 
@@ -399,8 +260,8 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.get_measurement_running_status()
         """
-        self.log.info(f'CANoe Measurement Running Status = {self.__canoe_objects["Measurement"].Running}')
-        return self.__canoe_objects['Measurement'].Running
+        self.log.info(f'CANoe Measurement Running Status = {self.meas.running}')
+        return self.meas.running
 
     def save_configuration(self) -> bool:
         r"""Saves the configuration.
@@ -414,13 +275,9 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.save_configuration()
         """
-        if not self.__canoe_objects['Configuration'].Saved:
-            self.__canoe_objects['Configuration'].Save()
-            self.log.info('CANoe Configuration saved.')
-        else:
-            self.log.info('CANoe Configuration already in saved state.')
-        return self.__canoe_objects['Configuration'].Saved
-
+        conf_obj = Configuration(self.app)
+        return conf_obj.save()
+    
     def save_configuration_as(self, path: str, major: int, minor: int, create_dir=True) -> bool:
         r"""Saves the configuration as a different CANoe version.
 
@@ -438,17 +295,17 @@ class CANoe:
             >>> canoe_inst = CANoe()
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.save_configuration_as(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo_v12.cfg', 10, 0)"""
+        conf_obj = Configuration(self.app)
         config_path = '\\'.join(path.split('\\')[:-1])
         if not os.path.exists(config_path) and create_dir:
             os.makedirs(config_path, exist_ok=True)
         if os.path.exists(config_path):
-            self.__canoe_objects['Configuration'].SaveAs(path, major, minor)
-            self.log.info(f'CANoe Configuration saved as {path}.')
-            return self.__canoe_objects['Configuration'].Saved
+            conf_obj.save_as(path, major, minor, False)
+            return conf_obj.saved
         else:
             self.log.info(f'tried creating {path}. but {config_path} directory not found.')
             return False
-
+        
     def get_signal_value(self, bus: str, channel: int, message: str, signal: str, raw_value=False) -> Union[float, int]:
         r"""get_signal_value Returns a Signal value.
 
@@ -470,12 +327,13 @@ class CANoe:
             >>> sig_val = canoe_inst.get_signal_value('CAN', 1, 'LightState', 'FlashLight')
             >>> print(sig_val)
         """
-        signal_obj = self.__canoe_objects['Application'].GetBus(bus).GetSignal(channel, message, signal)
-        signal_value = signal_obj.RawValue if raw_value else signal_obj.Value
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
+        signal_value = sig_obj.raw_value if raw_value else sig_obj.value
         self.log.info(f'value of signal({bus}{channel}.{message}.{signal})={signal_value}.')
         return signal_value
 
-    def set_signal_value(self, bus: str, channel: int, message: str, signal: str, value: Union[float, int], raw_value=False) -> None:
+    def set_signal_value(self, bus: str, channel: int, message: str, signal: str, value: int, raw_value=False) -> None:
         r"""set_signal_value sets a value to Signal. Works only when messages are sent using CANoe IL.
 
         Args:
@@ -493,12 +351,29 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.set_signal_value('CAN', 1, 'LightState', 'FlashLight', 1)
         """
-        signal_obj = self.__canoe_objects['Application'].GetBus(bus).GetSignal(channel, message, signal)
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
         if raw_value:
-            signal_obj.RawValue = value
+            sig_obj.raw_value = value
         else:
-            signal_obj.Value = value
+            sig_obj.value = value
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) value set to {value}.')
+    
+    def get_signal_full_name(self, bus: str, channel: int, message: str, signal: str) -> str:
+        """Determines the fully qualified name of a signal.
+
+        Args:
+            bus (str): The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.
+            channel (int): The channel on which the signal is sent.
+            message (str): The name of the message to which the signal belongs.
+            signal (str): The name of the signal.
+
+        Returns:
+            str: The fully qualified name of a signal. The following format will be used for signals: <DatabaseName>::<MessageName>::<SignalName>
+        """
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
+        return sig_obj.full_name
 
     def check_signal_online(self, bus: str, channel: int, message: str, signal: str) -> bool:
         r"""Checks whether the measurement is running and the signal has been received.
@@ -519,7 +394,9 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.check_signal_online('CAN', 1, 'LightState', 'FlashLight')
         """
-        sig_online_status = self.__canoe_objects['Application'].GetBus(bus).GetSignal(channel, message, signal).IsOnline
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
+        sig_online_status = sig_obj.is_online
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) online status = {sig_online_status}.')
         return sig_online_status
 
@@ -546,7 +423,9 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.check_signal_state('CAN', 1, 'LightState', 'FlashLight')
         """
-        sig_state = self.__canoe_objects['Application'].GetBus(bus).GetSignal(channel, message, signal).State
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
+        sig_state = sig_obj.state
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) state = {sig_state}.')
         return sig_state
 
@@ -574,8 +453,9 @@ class CANoe:
             >>> sig_val = canoe_inst.get_j1939_signal_value('CAN', 1, 'LightState', 'FlashLight', 0, 1)
             >>> print(sig_val)
         """
-        signal_obj = self.__canoe_objects['Application'].GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
-        signal_value = signal_obj.RawValue if raw_value else signal_obj.Value
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
+        signal_value = sig_obj.raw_value if raw_value else sig_obj.value
         self.log.info(f'value of signal({bus}{channel}.{message}.{signal})={signal_value}.')
         return signal_value
 
@@ -603,12 +483,60 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.set_j1939_signal_value('CAN', 1, 'LightState', 'FlashLight', 0, 1, 1)
         """
-        signal_obj = self.__canoe_objects['Application'].GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
         if raw_value:
-            signal_obj.RawValue = value
+            sig_obj.raw_value = value
         else:
-            signal_obj.Value = value
+            sig_obj.value = value
+        self.log.info(f'signal value set to {value}.')
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) value set to {value}.')
+    
+    def get_j1939_signal_full_name(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> str:
+        """Determines the fully qualified name of a signal.
+
+        Args:
+            bus (str): The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.
+            channel (int): The channel on which the signal is sent.
+            message (str): The name of the message to which the signal belongs.
+            signal (str): The name of the signal.
+            source_addr (int): The source address of the ECU that sends the message.
+            dest_addr (int): The destination address of the ECU that receives the message.
+
+        Returns:
+            str: The fully qualified name of a signal. The following format will be used for signals: <DatabaseName>::<MessageName>::<SignalName>
+        """
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
+        return sig_obj.full_name
+    
+    def check_j1939_signal_online(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> bool:
+        """Checks whether the measurement is running and the signal has been received.
+
+        Args:
+            bus (str): The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.
+            channel (int): The channel on which the signal is sent.
+            message (str): The name of the message to which the signal belongs.
+            signal (str): The name of the signal.
+            source_addr (int): The source address of the ECU that sends the message.
+            dest_addr (int): The destination address of the ECU that receives the message.
+        
+        Returns:
+            bool: TRUE: if the measurement is running and the signal has been received. FALSE: if not.
+        """
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
+        return sig_obj.is_online
+
+    def check_j1939_signal_state(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> int:
+        """Returns the state of the signal.
+
+        Returns:
+            int: State of the signal; possible values are: 0: The default value of the signal is returned. 1: The measurement is not running; the value set by the application is returned. 3: The signal has been received in the current measurement; the current value is returned.
+        """
+        bus_obj = Bus(self.app, bus_type=bus)
+        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
+        return sig_obj.state
 
     def ui_activate_desktop(self, name: str) -> None:
         r"""Activates the desktop with the given name.
@@ -623,8 +551,8 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.ui_activate_desktop("Configuration")
         """
-        self.__canoe_objects['UI'].ActivateDesktop(name)
-        self.log.info(f'Activated / switched to "{name}" Desktop')
+        ui_obj = Ui(self.app)
+        ui_obj.activate_desktop(name)
 
     def ui_open_baudrate_dialog(self) -> None:
         r"""opens the dialog for configuring the bus parameters. Make sure Measurement stopped when using this method.
@@ -636,8 +564,8 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
             >>> canoe_inst.ui_open_baudrate_dialog()
         """
-        self.log.info('opened the dialog for configuring the bus parameters')
-        self.__canoe_objects['UI'].OpenBaudrateDialog()
+        ui_obj = Ui(self.app)
+        ui_obj.open_baudrate_dialog()
 
     def write_text_in_write_window(self, text: str) -> None:
         r"""Outputs a line of text in the Write Window.
@@ -654,8 +582,8 @@ class CANoe:
             >>> wait(1)
             >>> print(canoe_inst.read_text_from_write_window())
         """
-        self.__canoe_objects['UI'].Write.Output(text)
-        self.log.info(f'written "{text}" to Write Window')
+        ui_obj = Ui(self.app)
+        ui_obj.send_text_to_write_window(text)
 
     def read_text_from_write_window(self) -> str:
         r"""read the text contents from Write Window.
@@ -673,7 +601,8 @@ class CANoe:
             >>> wait(1)
             >>> print(canoe_inst.read_text_from_write_window())
         """
-        return self.__canoe_objects['UI'].Write.Text
+        ui_obj = Ui(self.app)
+        return ui_obj.get_write_window_text_content()
 
     def clear_write_window_content(self) -> None:
         r"""Clears the contents of the Write Window.
@@ -688,8 +617,8 @@ class CANoe:
             >>> wait(1)
             >>> canoe_inst.clear_write_window_content()
         """
-        self.__canoe_objects['UI'].Write.Clear()
-        self.log.info(f'Cleared Write Window Content.')
+        ui_obj = Ui(self.app)
+        ui_obj.clear_write_window_content()
 
     def enable_write_window_output_file(self, output_file: str) -> None:
         r"""Enables logging of all outputs of the Write Window in the output file.
@@ -708,8 +637,8 @@ class CANoe:
             >>> wait(1)
             >>> canoe_inst.stop_measurement()
         """
-        self.__canoe_objects['UI'].Write.EnableOutputFile(output_file)
-        self.log.info(f'Enabled Write Window logging. file path --> {output_file}')
+        ui_obj = Ui(self.app)
+        ui_obj.enable_write_window_logging(output_file)
 
     def disable_write_window_output_file(self) -> None:
         r"""Disables logging of all outputs of the Write Window.
@@ -720,8 +649,8 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.disable_write_window_output_file()
         """
-        self.__canoe_objects['UI'].Write.DisableOutputFile()
-        self.log.info(f'Disabled Write Window logging.')
+        ui_obj = Ui(self.app)
+        ui_obj.disable_write_window_logging()
 
     def get_can_bus_statistics(self, channel: int) -> dict:
         r"""Returns CAN Bus Statistics.
@@ -738,8 +667,9 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> print(canoe_inst.get_can_bus_statistics(channel=1))
         """
+        conf_obj = Configuration(self.app)
         bus_types = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
-        bus_statistics_obj = self.__canoe_objects['Configuration'].OnlineSetup.BusStatistics.BusStatistic(bus_types['CAN'], channel)
+        bus_statistics_obj = conf_obj.conf_com_obj.OnlineSetup.BusStatistics.BusStatistic(bus_types['CAN'], channel)
         statistics_info = {
             # The bus load
             'bus_load': bus_statistics_obj.BusLoad,
@@ -751,6 +681,8 @@ class CANoe:
             'error_total': bus_statistics_obj.ErrorTotal,
             # The number of messages with extended identifier per second
             'extended': bus_statistics_obj.Extended,
+            # The total number of messages with extended identifier
+            'extended': bus_statistics_obj.ExtendedTotal,
             # The number of remote messages with extended identifier per second
             'extended_remote': bus_statistics_obj.ExtendedRemote,
             # The total number of remote messages with extended identifier
@@ -774,6 +706,7 @@ class CANoe:
             # The current number of the Tx error counter
             'tx_error_count': bus_statistics_obj.TxErrorCount,
         }
+        self.log.info(f'CAN Bus Statistics: {statistics_info}.')
         return statistics_info
 
     def get_canoe_version_info(self) -> dict:
@@ -794,43 +727,28 @@ class CANoe:
             >>> canoe_version_info = canoe_inst.get_canoe_version_info()
             >>> print(canoe_version_info)
         """
-        version_info = {'full_name': self.__canoe_objects['Application'].Application.Version.FullName,
-                        'name': self.__canoe_objects['Application'].Version.Name,
-                        'build': self.__canoe_objects['Application'].Version.Build,
-                        'major': self.__canoe_objects['Application'].Version.major,
-                        'minor': self.__canoe_objects['Application'].Version.minor,
-                        'patch': self.__canoe_objects['Application'].Version.Patch}
+        ver_obj = Version(self.app)
+        version_info = {'full_name': ver_obj.full_name,
+                        'name': ver_obj.name,
+                        'build': ver_obj.build,
+                        'major': ver_obj.major,
+                        'minor': ver_obj.minor,
+                        'patch': ver_obj.patch}
         self.log.info('> CANoe Application.Version <'.center(100, '='))
         for k, v in version_info.items():
             self.log.info(f'{k:<10}: {v}')
         self.log.info(''.center(100, '='))
         return version_info
 
-    def define_system_namespace(self, sys_namespace: str):
-        """define_system_namespace Create a namespace for variables
-        Args:
-            sys_namespace (str): The name of the system namespace. Ex- "sys_var_demo"
-        Examples:
-            >>> # The following example gets system variable value
-            >>> canoe_inst = CANoe()
-            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
-            >>> canoe_inst.define_system_namespace('sys_demo')
-        """
-        namespace_already_available = False
-        for n in self.__canoe_objects['Namespaces']:
-            if n.Name == sys_namespace:
-                namespace_already_available = True
-        if namespace_already_available:
-            self.log.info(f'namespace ({sys_namespace}) already available.')
-        else:
-            self.__canoe_objects['Namespaces'].Add(sys_namespace)
-            self.log.info(f'namespace ({sys_namespace}) created.')
-
-    def define_system_variable(self, sys_var_name: str, value: Union[int, float, str]):
-        """define_system_variable Create a system variable with an initial value
+    def define_system_variable(self, sys_var_name: str, value=0) -> object:
+        r"""define_system_variable Create a system variable with an initial value
         Args:
             sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
-            value (Union[int, float, str]): variable value.
+            value (Union[int, float, str]): variable value. Default value 0.
+        
+        Returns:
+            object: The new Variable object.
+        
         Examples:
             >>> # The following example gets system variable value
             >>> canoe_inst = CANoe()
@@ -839,14 +757,19 @@ class CANoe:
         """
         namespace = '::'.join(sys_var_name.split('::')[:-1])
         variable_name = sys_var_name.split('::')[-1]
+        new_var_obj = None
         try:
-            namespace_object = self.__canoe_objects['Namespaces'](namespace)
-            namespace_object.Variables.Add(variable_name, value)
-            self.log.info(f'system variable({sys_var_name}) created with value set to {value}.')
+            sys_obj = System(self.app)
+            namespaces_obj = Namespaces(win32com.client.Dispatch(sys_obj.sys_com_obj.Namespaces))
+            new_namespace_obj = namespaces_obj.add(namespace)
+            vars_obj = Variables(new_namespace_obj.Variables)
+            new_var_obj = vars_obj.add(variable_name, value)
+            self.log.info(f'system variable({sys_var_name}) created and value set to {value}.')
         except Exception as e:
             self.log.info(f'failed to create system variable({sys_var_name}). {e}')
+        return new_var_obj
 
-    def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str]:
+    def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str, None]:
         r"""get_system_variable_value Returns a system variable value.
 
         Args:
@@ -865,10 +788,15 @@ class CANoe:
         """
         namespace = '::'.join(sys_var_name.split('::')[:-1])
         variable_name = sys_var_name.split('::')[-1]
-        namespace_object = self.__canoe_objects['Namespaces'](namespace)
-        variable_value = namespace_object.Variables(variable_name).Value
-        self.log.info(f'system variable({sys_var_name}) value = {variable_value}.')
-        return variable_value
+        return_value = None
+        try:
+            sys_obj = System(self.app)
+            namespace_object = sys_obj.sys_com_obj.Namespaces(namespace)
+            return_value = namespace_object.Variables(variable_name).Value
+            self.log.info(f'system variable({sys_var_name}) value = {return_value}.')
+        except Exception as e:
+            self.log.info(f'failed to get system variable({sys_var_name}) value. {e}')
+        return return_value
 
     def set_system_variable_value(self, sys_var_name: str, value: Union[int, float, str]) -> None:
         r"""set_system_variable_value sets a value to system variable.
@@ -886,9 +814,13 @@ class CANoe:
         """
         namespace = '::'.join(sys_var_name.split('::')[:-1])
         variable_name = sys_var_name.split('::')[-1]
-        namespace_object = self.__canoe_objects['Namespaces'](namespace)
-        namespace_object.Variables(variable_name).Value = value
-        self.log.info(f'system variable({sys_var_name}) value set to {value}.')
+        try:
+            sys_obj = System(self.app)
+            namespace_object = sys_obj.sys_com_obj.Namespaces(namespace)
+            namespace_object.Variables(variable_name).Value = value
+            self.log.info(f'system variable({sys_var_name}) value set to {value}.')
+        except Exception as e:
+            self.log.info(f'failed to set system variable({sys_var_name}) value. {e}')
 
     def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True) -> str:
         r"""The send_diag_request method represents the query of a diagnostic tester (client) to an ECU (server) in CANoe.
@@ -920,33 +852,46 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
         """
         diag_response_data = ""
-        if diag_ecu_qualifier_name in self.__diag_ecu_qualifiers_dictionary.keys():
-            self.log.info(f'Diag Req --> {request}')
-            if request_in_bytes:
-                diag_req_in_bytes = bytearray()
-                request = ''.join(request.split(' '))
-                for i in range(0, len(request), 2):
-                    diag_req_in_bytes.append(int(request[i:i + 2], 16))
-                diag_req = self.__diag_ecu_qualifiers_dictionary[diag_ecu_qualifier_name].CreateRequestFromStream(diag_req_in_bytes)
+        try:
+            if diag_ecu_qualifier_name in self.__diag_devices.keys():
+                self.log.info(f'Diag Req --> {request}')
+                if request_in_bytes:
+                    diag_req_in_bytes = bytearray()
+                    request = ''.join(request.split(' '))
+                    for i in range(0, len(request), 2):
+                        diag_req_in_bytes.append(int(request[i:i + 2], 16))
+                    diag_req = self.__diag_devices[diag_ecu_qualifier_name].CreateRequestFromStream(diag_req_in_bytes)
+                else:
+                    diag_req = self.__diag_devices[diag_ecu_qualifier_name].CreateRequest(request)
+                diag_req.Send()
+                while diag_req.Pending:
+                    wait(0.1)
+                if diag_req.Responses.Count == 0:
+                    self.log.info("Diagnostic Response Not Received.")
+                else:
+                    for k in range(1, diag_req.Responses.Count + 1):
+                        diag_res = diag_req.Responses(k)
+                        if diag_res.Positive:
+                            self.log.info(f"+ve response received.")
+                        else:
+                            self.log.info(f"-ve response received.")
+                        diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
+                    self.log.info(f'Diag Res --> {diag_response_data}')
             else:
-                diag_req = self.__diag_ecu_qualifiers_dictionary[diag_ecu_qualifier_name].CreateRequest(request)
-            diag_req.Send()
-            while diag_req.Pending:
-                wait(0.1)
-            if diag_req.Responses.Count == 0:
-                self.log.info("Diagnostic Response Not Received.")
-            else:
-                for k in range(1, diag_req.Responses.Count + 1):
-                    diag_res = diag_req.Responses(k)
-                    if diag_res.Positive:
-                        self.log.info(f"+ve response received.")
-                    else:
-                        self.log.info(f"-ve response received.")
-                    diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
-                self.log.info(f'Diag Res --> {diag_response_data}')
-        else:
-            self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
+                self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
+        except Exception as e:
+            self.log.info(f'failed to send diag request({request}). {e}')
         return diag_response_data
+
+    def __fetch_replay_blocks(self) -> dict:
+        replay_blocks = dict()
+        try:
+            bus_obj = Bus(self.app)
+            for replay_block in bus_obj.ReplayCollection:
+                replay_blocks[replay_block.Name] = replay_block
+        except Exception as e:
+            self.log.info(f'failed to fetch replay blocks. {e}')
+        return replay_blocks
 
     def set_replay_block_file(self, block_name: str, recording_file_path: str) -> None:
         r"""Method for setting CANoe replay block file.
@@ -962,8 +907,9 @@ class CANoe:
             >>> canoe_inst.set_replay_block_file(block_name='replay block name', recording_file_path='replay file including path')
             >>> canoe_inst.start_measurement()
         """
-        if block_name in self.__replay_blocks_obj_dictionary.keys():
-            self.__replay_blocks_obj_dictionary[block_name].Path = recording_file_path
+        replay_blocks = self.__fetch_replay_blocks()
+        if block_name in replay_blocks.keys():
+            replay_blocks[block_name].Path = recording_file_path
             self.log.info(f'Replay block "{block_name}" updated with "{recording_file_path}" path.')
         else:
             self.log.warning(f'Replay block "{block_name}" not available.')
@@ -983,11 +929,44 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.control_replay_block('replay block name', True)
         """
-        if block_name in self.__replay_blocks_obj_dictionary.keys():
+        replay_blocks = self.__fetch_replay_blocks()
+        if block_name in replay_blocks.keys():
             if start_stop:
-                self.__replay_blocks_obj_dictionary[block_name].Start()
+                replay_blocks[block_name].Start()
             else:
-                self.__replay_blocks_obj_dictionary[block_name].Stop()
+                replay_blocks[block_name].Stop()
             self.log.info(f'Replay block "{block_name}" {"Started" if start_stop else "Stopped"}.')
         else:
             self.log.warning(f'Replay block "{block_name}" not available.')
+
+    def compile_all_capl_nodes(self) -> None:
+        """compiles all CAPL, XML and .NET nodes.
+        """
+        capl_obj = Capl(self.app)
+        capl_obj.compile()
+        self.log.info(f'compiled all nodes successfully.')
+    
+    def call_capl_function(self, name: str, *arguments) -> bool:
+        """Calls a CAPL function.
+        Please note that the number of parameters must agree with that of the CAPL function.
+        not possible to read return value of CAPL function at the moment. only execution status is returned.
+
+        Args:
+            name (str): The name of the CAPL function. Please make sure this name is already passed as argument during CANoe instance creation. see example for more info.
+            arguments (tuple): Function parameters p1…p10 (optional).
+
+        Returns:
+            bool: CAPL function execution status. True-success, False-failed.
+        
+        Examples:
+            >>> # The following example starts replay block
+            >>> canoe_inst = CANoe(user_capl_functions=('addition_function', ))
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> canoe_inst.call_capl_function('addition_function', 100, 200)
+            >>> canoe_inst.stop_measurement()
+        """
+        capl_obj = Capl(self.app)
+        exec_sts = capl_obj.call_capl_function(self.meas.user_capl_function_obj_dict[name], *arguments)
+        self.log.info(f'triggered capl function({name}). execution status = {exec_sts}.')
+        return exec_sts
