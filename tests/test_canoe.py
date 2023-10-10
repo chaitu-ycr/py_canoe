@@ -106,10 +106,11 @@ def test_diag_request_methods():
     wait(1)
     resp = canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
     assert resp == '50 01 00 00 00 00'
-    wait(1)
     resp = canoe_inst.send_diag_request('Door', '10 02')
-    assert canoe_inst.stop_measurement()
     assert resp == '50 02 00 00 00 00'
+    resp = canoe_inst.send_diag_request('Door', '10 03', return_sender_name=True)
+    assert resp['Door'] == '50 03 00 00 00 00'
+    assert canoe_inst.stop_measurement()
 
 def test_capl_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')

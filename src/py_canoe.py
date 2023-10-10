@@ -822,16 +822,17 @@ class CANoe:
         except Exception as e:
             self.log.info(f'failed to set system variable({sys_var_name}) value. {e}')
 
-    def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True) -> str:
+    def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True, return_sender_name=False) -> Union[str, dict]:
         r"""The send_diag_request method represents the query of a diagnostic tester (client) to an ECU (server) in CANoe.
 
         Args:
             diag_ecu_qualifier_name (str): Diagnostic Node ECU Qualifier Name configured in "Diagnostic/ISO TP Configuration".
-            request (str): Diagnostic request in bytes or diagnostic node qualifier name.
+            request (str): Diagnostic request in bytes or diagnostic request qualifier name.
             request_in_bytes (bool): True if Diagnostic request is bytes. False if you are using Qualifier name. Default is True.
+            return_sender_name (bool): True if you user want response along with response sender name in dictionary. Default is False.
 
         Returns:
-            diagnostic response stream. Ex- "50 01 00 00 00 00"
+            diagnostic response stream. Ex- "50 01 00 00 00 00" or {'Door': "50 01 00 00 00 00"}
 
         Examples:
             >>> # Example 1 - The following example sends diagnostic request "10 01"
@@ -852,9 +853,10 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
         """
         diag_response_data = ""
+        diag_responses = {}
         try:
             if diag_ecu_qualifier_name in self.__diag_devices.keys():
-                self.log.info(f'Diag Req --> {request}')
+                self.log.info(f'{diag_ecu_qualifier_name}: Diagnostic Request --> {request}')
                 if request_in_bytes:
                     diag_req_in_bytes = bytearray()
                     request = ''.join(request.split(' '))
@@ -871,17 +873,17 @@ class CANoe:
                 else:
                     for k in range(1, diag_req.Responses.Count + 1):
                         diag_res = diag_req.Responses(k)
-                        if diag_res.Positive:
-                            self.log.info(f"+ve response received.")
-                        else:
-                            self.log.info(f"-ve response received.")
                         diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
-                    self.log.info(f'Diag Res --> {diag_response_data}')
+                        diag_responses[diag_res.Sender] = diag_response_data
+                        if diag_res.Positive:
+                            self.log.info(f"{diag_res.Sender}: Diagnostic Response +ve <-- {diag_response_data}")
+                        else:
+                            self.log.info(f"{diag_res.Sender}: Diagnostic Response -ve <-- {diag_response_data}")
             else:
-                self.log.info(f'Diag ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
+                self.log.info(f'Diagnostic ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
         except Exception as e:
-            self.log.info(f'failed to send diag request({request}). {e}')
-        return diag_response_data
+            self.log.info(f'failed to send diagnostic request({request}). {e}')
+        return diag_responses if return_sender_name else diag_response_data
 
     def __fetch_replay_blocks(self) -> dict:
         replay_blocks = dict()
