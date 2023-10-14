@@ -4,11 +4,13 @@ import sys
 import logging
 from logging import handlers
 
+
 class PyCanoeLogger:
     def __init__(self, py_canoe_log_dir='') -> None:
         self.log = logging.getLogger('CANOE_LOG')
+        self.log.propagate = False
         self.__py_canoe_log_initialisation(py_canoe_log_dir)
-    
+
     def __py_canoe_log_initialisation(self, py_canoe_log_dir):
         self.log.setLevel(logging.DEBUG)
         log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-5.5s] %(message)s")

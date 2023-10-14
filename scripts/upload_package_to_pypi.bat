@@ -17,7 +17,8 @@ call %cmd_venv_activate%
 if %ERRORLEVEL% NEQ 0 (GOTO ERROR)
 
 :PUBLISH_PACKAGE
-flit publish
+poetry publish --build
+
 if %ERRORLEVEL% NEQ 0 (GOTO ERROR)
 
 :END

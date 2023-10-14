@@ -1,17 +1,17 @@
 # Import Python Libraries here
-import pythoncom
 import win32com.client
-from time import sleep as wait
+
 
 class Configuration:
     """The Configuration object represents the active configuration.
     """
+
     def __init__(self, app_obj) -> None:
         self.app_obj = app_obj
         self.log = self.app_obj.log
         self.conf_com_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.Configuration)
         win32com.client.WithEvents(self.conf_com_obj, CanoeConfigurationEvents)
-    
+
     @property
     def comment(self) -> str:
         """Gets the comment for the configuration.
@@ -20,7 +20,7 @@ class Configuration:
             str: The comment.
         """
         return self.conf_com_obj.Comment
-    
+
     @comment.setter
     def comment(self, text: str) -> None:
         """Defines the comment for the configuration.
@@ -30,7 +30,7 @@ class Configuration:
         """
         self.conf_com_obj.Comment = text
         self.log.info(f'configuration comment set to {text}.')
-    
+
     @property
     def fdx_enabled(self) -> int:
         """Enables/Disables value of FDX protocol.
@@ -39,7 +39,7 @@ class Configuration:
             int: The activation state of the FDX protocol. 0: FDX protocol is deactivated. 1: FDX protocol is activated.
         """
         return self.conf_com_obj.FDXEnabled
-    
+
     @fdx_enabled.setter
     def fdx_enabled(self, enabled: int) -> None:
         """Enables/Disables the FDX protocol.
@@ -49,7 +49,7 @@ class Configuration:
         """
         self.conf_com_obj.FDXEnabled = enabled
         self.log.info(f'FDX protocol set to {enabled}.')
-    
+
     @property
     def full_name(self) -> str:
         """gets the complete path of the configuration.
@@ -58,7 +58,7 @@ class Configuration:
             str: complete path of the configuration.
         """
         return self.conf_com_obj.FullName
-    
+
     @full_name.setter
     def full_name(self, full_name: str) -> None:
         """sets the complete path of the configuration.
@@ -68,7 +68,7 @@ class Configuration:
         """
         self.conf_com_obj.FullName = full_name
         self.log.info(f'complete path of the configuration set to {full_name}.')
-    
+
     @property
     def mode(self) -> int:
         """returns whether the Online mode or the Offline mode is active.
@@ -77,7 +77,7 @@ class Configuration:
             int: The currently active mode.
         """
         return self.conf_com_obj.Mode
-    
+
     @mode.setter
     def mode(self, mode: int) -> None:
         """sets the Online mode or the Offline mode to active.
@@ -97,7 +97,7 @@ class Configuration:
             bool: The current value of the property.
         """
         return self.conf_com_obj.Modified
-    
+
     @modified.setter
     def modified(self, modified: bool) -> None:
         """sets Modified property to flase/true.
@@ -107,7 +107,7 @@ class Configuration:
         """
         self.conf_com_obj.Modified = modified
         self.log.info(f'configuration modified property set to {modified}.')
-    
+
     @property
     def name(self) -> str:
         """Returns the name of the configuration.
@@ -116,7 +116,7 @@ class Configuration:
             str: The name of the currently loaded configuration.
         """
         return self.conf_com_obj.Name
-    
+
     @property
     def path(self) -> str:
         """returns the path of the configuration, depending on the actual configuration.
@@ -125,7 +125,7 @@ class Configuration:
             str: The path of the currently loaded configuration.
         """
         return self.conf_com_obj.Path
-    
+
     @property
     def read_only(self) -> bool:
         """Indicates whether the configuration is write protected.
@@ -134,7 +134,7 @@ class Configuration:
             bool: If the object is write protected True is returned; otherwise False is returned.
         """
         return self.conf_com_obj.ReadOnly
-    
+
     @property
     def saved(self) -> bool:
         """Indicates whether changes to the configuration have already been saved.
@@ -143,7 +143,7 @@ class Configuration:
             bool: If changes were made to the configuration and they have not been saved yet, False is returned; otherwise True is returned.
         """
         return self.conf_com_obj.Saved
-    
+
     def compile_and_verify(self):
         """Compiles all CAPL test modules and verifies all XML test modules.
         All test modules in the Simulation Setup and in the Test Setup are taken into consideration.
@@ -180,6 +180,7 @@ class Configuration:
         self.conf_com_obj.SaveAs(path, major, minor, prompt_user)
         self.log.info(f'Saved configuration as {path}.')
 
+
 class CanoeConfigurationEvents:
     """Handler for CANoe Configuration events"""
 
@@ -188,7 +189,7 @@ class CanoeConfigurationEvents:
         """Occurs when the configuration is closed.
         """
         print('configuration OnClose event triggered.')
-    
+
     @staticmethod
     def OnSystemVariablesDefinitionChanged():
         """Occurs when system variable definitions are added, changed or removed.

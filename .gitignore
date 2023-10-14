@@ -181,3 +181,6 @@ poetry.toml
 
 # user defined
 .py_canoe_log
+poetry.lock
+tests/demo_cfg/Logs/
+tests/demo_cfg/demo_v10.cfg

@@ -1,24 +1,26 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-[project]
+[tool.poetry]
 name = "py_canoe"
-authors = [{name = "chaitu-ycr", email = "chaitu.ycr@gmail.com"}]
+version = "2.0.2"
+description = "Python CANoe library"
+authors = ["chaitu-ycr <chaitu.ycr@gmail.com>"]
+license = "LICENSE"
 readme = "README.md"
-license = {file = "LICENSE"}
-classifiers = [
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.9',
-    'License :: OSI Approved :: MIT License',
-    'Operating System :: Microsoft :: Windows',
-]
-dynamic = ["version", "description"]
-requires-python = ">=3.6"
-dependencies = [
-    "pywin32 >= 305",
+packages = [
+    { include = "py_canoe.py", from = "src" },
+    { include = "py_canoe_utils/*.py", from = "src"},
 ]
 
-[project.urls]
-Home = "https://github.com/chaitu-ycr/py_canoe"
+[tool.poetry.dependencies]
+python = "^3.9"
+pywin32 = "^305"
+
+[tool.poetry.group.dev.dependencies]
+pywin32 = "^305"
+pytest = "^7.4.2"
+mkdocs = "^1.5.3"
+mkdocstrings-python = {extras = ["python"], version = "^1.7.3"}
+mkdocs-material = "^9.4.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

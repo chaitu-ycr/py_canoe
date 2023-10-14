@@ -1,14 +1,16 @@
 # Import Python Libraries here
 import win32com.client
 
+
 class Version:
     """The Version object represents the version of the CANoe application.
     """
+
     def __init__(self, app_obj) -> None:
         self.app_obj = app_obj
         self.log = self.app_obj.log
         self.ver_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.Version)
-    
+
     @property
     def build(self) -> int:
         """Returns the build number of the CANoe application.
@@ -26,7 +28,7 @@ class Version:
             str: The complete CANoe version in the following format: "Vector CANoe /run 6.0.50" or "Vector CANoe.LIN /run 6.0.50".
         """
         return self.ver_obj.FullName
-    
+
     @full_name.setter
     def full_name(self, full_name: str) -> None:
         """Sets the complete path of the object.

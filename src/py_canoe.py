@@ -1,7 +1,5 @@
 """Python package for controlling Vector CANoe tool"""
 
-__version__ = "2.0.1"
-
 # Import Python Libraries here
 import os
 import pythoncom
@@ -10,16 +8,17 @@ from typing import Union
 from time import sleep as wait
 
 # import CANoe utils here
-from utils.py_canoe_logger import PyCanoeLogger
-from utils.application import Application
-from utils.bus import Bus, Signal
-from utils.capl import Capl
-from utils.configuration import Configuration
-from utils.measurement import Measurement
-from utils.networks import Networks
-from utils.system import System, Namespaces, Variables
-from utils.ui import Ui
-from utils.version import Version
+from py_canoe_utils.py_canoe_logger import PyCanoeLogger
+from py_canoe_utils.application import Application
+from py_canoe_utils.bus import Bus, Signal
+from py_canoe_utils.capl import Capl
+from py_canoe_utils.configuration import Configuration
+from py_canoe_utils.measurement import Measurement
+from py_canoe_utils.networks import Networks
+from py_canoe_utils.system import System, Namespaces, Variables
+from py_canoe_utils.ui import Ui
+from py_canoe_utils.version import Version
+
 
 class CANoe:
     r"""The CANoe class represents the CANoe application.
@@ -35,6 +34,7 @@ class CANoe:
         >>> canoe_inst.stop_measurement()
         >>> canoe_inst.quit()
     """
+
     def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
         """
         Args:
@@ -47,7 +47,7 @@ class CANoe:
         self.meas = object
         self.__diag_devices = dict()
         self.user_capl_function_names = user_capl_functions
-    
+
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
         r"""Loads CANoe configuration.
 
@@ -72,7 +72,7 @@ class CANoe:
         self.meas = Measurement(self.app, self.user_capl_function_names)
         networks_obj = Networks(self.app)
         self.__diag_devices = networks_obj.fetch_diag_devices()
-    
+
     def new(self, auto_save=False, prompt_user=False) -> None:
         """Creates a new configuration.
 
@@ -86,7 +86,7 @@ class CANoe:
             >>> canoe_inst.new()
         """
         self.app.new(auto_save, prompt_user)
-    
+
     def quit(self):
         r"""Quits CANoe without saving changes in the configuration.
 
@@ -111,7 +111,7 @@ class CANoe:
             >>> canoe_inst.start_measurement()
         """
         return self.meas.start()
-    
+
     def stop_measurement(self) -> bool:
         r"""Stops the measurement.
 
@@ -126,7 +126,7 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
         """
         return self.meas.stop()
-    
+
     def stop_ex_measurement(self) -> bool:
         r"""StopEx repairs differences in the behavior of the Stop method on deferred stops concerning simulated and real mode in CANoe.
 
@@ -141,7 +141,7 @@ class CANoe:
             >>> canoe_inst.stop_ex_measurement()
         """
         return self.meas.stop_ex()
-    
+
     def reset_measurement(self) -> bool:
         r"""reset the measurement.
 
@@ -160,7 +160,7 @@ class CANoe:
         self.meas.start()
         self.log.info(f'Resetted measurement.')
         return self.meas.running
-    
+
     def start_measurement_in_animation_mode(self, animation_delay=100) -> None:
         r"""Starts the measurement in Animation mode.
 
@@ -175,7 +175,7 @@ class CANoe:
         """
         self.meas.animation_delay = animation_delay
         self.meas.animate()
-    
+
     def break_measurement_in_offline_mode(self) -> None:
         r"""Interrupts the playback in Offline mode.
 
@@ -186,7 +186,7 @@ class CANoe:
             >>> canoe_inst.break_measurement_in_offline_mode()
         """
         self.meas.break_offline_mode()
-    
+
     def reset_measurement_in_offline_mode(self) -> None:
         r"""Resets the measurement in Offline mode.
 
@@ -197,7 +197,7 @@ class CANoe:
             >>> canoe_inst.reset_measurement_in_offline_mode()
         """
         self.meas.reset_offline_mode()
-    
+
     def step_measurement_event_in_single_step(self) -> None:
         r"""Processes a measurement event in single step.
 
@@ -208,7 +208,7 @@ class CANoe:
             >>> canoe_inst.step_measurement_event_in_single_step()
         """
         self.meas.step()
-    
+
     def get_measurement_index(self) -> int:
         r"""gets the measurement index for the next measurement.
 
@@ -245,7 +245,7 @@ class CANoe:
         """
         self.meas.measurement_index = index
         return self.meas.measurement_index
-    
+
     def get_measurement_running_status(self) -> bool:
         r"""Returns the running state of the measurement.
 
@@ -277,7 +277,7 @@ class CANoe:
         """
         conf_obj = Configuration(self.app)
         return conf_obj.save()
-    
+
     def save_configuration_as(self, path: str, major: int, minor: int, create_dir=True) -> bool:
         r"""Saves the configuration as a different CANoe version.
 
@@ -305,7 +305,7 @@ class CANoe:
         else:
             self.log.info(f'tried creating {path}. but {config_path} directory not found.')
             return False
-        
+
     def get_signal_value(self, bus: str, channel: int, message: str, signal: str, raw_value=False) -> Union[float, int]:
         r"""get_signal_value Returns a Signal value.
 
@@ -358,7 +358,7 @@ class CANoe:
         else:
             sig_obj.value = value
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) value set to {value}.')
-    
+
     def get_signal_full_name(self, bus: str, channel: int, message: str, signal: str) -> str:
         """Determines the fully qualified name of a signal.
 
@@ -429,7 +429,8 @@ class CANoe:
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) state = {sig_state}.')
         return sig_state
 
-    def get_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int,
+    def get_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
+                               dest_addr: int,
                                raw_value=False) -> Union[float, int]:
         r"""get_j1939_signal Returns a Signal object.
 
@@ -459,7 +460,8 @@ class CANoe:
         self.log.info(f'value of signal({bus}{channel}.{message}.{signal})={signal_value}.')
         return signal_value
 
-    def set_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int, value: Union[float, int],
+    def set_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
+                               dest_addr: int, value: Union[float, int],
                                raw_value=False) -> None:
         r"""get_j1939_signal Returns a Signal object.
 
@@ -491,8 +493,9 @@ class CANoe:
             sig_obj.value = value
         self.log.info(f'signal value set to {value}.')
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) value set to {value}.')
-    
-    def get_j1939_signal_full_name(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> str:
+
+    def get_j1939_signal_full_name(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
+                                   dest_addr: int) -> str:
         """Determines the fully qualified name of a signal.
 
         Args:
@@ -509,8 +512,9 @@ class CANoe:
         bus_obj = Bus(self.app, bus_type=bus)
         sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
         return sig_obj.full_name
-    
-    def check_j1939_signal_online(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> bool:
+
+    def check_j1939_signal_online(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
+                                  dest_addr: int) -> bool:
         """Checks whether the measurement is running and the signal has been received.
 
         Args:
@@ -528,7 +532,8 @@ class CANoe:
         sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
         return sig_obj.is_online
 
-    def check_j1939_signal_state(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> int:
+    def check_j1939_signal_state(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
+                                 dest_addr: int) -> int:
         """Returns the state of the signal.
 
         Returns:
@@ -822,7 +827,8 @@ class CANoe:
         except Exception as e:
             self.log.info(f'failed to set system variable({sys_var_name}) value. {e}')
 
-    def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True, return_sender_name=False) -> Union[str, dict]:
+    def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True,
+                          return_sender_name=False) -> Union[str, dict]:
         r"""The send_diag_request method represents the query of a diagnostic tester (client) to an ECU (server) in CANoe.
 
         Args:
@@ -947,7 +953,7 @@ class CANoe:
         capl_obj = Capl(self.app)
         capl_obj.compile()
         self.log.info(f'compiled all nodes successfully.')
-    
+
     def call_capl_function(self, name: str, *arguments) -> bool:
         r"""Calls a CAPL function.
         Please note that the number of parameters must agree with that of the CAPL function.

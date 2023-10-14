@@ -3,6 +3,7 @@ import pythoncom
 import win32com.client
 from time import sleep as wait
 
+
 class Measurement:
     """The Measurement object represents measurement functions of CANoe.
     """
@@ -18,7 +19,7 @@ class Measurement:
         self.wait_for_canoe_meas_to_start = lambda: DoEventsUntil(lambda: Measurement.STARTED)
         self.wait_for_canoe_meas_to_stop = lambda: DoEventsUntil(lambda: Measurement.STOPPED)
         win32com.client.WithEvents(self.meas_obj, CanoeMeasurementEvents)
-    
+
     @property
     def animation_delay(self) -> int:
         """Defines the animation delay during the measurement in Offline mode.
@@ -27,7 +28,7 @@ class Measurement:
             int: The animation delay during the measurement in Offline mode.
         """
         return self.meas_obj.AnimationDelay
-    
+
     @animation_delay.setter
     def animation_delay(self, delay: int):
         """Sets the animation delay during the measurement in Offline mode.
@@ -37,7 +38,7 @@ class Measurement:
         """
         self.meas_obj.AnimationDelay = delay
         self.log.info(f'Animation delay set to = {delay}.')
-    
+
     @property
     def measurement_index(self) -> int:
         """Determines the measurement index for the next measurement.
@@ -46,7 +47,7 @@ class Measurement:
             int: Returns the measurement index for the next measurement.
         """
         return self.meas_obj.MeasurementIndex
-    
+
     @measurement_index.setter
     def measurement_index(self, index: int):
         """sets the measurement index for the next measurement.
@@ -56,7 +57,7 @@ class Measurement:
         """
         self.meas_obj.MeasurementIndex = index
         self.log.info(f'next measurement index set to = {index}.')
-    
+
     @property
     def running(self) -> bool:
         """Returns the running state of the measurement.
@@ -65,7 +66,7 @@ class Measurement:
             bool: True- The measurement is running. False- The measurement is not running.
         """
         return self.meas_obj.Running
-    
+
     @property
     def user_capl_function_obj_dict(self):
         return CanoeMeasurementEvents.user_capl_function_obj_dict
@@ -75,21 +76,21 @@ class Measurement:
         """
         self.meas_obj.Animate()
         self.log.info(f'Started the measurement in Animation mode with animation delay = {self.animation_delay}.')
-    
+
     def break_offline_mode(self) -> None:
         """Interrupts the playback in Offline mode.
         """
         if self.running:
             self.meas_obj.Break()
             self.log.info('Interrupted the playback in Offline mode.')
-    
+
     def reset_offline_mode(self) -> None:
         """Resets the measurement in Offline mode.
         """
         self.meas_obj.Reset()
         self.log.info('resetted measurement in offline mode.')
-    
-    def start(self) -> None:
+
+    def start(self) -> bool:
         """Starts the measurement.
         """
         if not self.running:
@@ -101,20 +102,20 @@ class Measurement:
         else:
             self.log.info(f'CANoe Measurement Already Running. Measurement running status = {self.running}')
         return self.running
-    
+
     def step(self) -> None:
         """Processes a measurement event in single step.
         """
         if not self.running:
             self.meas_obj.Step()
             self.log.info('processed a measurement event in single step')
-    
-    def stop(self) -> None:
+
+    def stop(self) -> bool:
         """Stops the measurement.
         """
         return self.stop_ex()
-    
-    def stop_ex(self) -> None:
+
+    def stop_ex(self) -> bool:
         """StopEx repairs differences in the behavior of the Stop method on deferred stops concerning simulated and real mode in CANoe.
         Calling the StopEx method correlates to clicking the Stop button.
         """
@@ -127,6 +128,7 @@ class Measurement:
         else:
             self.log.info(f'CANoe Measurement Already Stopped. Measurement running status = {self.running}')
         return not self.running
+
 
 class CanoeMeasurementEvents:
     """Handler for CANoe Measurement events"""
@@ -165,9 +167,11 @@ class CanoeMeasurementEvents:
         Measurement.STOPPED = True
         print('measurement OnStop event triggered')
 
+
 def DoEvents():
     pythoncom.PumpWaitingMessages()
     wait(.1)
+
 
 def DoEventsUntil(cond):
     while not cond():
