@@ -6,6 +6,7 @@ file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
 root_path = file_path
 canoe_inst = CANoe(fr'{root_path}\.py_canoe_log', ('addition_function', 'hello_world'))
 
+
 def test_canoe_open_new_save_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     canoe_inst.quit()
@@ -15,6 +16,7 @@ def test_canoe_open_new_save_methods():
     assert canoe_inst.save_configuration_as(fr'{file_path}\demo_cfg\demo_v10.cfg', 10, 0)
     wait(2)
 
+
 def test_canoe_basic_measurement_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     meas_index = canoe_inst.get_measurement_index()
@@ -23,15 +25,17 @@ def test_canoe_basic_measurement_methods():
     assert canoe_inst.stop_measurement()
     meas_index = canoe_inst.get_measurement_index()
     print(f'CANoe measurement index value = {meas_index}')
-    canoe_inst.set_measurement_index(meas_index+1)
+    canoe_inst.set_measurement_index(meas_index + 1)
     meas_index = canoe_inst.get_measurement_index()
     print(f'CANoe measurement index value = {meas_index}')
     canoe_inst.get_measurement_running_status()
     canoe_inst.reset_measurement()
     assert canoe_inst.stop_measurement()
 
+
 def test_canoe_animation_mode_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo_offline.cfg')
+    canoe_inst.add_offline_source_log_file(fr'{file_path}\demo_cfg\Logs\demo_log.blf')
     canoe_inst.start_measurement_in_animation_mode()
     wait(1)
     canoe_inst.break_measurement_in_offline_mode()
@@ -42,7 +46,7 @@ def test_canoe_animation_mode_methods():
     wait(1)
     assert canoe_inst.stop_measurement()
     wait(1)
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+
 
 def test_signal_value_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -56,6 +60,7 @@ def test_signal_value_methods():
     assert canoe_inst.stop_measurement()
     assert sig_val == 1
     wait(1)
+
 
 def test_write_window_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -72,12 +77,14 @@ def test_write_window_methods():
     assert "hello from python!" in text
     wait(1)
 
+
 def test_bus_statistics():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
     canoe_inst.get_canoe_version_info()
     assert canoe_inst.stop_measurement()
     wait(1)
+
 
 def test_system_variable_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -97,6 +104,7 @@ def test_system_variable_methods():
     assert canoe_inst.stop_measurement()
     wait(1)
 
+
 def test_diag_request_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
@@ -109,12 +117,11 @@ def test_diag_request_methods():
     assert resp['Door'] == '50 03 00 00 00 00'
     assert canoe_inst.stop_measurement()
 
+
 def test_capl_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
-    resp = canoe_inst.call_capl_function('addition_function', 100, 200)
-    assert resp == True
-    resp = canoe_inst.call_capl_function('hello_world')
-    assert resp == True
+    assert canoe_inst.call_capl_function('addition_function', 100, 200)
+    assert canoe_inst.call_capl_function('hello_world')
     assert canoe_inst.stop_measurement()
