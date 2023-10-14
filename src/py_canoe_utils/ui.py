@@ -1,16 +1,17 @@
 # Import Python Libraries here
 import win32com.client
 
+
 class Ui:
     """The UI object represents the user interface in CANoe.
     """
+
     def __init__(self, app) -> None:
         self.app = app
         self.log = self.app.log
         self.ui_com_obj = win32com.client.Dispatch(self.app.app_com_obj.UI)
-    
-    @property
-    def command_enabled(self, command: str) -> bool:
+
+    def get_command_availability(self, command: str) -> bool:
         """defines the availability of a command on the user interface.
 
         Args:
@@ -20,9 +21,8 @@ class Ui:
             bool: The availability of the command: If the command is available True is returned. Otherwise False is returned.
         """
         return self.ui_com_obj.CommandEnabled(command)
-    
-    @command_enabled.setter
-    def command_enabled(self, command: str, value: bool) -> None:
+
+    def set_command_availability(self, command: str, value: bool) -> None:
         """sets the availability of a command on the user interface.
 
         Args:
@@ -41,7 +41,7 @@ class Ui:
         """
         self.ui_com_obj.ActivateDesktop(name)
         self.log.info(f'Activated the desktop with the given name({name}.')
-    
+
     def open_baudrate_dialog(self) -> None:
         """Configures the bus parameters.
         """
@@ -51,36 +51,38 @@ class Ui:
     def get_write_window_text_content(self) -> str:
         write_obj = Write(self)
         return write_obj.text
-    
+
     def clear_write_window_content(self) -> None:
         write_obj = Write(self)
         write_obj.clear()
-    
+
     def copy_write_window_content_to_clipboard(self) -> None:
         write_obj = Write(self)
         write_obj.copy()
-    
+
     def disable_write_window_logging(self, tab_index=None) -> None:
         write_obj = Write(self)
         write_obj.disable_output_file(tab_index)
-    
+
     def enable_write_window_logging(self, output_file: str, tab_index=None) -> None:
         write_obj = Write(self)
         write_obj.enable_output_file(output_file, tab_index)
-    
+
     def send_text_to_write_window(self, text: str) -> None:
         write_obj = Write(self)
         write_obj.output(text)
+
 
 class Write:
     """The Write object represents the Write Window in CANoe.
     It is part of the user interface.
     """
+
     def __init__(self, ui_obj) -> None:
         self.ui_obj = ui_obj
         self.log = self.ui_obj.log
         self.write_com_obj = win32com.client.Dispatch(self.ui_obj.ui_com_obj.Write)
-    
+
     @property
     def text(self) -> str:
         """Gets the text contents of the Write window.
@@ -89,7 +91,7 @@ class Write:
             str: The text content
         """
         return self.write_com_obj.Text
-    
+
     def clear(self) -> None:
         """Clears the contents of the Write Window
         """
@@ -125,7 +127,8 @@ class Write:
             self.write_com_obj.EnableOutputFile(output_file, tab_index)
         else:
             self.write_com_obj.EnableOutputFile(output_file)
-        self.log.info(f'Enabled logging of outputs of the Write Window. output_file={output_file} and tab_index={tab_index}')
+        self.log.info(
+            f'Enabled logging of outputs of the Write Window. output_file={output_file} and tab_index={tab_index}')
 
     def output(self, text: str) -> None:
         """Outputs a line of text in the Write Window.

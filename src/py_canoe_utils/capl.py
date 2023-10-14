@@ -1,17 +1,18 @@
 # Import Python Libraries here
 import win32com.client
-from typing import Union
+
 
 class Capl:
     """The CAPL object allows to compile all nodes (CAPL, .NET, XML) in the configuration.
-    Additionally it represents the CAPL functions available in the CAPL programs.
+    Additionally, it represents the CAPL functions available in the CAPL programs.
     Please note that only user-defined CAPL functions can be accessed
     """
+
     def __init__(self, app_obj: object) -> None:
         self.app_obj = app_obj
         self.log = self.app_obj.log
         self.capl_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.CAPL)
-    
+
     def compile(self) -> None:
         """Translates all CAPL, XML and .NET nodes.
         """
@@ -39,7 +40,6 @@ class Capl:
             int: The number of parameters of the CAPL function.
         """
         return capl_function_object.ParameterCount
-    
 
     @staticmethod
     def parameter_types(capl_function_object: object) -> tuple:
@@ -56,7 +56,7 @@ class Capl:
             tuple: The types of the parameters of the CAPL function as byte array.
         """
         return capl_function_object.ParameterTypes
-    
+
     def call_capl_function(self, capl_function_obj: object, *arguments) -> bool:
         """Calls a CAPL function.
         Please note that the number of parameters must agree with that of the CAPL function.
@@ -80,7 +80,7 @@ class Capl:
         else:
             print(fr'function arguments not matching with CAPL user function args.')
         return return_value
-    
+
     def compile_result(self) -> dict:
         """The CompileResult object represents the result of the last compilation of the CAPL object.
 
@@ -98,8 +98,3 @@ class Capl:
         # Returns the path of the program file where the first compile error occurred
         return_values['source_file'] = compile_result_obj.SourceFile
         return return_values
-
-
-
-
-    

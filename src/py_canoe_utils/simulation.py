@@ -1,16 +1,18 @@
 # Import Python Libraries here
 import win32com.client
 
+
 class Simulation:
     """The Simulation object represents CANoe's measurement functions in the Simulation mode.
     With the help of the Simulation object you can control the system time from an external source during the measurement.
     """
+
     def __init__(self, app) -> None:
         self.app = app
         self.log = self.app.log
         self.sim_obj = win32com.client.Dispatch(self.app.app_com_obj.Simulation)
         win32com.client.WithEvents(self.meas_obj, CanoeSimulationEvents)
-    
+
     @property
     def animation(self) -> int:
         """Returns the animation factor.
@@ -19,7 +21,7 @@ class Simulation:
             int: The animation factor.
         """
         return self.sim_obj.Animation
-    
+
     @animation.setter
     def animation(self, value: int) -> None:
         """Sets the animation factor.
@@ -56,7 +58,7 @@ class Simulation:
             int: The notification type. 0-Idle. 1-IdleU
         """
         return self.sim_obj.NotificationType
-    
+
     @notification_type.setter
     def notification_type(self, value: int) -> None:
         """sets the notification type for the OnIdle handler.
@@ -87,6 +89,7 @@ class Simulation:
         self.sim_obj.IncrementTimeAndWait(ticks)
         self.log.info(f'Increased the system time to = {ticks} ticks.')
 
+
 class CanoeSimulationEvents:
     """Handler for CANoe Simulation events"""
 
@@ -99,7 +102,7 @@ class CanoeSimulationEvents:
             time (int): Low-order 32 bit of the current simulation time.
         """
         print(f'Simulation OnIdle event triggered. time_high = {time_high} and time = {time}')
-    
+
     @staticmethod
     def OnIdleU(time_high: int, time: int) -> None:
         """Occurs after a simulation step.
