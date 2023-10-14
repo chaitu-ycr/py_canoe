@@ -1,12 +1,9 @@
 import os
-import sys
 from time import sleep as wait
+from py_canoe import CANoe
 
 file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
-root_path = '\\'.join(file_path.split('\\')[:-1])
-sys.path.extend([file_path, fr'{root_path}\src'])
-
-from py_canoe import CANoe
+root_path = file_path
 canoe_inst = CANoe(fr'{root_path}\.py_canoe_log', ('addition_function', 'hello_world'))
 
 def test_canoe_open_new_save_methods():
