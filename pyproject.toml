@@ -5,6 +5,16 @@ description = "Python CANoe library"
 authors = ["chaitu-ycr <chaitu.ycr@gmail.com>"]
 license = "LICENSE"
 readme = "README.md"
+homepage = "https://github.com/chaitu-ycr/py_canoe.git"
+repository = "https://github.com/chaitu-ycr/py_canoe.git"
+documentation = "https://chaitu-ycr.github.io/py_canoe/"
+keywords = ["Vector", "CANoe", "py_canoe"]
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Software Development :: Embedded Systems"
+]
 packages = [
     { include = "py_canoe.py", from = "src" },
     { include = "py_canoe_utils/*.py", from = "src"},

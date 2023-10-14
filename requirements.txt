@@ -1,6 +1,0 @@
-pywin32
-flit
-pytest
-mkdocs
-mkdocstrings[python]
-mkdocs-material
