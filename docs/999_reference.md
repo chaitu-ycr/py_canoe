@@ -2,31 +2,31 @@
 
 ## ::: src.py_canoe
 
-## ::: src.utils.application
+## ::: src.py_canoe_utils.application
 
-## ::: src.utils.bus
+## ::: src.py_canoe_utils.bus
 
-## ::: src.utils.capl
+## ::: src.py_canoe_utils.capl
 
-## ::: src.utils.configuration
+## ::: src.py_canoe_utils.configuration
 
-## ::: src.utils.environment
+## ::: src.py_canoe_utils.environment
 
-## ::: src.utils.measurement
+## ::: src.py_canoe_utils.measurement
 
-## ::: src.utils.networks
+## ::: src.py_canoe_utils.networks
 
-## ::: src.utils.performance
+## ::: src.py_canoe_utils.performance
 
-## ::: src.utils.py_canoe_logger
+## ::: src.py_canoe_utils.py_canoe_logger
 
-## ::: src.utils.simulation
+## ::: src.py_canoe_utils.simulation
 
-## ::: src.utils.system
+## ::: src.py_canoe_utils.system
 
-## ::: src.utils.ui
+## ::: src.py_canoe_utils.ui
 
-## ::: src.utils.version
+## ::: src.py_canoe_utils.version
 
 
 
