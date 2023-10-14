@@ -978,3 +978,30 @@ class CANoe:
         exec_sts = capl_obj.call_capl_function(self.meas.user_capl_function_obj_dict[name], *arguments)
         self.log.info(f'triggered capl function({name}). execution status = {exec_sts}.')
         return exec_sts
+
+    def add_offline_source_log_file(self, absolute_log_file_path: str) -> bool:
+        """this method adds offline source log file.
+
+        Args:
+            absolute_log_file_path (str): absolute path of offline source log file.
+
+        Returns:
+            bool: returns True if log file added or already available. False if log file not available.
+        
+        Examples:
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.add_offline_source_log_file(fr'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\Logs\demo_log.blf')
+        """
+        if os.path.isfile(absolute_log_file_path):
+            offline_sources = self.app.app_com_obj.Configuration.OfflineSetup.Source.Sources
+            file_already_added = any([file == absolute_log_file_path for file in offline_sources])
+            if file_already_added:
+                self.log.info(f'offline logging file ({absolute_log_file_path}) already added.')
+            else:
+                offline_sources.Add(absolute_log_file_path)
+                self.log.info(f'added offline logging file ({absolute_log_file_path})')
+            return True
+        else:
+            self.log.info(f'invalid logging file ({absolute_log_file_path}). Failed to add.')
+            return False
