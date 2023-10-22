@@ -1,5 +1,7 @@
 # Import Python Libraries here
+import pythoncom
 import win32com.client
+from time import sleep as wait
 
 
 class Configuration:
@@ -180,6 +182,20 @@ class Configuration:
         self.conf_com_obj.SaveAs(path, major, minor, prompt_user)
         self.log.info(f'Saved configuration as {path}.')
 
+    def get_all_test_setup_environments(self) -> dict:
+        test_environments_info = dict()
+        test_setup_environments = self.conf_com_obj.TestSetup.TestEnvironments
+        for test_env in test_setup_environments:
+            test_environments_info[test_env.Name] = test_env
+        return test_environments_info
+    
+    def get_all_test_modules_in_test_environment(self, test_environment_com_obj: object) -> dict:
+        test_modules_info = dict()
+        test_modules = test_environment_com_obj.Items
+        for test_module in test_modules:
+            test_modules_info[test_module.Name] = test_module
+        return test_modules_info
+
 
 class CanoeConfigurationEvents:
     """Handler for CANoe Configuration events"""
@@ -195,3 +211,109 @@ class CanoeConfigurationEvents:
         """Occurs when system variable definitions are added, changed or removed.
         """
         print('configuration OnSystemVariablesDefinitionChanged event triggered.')
+
+
+class TestModule:
+    TM_STARTED = False
+    TM_STOPPED = False
+    TM_REPORT_GENERATED = False
+    TM_REPORT_PATH = ''
+
+    def __init__(self, test_module_com_obj: object):
+        self.tm_com_obj = win32com.client.Dispatch(test_module_com_obj)
+        self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: TestModule.TM_STARTED)
+        self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: TestModule.TM_STOPPED)
+        win32com.client.DispatchWithEvents(self.tm_com_obj, TestModuleEvents)
+
+    @property
+    def name(self) -> str:
+        """Returns the name of the object.
+
+        Returns:
+            str: The name of the TSTestModule object.
+        """
+        return self.tm_com_obj.Name
+
+    @property
+    def full_name(self) -> str:
+        """determines the complete path of the object.
+
+        Returns:
+            str: The complete path.
+        """
+        return self.tm_com_obj.FullName
+
+    @property
+    def path(self) -> str:
+        """returns the path of the object, depending on the actual object.
+
+        Returns:
+            str: The complete path of the CAPL program or of the XML test module executed in the test module.
+        """
+        return self.tm_com_obj.Path
+
+    @property
+    def verdict(self) -> int:
+        """Returns the verdict of the test tree element(test module).
+
+        Returns:
+            int: The verdict of the test tree element. 0=VerdictNotAvailable, 1=VerdictPassed, 2=VerdictFailed.
+        """
+        return self.tm_com_obj.Verdict
+
+    def start(self):
+        """Starts the test module.
+        """
+        self.tm_com_obj.Start()
+
+    def pause(self):
+        pass
+
+    def resume(self):
+        pass
+
+    def stop(self):
+        pass
+
+    def reload(self):
+        pass
+
+    def set_execution_time(self, days: int, hours: int, minutes: int):
+        pass
+
+
+class TestModuleEvents:
+    def __init__(self):
+        pass
+
+    def OnStart(self):
+        TestModule.TM_REPORT_PATH = ''
+        TestModule.TM_REPORT_GENERATED = False
+        TestModule.TM_STARTED = True
+        TestModule.TM_STOPPED = False
+        print(f'test module OnStart event.')
+
+    def OnPause(self):        
+        print(f'test module OnPause event.')
+
+    def OnStop(self, reason):        
+        TestModule.TM_STARTED = False
+        TestModule.TM_STOPPED = True
+        print(f'test module OnStop event. reason -> {reason}')
+
+    def OnReportGenerated(self, Success, SourceFullName, GeneratedFullName):
+        TestModule.TM_REPORT_PATH = SourceFullName
+        TestModule.TM_REPORT_GENERATED = Success
+        print(f'test module OnReportGenerated event. {Success} # {SourceFullName} # {GeneratedFullName}')
+
+    def OnVerdictFail(self):
+        pass
+
+def TmDoEvents():
+    pythoncom.PumpWaitingMessages()
+    wait(.1)
+
+
+def TmDoEventsUntil(condition):
+    while not condition():
+        TmDoEvents()

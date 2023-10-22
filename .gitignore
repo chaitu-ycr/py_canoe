@@ -184,3 +184,5 @@ poetry.toml
 poetry.lock
 tests/demo_cfg/Logs/
 tests/demo_cfg/demo_v10.cfg
+*.vtestreport
+*.settings

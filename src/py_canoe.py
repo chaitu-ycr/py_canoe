@@ -12,7 +12,7 @@ from py_canoe_utils.py_canoe_logger import PyCanoeLogger
 from py_canoe_utils.application import Application
 from py_canoe_utils.bus import Bus, Signal
 from py_canoe_utils.capl import Capl
-from py_canoe_utils.configuration import Configuration
+from py_canoe_utils.configuration import Configuration, TestModule
 from py_canoe_utils.measurement import Measurement
 from py_canoe_utils.networks import Networks
 from py_canoe_utils.system import System, Namespaces, Variables
@@ -774,7 +774,7 @@ class CANoe:
             self.log.info(f'failed to create system variable({sys_var_name}). {e}')
         return new_var_obj
 
-    def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str, None]:
+    def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str, tuple, None]:
         r"""get_system_variable_value Returns a system variable value.
 
         Args:
@@ -797,8 +797,9 @@ class CANoe:
         try:
             sys_obj = System(self.app)
             namespace_object = sys_obj.sys_com_obj.Namespaces(namespace)
-            return_value = namespace_object.Variables(variable_name).Value
-            self.log.info(f'system variable({sys_var_name}) value = {return_value}.')
+            variable_object = namespace_object.Variables(variable_name)
+            return_value = variable_object.Value
+            self.log.info(f'system variable({sys_var_name}) value <- {return_value}.')
         except Exception as e:
             self.log.info(f'failed to get system variable({sys_var_name}) value. {e}')
         return return_value
@@ -807,8 +808,8 @@ class CANoe:
         r"""set_system_variable_value sets a value to system variable.
 
         Args:
-            sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
-            value (Union[int, float, str]): variable value.
+            sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed".
+            value (Union[int, float, str]): variable value. supported CAPL system variable data types integer, double, string and data.
 
         Examples:
             >>> # The following example sets system variable value to 1
@@ -816,14 +817,60 @@ class CANoe:
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.set_system_variable_value('sys_var_demo::speed', 1)
+            >>> canoe_inst.set_system_variable_value('demo::string_var', 'hey hello this is string variable')
+            >>> canoe_inst.set_system_variable_value('demo::data_var', 'hey hello this is data variable')
         """
         namespace = '::'.join(sys_var_name.split('::')[:-1])
         variable_name = sys_var_name.split('::')[-1]
         try:
             sys_obj = System(self.app)
             namespace_object = sys_obj.sys_com_obj.Namespaces(namespace)
-            namespace_object.Variables(variable_name).Value = value
-            self.log.info(f'system variable({sys_var_name}) value set to {value}.')
+            variable_object = namespace_object.Variables(variable_name)
+            if isinstance(variable_object.Value, int):
+                variable_object.Value = int(value)
+            elif isinstance(variable_object.Value, float):
+                variable_object.Value = float(value)
+            else:
+                variable_object.Value = value
+            self.log.info(f'system variable({sys_var_name}) value set to -> {value}.')
+        except Exception as e:
+            self.log.info(f'failed to set system variable({sys_var_name}) value. {e}')
+
+    def set_system_variable_array_values(self, sys_var_name: str, value: tuple, index=0) -> None:
+        r"""set_system_variable_array_values sets a array values to system variable.
+
+        Args:
+            sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
+            value (tuple): variable values. supported integer array or double array. please always give only one type.
+            index (int): value of index where values will start updating. Defaults to 0.
+
+        Examples:
+            >>> # The following example sets system variable value to 1
+            >>> canoe_inst = CANoe()
+            >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
+            >>> canoe_inst.start_measurement()
+            >>> canoe_inst.set_system_variable_array_values('demo::int_array_var', (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
+            >>> canoe_inst.set_system_variable_array_values('demo::double_array_var', (00.0, 11.1, 22.2, 33.3, 44.4))
+            >>> canoe_inst.set_system_variable_array_values('demo::double_array_var', (99.9, 100.0), 3)
+        """
+        namespace = '::'.join(sys_var_name.split('::')[:-1])
+        variable_name = sys_var_name.split('::')[-1]
+        try:
+            sys_obj = System(self.app)
+            namespace_object = sys_obj.sys_com_obj.Namespaces(namespace)
+            variable_object = namespace_object.Variables(variable_name)
+            existing_variable_value = list(variable_object.Value)
+            if (index + len(value)) <= len(existing_variable_value):
+                final_value = existing_variable_value
+                if isinstance(existing_variable_value[0], float):
+                    final_value[index: index + len(value)] = (float(v) for v in value)
+                else:
+                    final_value[index: index + len(value)] = value
+                variable_object.Value = tuple(final_value)
+                wait(0.1)
+                self.log.info(f'system variable({sys_var_name}) value set to -> {variable_object.Value}.')
+            else:
+                self.log.info(f'failed to set system variable({sys_var_name}) value. check variable length and index value.')
         except Exception as e:
             self.log.info(f'failed to set system variable({sys_var_name}) value. {e}')
 
@@ -1005,3 +1052,23 @@ class CANoe:
         else:
             self.log.info(f'invalid logging file ({absolute_log_file_path}). Failed to add.')
             return False
+
+    def execute_test_module(self, test_environment_name: str, test_module_name: str) -> int:
+        """use this method to execute test module.
+
+        Args:
+            test_environment_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
+            test_module_name (str): test module name. avoid duplicate test module names in CANoe configuration.
+
+        Returns:
+            int: test module execution verdict.
+        """
+        conf_obj = Configuration(self.app)
+        test_environments = conf_obj.get_all_test_setup_environments()
+        test_env_obj = test_environments[test_environment_name]
+        test_modules = conf_obj.get_all_test_modules_in_test_environment(test_env_obj)
+        test_module_com_obj = test_modules[test_module_name]
+        tm_obj = TestModule(test_module_com_obj)
+        print(f'test_module_name = {tm_obj.name}')
+        tm_obj.start()
+

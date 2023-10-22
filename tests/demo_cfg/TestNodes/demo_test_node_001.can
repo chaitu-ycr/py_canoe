@@ -1,0 +1,41 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  
+}
+
+void MainTest ()
+{
+  demo_test_001();
+  demo_test_002();
+}
+
+testcase demo_test_001()
+{
+  testWaitForTimeout(10000);
+  if( 1+1 == 2)
+  {
+    testStepPass("demo_test_001 pass");
+  }
+  else
+  {
+    testStepFail("demo_test_001 Fail");
+  }
+}
+
+testcase demo_test_002()
+{
+  if( 1+1 == 2)
+  {
+    testStepPass("demo_test_002 pass");
+  }
+  else
+  {
+    testStepFail("demo_test_002 Fail");
+  }
+}
