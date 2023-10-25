@@ -52,6 +52,7 @@ def test_signal_value_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
+    canoe_inst.get_signal_full_name('CAN', 1, 'LightState', 'FlashLight')
     canoe_inst.set_signal_value('CAN', 1, 'LightState', 'FlashLight', 1)
     wait(1)
     canoe_inst.check_signal_online('CAN', 1, 'LightState', 'FlashLight')
@@ -59,6 +60,16 @@ def test_signal_value_methods():
     sig_val = canoe_inst.get_signal_value('CAN', 1, 'LightState', 'FlashLight')
     assert canoe_inst.stop_measurement()
     assert sig_val == 1
+    wait(1)
+
+
+def test_bus_class_methods():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    # assert canoe_inst.start_measurement()
+    wait(1)
+    canoe_inst.get_channels_info('CAN')
+    # canoe_inst.get_channels_info('CAN')
+    # assert canoe_inst.stop_measurement()
     wait(1)
 
 
@@ -94,7 +105,8 @@ def test_system_variable_methods():
     wait(0.1)
     sys_var_val = canoe_inst.get_system_variable_value('demo::level_two_1::sys_var2')
     canoe_inst.set_system_variable_array_values('demo::int_array_var', (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
-    assert set(canoe_inst.get_system_variable_value('demo::int_array_var')) == set((00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
+    assert set(canoe_inst.get_system_variable_value('demo::int_array_var')) == set(
+        (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
     canoe_inst.set_system_variable_array_values('demo::double_array_var', (00.0, 11.1, 22.2, 33.3, 44.4))
     assert set(canoe_inst.get_system_variable_value('demo::double_array_var')) == set((00.0, 11.1, 22.2, 33.3, 44.4))
     canoe_inst.set_system_variable_value('demo::string_var', 'hey hello this is string variable')
@@ -135,6 +147,7 @@ def test_capl_methods():
     assert canoe_inst.call_capl_function('addition_function', 100, 200)
     assert canoe_inst.call_capl_function('hello_world')
     assert canoe_inst.stop_measurement()
+
 
 def test_test_module_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')

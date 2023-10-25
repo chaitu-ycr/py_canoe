@@ -10,7 +10,7 @@ from time import sleep as wait
 # import CANoe utils here
 from py_canoe_utils.py_canoe_logger import PyCanoeLogger
 from py_canoe_utils.application import Application
-from py_canoe_utils.bus import Bus, Signal
+from py_canoe_utils.bus import Bus
 from py_canoe_utils.capl import Capl
 from py_canoe_utils.configuration import Configuration, TestModule
 from py_canoe_utils.measurement import Measurement
@@ -328,8 +328,8 @@ class CANoe:
             >>> print(sig_val)
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
-        signal_value = sig_obj.raw_value if raw_value else sig_obj.value
+        sig_obj = bus_obj.get_signal(channel, message, signal)
+        signal_value = bus_obj.signal_get_raw_value(sig_obj) if raw_value else bus_obj.signal_get_value(sig_obj)
         self.log.info(f'value of signal({bus}{channel}.{message}.{signal})={signal_value}.')
         return signal_value
 
@@ -352,11 +352,11 @@ class CANoe:
             >>> canoe_inst.set_signal_value('CAN', 1, 'LightState', 'FlashLight', 1)
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
+        sig_obj = bus_obj.get_signal(channel, message, signal)
         if raw_value:
-            sig_obj.raw_value = value
+            bus_obj.signal_set_raw_value(sig_obj, value)
         else:
-            sig_obj.value = value
+            bus_obj.signal_set_value(sig_obj, value)
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) value set to {value}.')
 
     def get_signal_full_name(self, bus: str, channel: int, message: str, signal: str) -> str:
@@ -372,8 +372,10 @@ class CANoe:
             str: The fully qualified name of a signal. The following format will be used for signals: <DatabaseName>::<MessageName>::<SignalName>
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
-        return sig_obj.full_name
+        sig_obj = bus_obj.get_signal(channel, message, signal)
+        signal_fullname = bus_obj.signal_full_name(sig_obj)
+        self.log.info(f'signal({bus}{channel}.{message}.{signal}) full name = {signal_fullname}.')
+        return signal_fullname
 
     def check_signal_online(self, bus: str, channel: int, message: str, signal: str) -> bool:
         r"""Checks whether the measurement is running and the signal has been received.
@@ -395,8 +397,8 @@ class CANoe:
             >>> canoe_inst.check_signal_online('CAN', 1, 'LightState', 'FlashLight')
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
-        sig_online_status = sig_obj.is_online
+        sig_obj = bus_obj.get_signal(channel, message, signal)
+        sig_online_status = bus_obj.signal_is_online(sig_obj)
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) online status = {sig_online_status}.')
         return sig_online_status
 
@@ -424,8 +426,8 @@ class CANoe:
             >>> canoe_inst.check_signal_state('CAN', 1, 'LightState', 'FlashLight')
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_signal(channel, message, signal))
-        sig_state = sig_obj.state
+        sig_obj = bus_obj.get_signal(channel, message, signal)
+        sig_state = bus_obj.signal_state(sig_obj)
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) state = {sig_state}.')
         return sig_state
 
@@ -455,8 +457,8 @@ class CANoe:
             >>> print(sig_val)
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
-        signal_value = sig_obj.raw_value if raw_value else sig_obj.value
+        sig_obj = bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr)
+        signal_value = bus_obj.signal_get_raw_value(sig_obj) if raw_value else bus_obj.signal_get_value(sig_obj)
         self.log.info(f'value of signal({bus}{channel}.{message}.{signal})={signal_value}.')
         return signal_value
 
@@ -486,11 +488,11 @@ class CANoe:
             >>> canoe_inst.set_j1939_signal_value('CAN', 1, 'LightState', 'FlashLight', 0, 1, 1)
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
+        sig_obj = bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr)
         if raw_value:
-            sig_obj.raw_value = value
+            bus_obj.signal_set_raw_value(sig_obj, value)
         else:
-            sig_obj.value = value
+            bus_obj.signal_set_value(sig_obj, value)
         self.log.info(f'signal value set to {value}.')
         self.log.info(f'signal({bus}{channel}.{message}.{signal}) value set to {value}.')
 
@@ -510,8 +512,10 @@ class CANoe:
             str: The fully qualified name of a signal. The following format will be used for signals: <DatabaseName>::<MessageName>::<SignalName>
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
-        return sig_obj.full_name
+        sig_obj = bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr)
+        signal_fullname = bus_obj.signal_full_name(sig_obj)
+        self.log.info(f'signal({bus}{channel}.{message}.{signal}) full name = {signal_fullname}.')
+        return signal_fullname
 
     def check_j1939_signal_online(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
                                   dest_addr: int) -> bool:
@@ -529,8 +533,10 @@ class CANoe:
             bool: TRUE: if the measurement is running and the signal has been received. FALSE: if not.
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
-        return sig_obj.is_online
+        sig_obj = bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr)
+        signal_online_status = bus_obj.signal_is_online(sig_obj)
+        self.log.info(f'signal({bus}{channel}.{message}.{signal}) online status = {signal_online_status}.')
+        return signal_online_status
 
     def check_j1939_signal_state(self, bus: str, channel: int, message: str, signal: str, source_addr: int,
                                  dest_addr: int) -> int:
@@ -540,8 +546,10 @@ class CANoe:
             int: State of the signal; possible values are: 0: The default value of the signal is returned. 1: The measurement is not running; the value set by the application is returned. 3: The signal has been received in the current measurement; the current value is returned.
         """
         bus_obj = Bus(self.app, bus_type=bus)
-        sig_obj = Signal(bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr))
-        return sig_obj.state
+        sig_obj = bus_obj.get_j1939_signal(channel, message, signal, source_addr, dest_addr)
+        signal_state = bus_obj.signal_state(sig_obj)
+        self.log.info(f'signal({bus}{channel}.{message}.{signal}) state = {signal_state}.')
+        return signal_state
 
     def ui_activate_desktop(self, name: str) -> None:
         r"""Activates the desktop with the given name.
@@ -1071,4 +1079,8 @@ class CANoe:
         tm_obj = TestModule(test_module_com_obj)
         print(f'test_module_name = {tm_obj.name}')
         tm_obj.start()
+
+    def get_channels_info(self, bus: str):
+        bus_obj = Bus(self.app, bus_type=bus)
+        self.log.info(f'channels info -> {bus_obj}.')
 
