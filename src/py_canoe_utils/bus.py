@@ -131,7 +131,17 @@ class Bus:
         signal_object.Value = value
 
     # Databases
-    # Generators
-    # InteractiveGenerators
+    def database_objects(self):
+        db_objects = dict()
+        databases = self.bus_com_obj.Databases
+        for database in databases:
+            db_objects[database.Name] = database
+        return db_objects
+    
     # Nodes
-    # ReplayCollection
+    def node_objects(self):
+        n_objects = dict()
+        nodes = self.bus_com_obj.Nodes
+        for node in nodes:
+            n_objects[node.Name] = node
+        return n_objects

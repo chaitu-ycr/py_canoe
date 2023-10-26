@@ -11,12 +11,12 @@ class Capl:
     def __init__(self, app_obj: object) -> None:
         self.app_obj = app_obj
         self.log = self.app_obj.log
-        self.capl_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.CAPL)
+        self.capl_com_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.CAPL)
 
     def compile(self) -> None:
         """Translates all CAPL, XML and .NET nodes.
         """
-        self.capl_obj.Compile()
+        self.capl_com_obj.Compile()
 
     def get_function(self, name: str) -> object:
         """Returns a CAPLFunction object.
@@ -27,7 +27,7 @@ class Capl:
         Returns:
             object: The CAPLFunction object.
         """
-        return self.capl_obj.GetFunction(name)
+        return self.capl_com_obj.GetFunction(name)
 
     @staticmethod
     def parameter_count(capl_function_object: object) -> int:
@@ -88,13 +88,13 @@ class Capl:
             dict: returns dictionary of 'error_message', 'node_name', 'result', 'source_file'
         """
         return_values = dict()
-        compile_result_obj = self.capl_obj.CompileResult
+        compile_result_obj = self.capl_com_obj.CompileResult
         # Returns the last compilation error for the CompileResult object or the last loading error/warning for the OpenConfigurationResult object
         return_values['error_message'] = compile_result_obj.ErrorMessage
         # Returns the name of the first compilation error node.
         return_values['node_name'] = compile_result_obj.NodeName
         # Returns the result of the last compilation of the CAPL object.
-        return_values['result'] = compile_result_obj.Result
+        return_values['result'] = compile_result_obj.result
         # Returns the path of the program file where the first compile error occurred
         return_values['source_file'] = compile_result_obj.SourceFile
         return return_values

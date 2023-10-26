@@ -1007,7 +1007,9 @@ class CANoe:
         """
         capl_obj = Capl(self.app)
         capl_obj.compile()
-        self.log.info(f'compiled all nodes successfully.')
+        wait(1)
+        compile_result = capl_obj.compile_result()
+        self.log.info(f'compiled all nodes successfully. result={compile_result["result"]}')
 
     def call_capl_function(self, name: str, *arguments) -> bool:
         r"""Calls a CAPL function.
@@ -1080,7 +1082,20 @@ class CANoe:
         print(f'test_module_name = {tm_obj.name}')
         tm_obj.start()
 
-    def get_channels_info(self, bus: str):
+    def get_bus_databases_info(self, bus: str):
+        dbcs_info = dict()
         bus_obj = Bus(self.app, bus_type=bus)
-        self.log.info(f'channels info -> {bus_obj}.')
-
+        db_objects = bus_obj.database_objects()
+        for db_object in db_objects.values():
+            dbcs_info[db_object.Name] = {'path': db_object.Path, 'channel': db_object.Channel, 'full_name': db_object.FullName}
+        self.log.info(f'{bus} bus databases info -> {dbcs_info}.')
+        return dbcs_info
+    
+    def get_bus_nodes_info(self, bus: str):
+        nodes_info = dict()
+        bus_obj = Bus(self.app, bus_type=bus)
+        node_objects = bus_obj.node_objects()
+        for n_object in node_objects.values():
+            nodes_info[n_object.Name] = {'path': n_object.Path, 'full_name': n_object.FullName, 'active': n_object.Active}
+        self.log.info(f'{bus} bus nodes info -> {nodes_info}.')
+        return nodes_info

@@ -67,7 +67,8 @@ def test_bus_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     # assert canoe_inst.start_measurement()
     wait(1)
-    canoe_inst.get_channels_info('CAN')
+    canoe_inst.get_bus_databases_info('CAN')
+    canoe_inst.get_bus_nodes_info('CAN')
     # canoe_inst.get_channels_info('CAN')
     # assert canoe_inst.stop_measurement()
     wait(1)
@@ -142,6 +143,7 @@ def test_diag_request_methods():
 
 def test_capl_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.compile_all_capl_nodes()
     assert canoe_inst.start_measurement()
     wait(1)
     assert canoe_inst.call_capl_function('addition_function', 100, 200)
