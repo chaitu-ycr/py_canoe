@@ -7,8 +7,14 @@ root_path = file_path
 canoe_inst = CANoe(fr'{root_path}\.py_canoe_log', ('addition_function', 'hello_world'))
 
 
-def test_canoe_open_new_save_methods():
+def test_application_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    print(f'application name: {canoe_inst.application.name}')
+    print(f'application full_name: {canoe_inst.application.full_name}')
+    print(f'application path: {canoe_inst.application.path}')
+    print(f'application channel_mapping_name: {canoe_inst.application.channel_mapping_name}')
+    print(f'application visible: {canoe_inst.application.visible}')
+    canoe_inst.get_canoe_version_info()
     canoe_inst.quit()
     wait(1)
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -17,23 +23,17 @@ def test_canoe_open_new_save_methods():
     wait(2)
 
 
-def test_canoe_basic_measurement_methods():
+def test_app_measurement_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
-    meas_index = canoe_inst.get_measurement_index()
-    print(f'CANoe measurement index value = {meas_index}')
+    canoe_inst.get_measurement_index()
     assert canoe_inst.start_measurement()
     assert canoe_inst.stop_measurement()
     meas_index = canoe_inst.get_measurement_index()
-    print(f'CANoe measurement index value = {meas_index}')
     canoe_inst.set_measurement_index(meas_index + 1)
-    meas_index = canoe_inst.get_measurement_index()
-    print(f'CANoe measurement index value = {meas_index}')
+    canoe_inst.get_measurement_index()
     canoe_inst.get_measurement_running_status()
     canoe_inst.reset_measurement()
     assert canoe_inst.stop_measurement()
-
-
-def test_canoe_animation_mode_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo_offline.cfg')
     canoe_inst.add_offline_source_log_file(fr'{file_path}\demo_cfg\Logs\demo_log.blf')
     canoe_inst.start_measurement_in_animation_mode()
@@ -48,8 +48,10 @@ def test_canoe_animation_mode_methods():
     wait(1)
 
 
-def test_signal_value_methods():
+def test_app_bus_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.get_bus_databases_info('CAN')
+    canoe_inst.get_bus_nodes_info('CAN')
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.get_signal_full_name('CAN', 1, 'LightState', 'FlashLight')
@@ -63,18 +65,7 @@ def test_signal_value_methods():
     wait(1)
 
 
-def test_bus_class_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
-    # assert canoe_inst.start_measurement()
-    wait(1)
-    canoe_inst.get_bus_databases_info('CAN')
-    canoe_inst.get_bus_nodes_info('CAN')
-    # canoe_inst.get_channels_info('CAN')
-    # assert canoe_inst.stop_measurement()
-    wait(1)
-
-
-def test_write_window_methods():
+def test_app_ui_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     wait(1)
     canoe_inst.enable_write_window_output_file(fr'{file_path}\demo_cfg\Logs\write_win.txt')
@@ -90,14 +81,6 @@ def test_write_window_methods():
     wait(1)
 
 
-def test_bus_statistics():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
-    assert canoe_inst.start_measurement()
-    canoe_inst.get_canoe_version_info()
-    assert canoe_inst.stop_measurement()
-    wait(1)
-
-
 def test_system_variable_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
@@ -106,8 +89,7 @@ def test_system_variable_methods():
     wait(0.1)
     sys_var_val = canoe_inst.get_system_variable_value('demo::level_two_1::sys_var2')
     canoe_inst.set_system_variable_array_values('demo::int_array_var', (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
-    assert set(canoe_inst.get_system_variable_value('demo::int_array_var')) == set(
-        (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
+    assert set(canoe_inst.get_system_variable_value('demo::int_array_var')) == set((00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
     canoe_inst.set_system_variable_array_values('demo::double_array_var', (00.0, 11.1, 22.2, 33.3, 44.4))
     assert set(canoe_inst.get_system_variable_value('demo::double_array_var')) == set((00.0, 11.1, 22.2, 33.3, 44.4))
     canoe_inst.set_system_variable_value('demo::string_var', 'hey hello this is string variable')

@@ -1,5 +1,8 @@
 # Import Python Libraries here
+import logging
 import win32com.client
+
+logger_inst = logging.getLogger('CANOE_LOG')
 
 
 class Simulation:
@@ -7,11 +10,11 @@ class Simulation:
     With the help of the Simulation object you can control the system time from an external source during the measurement.
     """
 
-    def __init__(self, app) -> None:
-        self.app = app
-        self.log = self.app.log
-        self.sim_obj = win32com.client.Dispatch(self.app.app_com_obj.Simulation)
-        win32com.client.WithEvents(self.meas_obj, CanoeSimulationEvents)
+    def __init__(self, app_com_obj: object, enable_sim_events=False):
+        self.log = logger_inst
+        self.com_obj = win32com.client.Dispatch(app_com_obj.Simulation)
+        if enable_sim_events:
+            win32com.client.WithEvents(self.com_obj, CanoeSimulationEvents)
 
     @property
     def animation(self) -> int:
@@ -20,7 +23,7 @@ class Simulation:
         Returns:
             int: The animation factor.
         """
-        return self.sim_obj.Animation
+        return self.com_obj.Animation
 
     @animation.setter
     def animation(self, value: int) -> None:
@@ -29,7 +32,7 @@ class Simulation:
         Args:
             value (int): The animation factor.
         """
-        self.sim_obj.Animation = value
+        self.com_obj.Animation = value
         self.log.info(f'animation factor set to = {value}.')
 
     @property
@@ -39,7 +42,7 @@ class Simulation:
         Returns:
             int: The low-order 32 bit of the current system time.
         """
-        return self.sim_obj.CurrentTime
+        return self.com_obj.CurrentTime
 
     @property
     def current_time_high(self) -> int:
@@ -48,7 +51,7 @@ class Simulation:
         Returns:
             int: The high-order 32 bit of the current system time.
         """
-        return self.sim_obj.CurrentTimeHigh
+        return self.com_obj.CurrentTimeHigh
 
     @property
     def notification_type(self) -> int:
@@ -57,7 +60,7 @@ class Simulation:
         Returns:
             int: The notification type. 0-Idle. 1-IdleU
         """
-        return self.sim_obj.NotificationType
+        return self.com_obj.NotificationType
 
     @notification_type.setter
     def notification_type(self, value: int) -> None:
@@ -66,7 +69,7 @@ class Simulation:
         Args:
             value (int): The notification type. 0-Idle. 1-IdleU
         """
-        self.sim_obj.NotificationType = value
+        self.com_obj.NotificationType = value
         self.log.info(f'notification type set to = {value}.')
 
     def increment_time(self, ticks: int) -> None:
@@ -76,7 +79,7 @@ class Simulation:
         Args:
             ticks (int): The number of ticks by which the system time is to be increased. 1 tick corresponds to 10 µs.
         """
-        self.sim_obj.IncrementTime(ticks)
+        self.com_obj.IncrementTime(ticks)
         self.log.info(f'Increased the system time to = {ticks} ticks.')
 
     def increment_time_and_wait(self, ticks: int) -> None:
@@ -86,7 +89,7 @@ class Simulation:
         Args:
             ticks (int): The number of ticks by which the system time is to be increased. 1 tick corresponds to 10 µs.
         """
-        self.sim_obj.IncrementTimeAndWait(ticks)
+        self.com_obj.IncrementTimeAndWait(ticks)
         self.log.info(f'Increased the system time to = {ticks} ticks.')
 
 
@@ -101,7 +104,7 @@ class CanoeSimulationEvents:
             time_high (int): High-order 32 bit of the current simulation time.
             time (int): Low-order 32 bit of the current simulation time.
         """
-        print(f'Simulation OnIdle event triggered. time_high = {time_high} and time = {time}')
+        logger_inst.info(f'Simulation OnIdle event triggered. time_high = {time_high} and time = {time}')
 
     @staticmethod
     def OnIdleU(time_high: int, time: int) -> None:
@@ -111,4 +114,4 @@ class CanoeSimulationEvents:
             time_high (int): High-order 32 bit of the current simulation time.
             time (int): Low-order 32 bit of the current simulation time.
         """
-        print(f'Simulation OnIdleU event triggered. time_high = {time_high} and time = {time}')
+        logger_inst.info(f'Simulation OnIdleU event triggered. time_high = {time_high} and time = {time}')

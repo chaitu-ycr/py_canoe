@@ -2,5 +2,5 @@
 
 
 class Performance:
-    def __init__(self) -> None:
+    def __init__(self, app_com_obj: object):
         pass

@@ -1,21 +1,24 @@
 # Import Python Libraries here
-# import win32com.client
+import logging
 
 
 class Bus:
     """The Bus object represents a bus of the CANoe application.
     """
 
-    def __init__(self, app_obj, bus_type='CAN') -> None:
+    def __init__(self, app_com_obj, bus_type='CAN'):
         """Returns a Signal object.
 
         Args:
-            app_obj (object): application class instance object.
+            app_com_obj (object): application com object.
             bus_type (str, optional): The desired bus type. Valid types are: CAN, LIN, FlexRay, AFDX, Ethernet. Defaults to 'CAN'.
         """
-        self.app_obj = app_obj
-        self.log = self.app_obj.log
-        self.bus_com_obj = self.app_obj.app_com_obj.GetBus(bus_type)
+        self.app_com_obj = app_com_obj
+        self.log = logging.getLogger('CANOE_LOG')
+        self.com_obj = self.app_com_obj.GetBus(bus_type)
+
+    def reinit_bus(self, bus_type='CAN'):
+        self.com_obj = self.app_com_obj.GetBus(bus_type)
 
     def get_signal(self, channel: int, message: str, signal: str) -> object:
         """Returns a Signal object.
@@ -28,7 +31,7 @@ class Bus:
         Returns:
             object: The Signal object.
         """
-        return self.bus_com_obj.GetSignal(channel, message, signal)
+        return self.com_obj.GetSignal(channel, message, signal)
 
     def get_j1939_signal(self, channel: int, message: str, signal: str, source_address: int,
                          destination_address: int) -> object:
@@ -44,7 +47,7 @@ class Bus:
         Returns:
             object: The Signal object.
         """
-        return self.bus_com_obj.GetJ1939Signal(channel, message, signal, source_address, destination_address)
+        return self.com_obj.GetJ1939Signal(channel, message, signal, source_address, destination_address)
 
     # Signal object relevant
     @staticmethod
@@ -133,7 +136,7 @@ class Bus:
     # Databases
     def database_objects(self):
         db_objects = dict()
-        databases = self.bus_com_obj.Databases
+        databases = self.com_obj.Databases
         for database in databases:
             db_objects[database.Name] = database
         return db_objects
@@ -141,7 +144,7 @@ class Bus:
     # Nodes
     def node_objects(self):
         n_objects = dict()
-        nodes = self.bus_com_obj.Nodes
+        nodes = self.com_obj.Nodes
         for node in nodes:
             n_objects[node.Name] = node
         return n_objects
