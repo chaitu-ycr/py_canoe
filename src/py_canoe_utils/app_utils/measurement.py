@@ -4,18 +4,65 @@ import win32com.client
 from time import sleep as wait
 
 
+def DoEvents():
+    pythoncom.PumpWaitingMessages()
+    wait(.1)
+
+
+def DoEventsUntil(cond):
+    while not cond():
+        DoEvents()
+
+
+class CanoeMeasurementEvents:
+    """Handler for CANoe Measurement events"""
+    app_com_obj = object
+    user_capl_function_names = tuple()
+    user_capl_function_obj_dict = dict()
+
+    @staticmethod
+    def OnInit():
+        """Occurs when the measurement is initialized.
+        """
+        app_com_obj_loc = CanoeMeasurementEvents.app_com_obj
+        for fun in CanoeMeasurementEvents.user_capl_function_names:
+            CanoeMeasurementEvents.user_capl_function_obj_dict[fun] = app_com_obj_loc.CAPL.GetFunction(fun)
+        print('measurement OnInit event triggered')
+
+    @staticmethod
+    def OnExit():
+        """Occurs when the measurement is exited.
+        """
+        print('measurement OnExit event triggered')
+
+    @staticmethod
+    def OnStart():
+        """Occurs when the measurement is started.
+        """
+        Measurement.STARTED = True
+        Measurement.STOPPED = False
+        print('measurement OnStart event triggered')
+
+    @staticmethod
+    def OnStop():
+        """Occurs when the measurement is stopped.
+        """
+        Measurement.STARTED = False
+        Measurement.STOPPED = True
+        print('measurement OnStop event triggered')
+
+
 class Measurement:
     """The Measurement object represents measurement functions of CANoe.
     """
     STARTED = False
     STOPPED = False
 
-    def __init__(self, app, user_capl_function_names=tuple()) -> None:
-        self.app = app
-        self.log = self.app.log
-        CanoeMeasurementEvents.app_com_obj = self.app.app_com_obj
+    def __init__(self, app_com_obj, log_obj, user_capl_function_names=tuple()) -> None:
+        self.log = log_obj
+        CanoeMeasurementEvents.app_com_obj = app_com_obj
         CanoeMeasurementEvents.user_capl_function_names = user_capl_function_names
-        self.meas_obj = win32com.client.Dispatch(self.app.app_com_obj.Measurement)
+        self.meas_obj = win32com.client.Dispatch(app_com_obj.Measurement)
         self.wait_for_canoe_meas_to_start = lambda: DoEventsUntil(lambda: Measurement.STARTED)
         self.wait_for_canoe_meas_to_stop = lambda: DoEventsUntil(lambda: Measurement.STOPPED)
         win32com.client.WithEvents(self.meas_obj, CanoeMeasurementEvents)
@@ -128,51 +175,3 @@ class Measurement:
         else:
             self.log.info(f'CANoe Measurement Already Stopped. Measurement running status = {self.running}')
         return not self.running
-
-
-class CanoeMeasurementEvents:
-    """Handler for CANoe Measurement events"""
-    app_com_obj = object
-    user_capl_function_names = tuple()
-    user_capl_function_obj_dict = dict()
-
-    @staticmethod
-    def OnInit():
-        """Occurs when the measurement is initialized.
-        """
-        app_com_obj_loc = CanoeMeasurementEvents.app_com_obj
-        for fun in CanoeMeasurementEvents.user_capl_function_names:
-            CanoeMeasurementEvents.user_capl_function_obj_dict[fun] = app_com_obj_loc.CAPL.GetFunction(fun)
-        print('measurement OnInit event triggered')
-
-    @staticmethod
-    def OnExit():
-        """Occurs when the measurement is exited.
-        """
-        print('measurement OnExit event triggered')
-
-    @staticmethod
-    def OnStart():
-        """Occurs when the measurement is started.
-        """
-        Measurement.STARTED = True
-        Measurement.STOPPED = False
-        print('measurement OnStart event triggered')
-
-    @staticmethod
-    def OnStop():
-        """Occurs when the measurement is stopped.
-        """
-        Measurement.STARTED = False
-        Measurement.STOPPED = True
-        print('measurement OnStop event triggered')
-
-
-def DoEvents():
-    pythoncom.PumpWaitingMessages()
-    wait(.1)
-
-
-def DoEventsUntil(cond):
-    while not cond():
-        DoEvents()
