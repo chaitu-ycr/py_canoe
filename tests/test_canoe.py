@@ -1,11 +1,12 @@
 import os
+import logging
 from time import sleep as wait
 from py_canoe import CANoe
 
 file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
 root_path = file_path
 canoe_inst = CANoe(fr'{root_path}\.py_canoe_log', ('addition_function', 'hello_world'))
-
+logger_inst = logging.getLogger('CANOE_LOG')
 
 def test_application_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -137,5 +138,7 @@ def test_test_module_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
-    canoe_inst.execute_test_module("demo_test_environment", "demo_test_node_001")
+    canoe_inst.execute_test_module('demo_test_node_001')
+    canoe_inst.execute_test_module('demo_test_node_002')
+    wait(1)
     assert canoe_inst.stop_measurement()

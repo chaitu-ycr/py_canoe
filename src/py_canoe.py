@@ -33,12 +33,13 @@ class CANoe:
         """
         Args:
             py_canoe_log_dir (str): directory to store py_canoe log. example 'D:\\.py_canoe'
-            user_capl_functions (tuple): user defined CAPL funtions to access.
+            user_capl_functions (tuple): user defined CAPL functions to access. on measurement init these functions will be initialized.
         """
         pcl = PyCanoeLogger(py_canoe_log_dir)
         self.log = pcl.log
         self.application: Application
         self.__diag_devices = dict()
+        self.__test_modules = list()
         self.user_capl_function_names = user_capl_functions
 
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
@@ -61,6 +62,7 @@ class CANoe:
         self.application.visible = visible
         self.application.open(path=canoe_cfg, auto_save=auto_save, prompt_user=prompt_user)
         self.__diag_devices = self.application.networks.fetch_diag_devices()
+        self.__test_modules = self.application.configuration.get_all_test_modules_in_test_environment()
 
     def new(self, auto_save=False, prompt_user=False) -> None:
         """Creates a new configuration.
@@ -1072,24 +1074,42 @@ class CANoe:
             self.log.info(f'invalid logging file ({absolute_log_file_path}). Failed to add.')
             return False
 
-    def execute_test_module(self, test_environment_name: str, test_module_name: str) -> int:
+    def execute_test_module(self, test_module_name: str) -> int:
         """use this method to execute test module.
 
         Args:
-            test_environment_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
             test_module_name (str): test module name. avoid duplicate test module names in CANoe configuration.
 
         Returns:
-            int: test module execution verdict.
+            int: test module execution verdict. 0 ='VerdictNotAvailable', 1 = 'VerdictPassed', 2 = 'VerdictFailed',
         """
-        conf_obj = self.application.configuration
-        test_environments = conf_obj.get_all_test_setup_environments()
-        test_env_obj = test_environments[test_environment_name]
-        test_modules = conf_obj.get_all_test_modules_in_test_environment(test_env_obj)
-        test_module_com_obj = test_modules[test_module_name]
-        tm_obj = TestModule(test_module_com_obj)
-        print(f'test_module_name = {tm_obj.name}')
-        tm_obj.start()
+        test_verdict = {0: 'VerdictNotAvailable',
+                        1: 'VerdictPassed',
+                        2: 'VerdictFailed',
+                        3: 'VerdictNone (not available for test modules)',
+                        4: 'VerdictInconclusive (not available for test modules)',
+                        5: 'VerdictErrorInTestSystem (not available for test modules)',}
+        execution_result = 0
+        test_module_found = False
+        test_env_name = ''
+        for tm in self.__test_modules:
+            if tm['name'] == test_module_name:
+                test_module_found = True
+                tm_obj = tm['object']
+                test_env_name = tm['environment']
+                self.log.info(f'test module "{test_module_name}" found in "{test_env_name}"')
+                tm_obj.start()
+                execution_result = tm_obj.verdict
+                break
+            else:
+                continue
+        if test_module_found and (execution_result == 1):
+            self.log.info(f'test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}.')
+        elif test_module_found and (execution_result != 1):
+            self.log.info(f'test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}.')
+        else:
+            self.log.info(f'test module "{test_env_name}.{test_module_name}" not found. not possible to execute.')
+        return execution_result
 
     def get_bus_databases_info(self, bus: str):
         dbcs_info = dict()
