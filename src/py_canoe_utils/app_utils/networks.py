@@ -1,17 +1,17 @@
 # Import Python Libraries here
+import logging
 import pythoncom
 import win32com.client
 
 
 class Networks:
-    def __init__(self, app_obj) -> None:
-        self.app_obj = app_obj
-        self.log = self.app_obj.log
-        self.networks_com_obj = win32com.client.Dispatch(self.app_obj.app_com_obj.Networks)
+    def __init__(self, app_com_obj: object):
+        self.log = logging.getLogger('CANOE_LOG')
+        self.com_obj = win32com.client.Dispatch(app_com_obj.Networks)
 
     def fetch_diag_devices(self) -> dict:
         diag_devices = {}
-        for network in self.networks_com_obj:
+        for network in self.com_obj:
             for device in network.Devices:
                 try:
                     diag_devices[device.Name] = device.Diagnostic

@@ -1,0 +1,40 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  
+}
+
+void MainTest ()
+{
+  test_case_001();
+  test_case_002();
+}
+
+testcase test_case_001()
+{
+  if( 1+1 == 2)
+  {
+    testStepPass("test_case_001 pass");
+  }
+  else
+  {
+    testStepFail("test_case_001 Fail");
+  }
+}
+
+testcase test_case_002()
+{
+  if( 1+2 == 2)
+  {
+    testStepPass("test_case_002 pass");
+  }
+  else
+  {
+    testStepFail("test_case_002 Fail");
+  }
+}
