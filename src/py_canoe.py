@@ -1111,6 +1111,30 @@ class CANoe:
             self.log.info(f'test module "{test_env_name}.{test_module_name}" not found. not possible to execute.')
         return execution_result
 
+    def get_test_environments(self) -> dict:
+        return self.application.configuration.get_all_test_setup_environments()
+
+    def get_test_modules(self, test_env_name: str) -> list:
+        return self.__test_modules
+
+    def start_test_environment(self, test_env_name: str) -> bool:
+        pass
+
+    def stop_test_environment(self, test_env_name: str) -> bool:
+        pass
+
+    def execute_all_test_environments(self):
+        pass
+
+    def stop_all_test_environments(self):
+        pass
+
+    def start_all_test_modules(self, env_name: str, wait_for_completion: bool) -> bool:
+        pass
+
+    def stop_test_module(self, env_name: str, module_name: str) -> bool:
+        pass
+
     def get_bus_databases_info(self, bus: str):
         dbcs_info = dict()
         bus_obj = self.application.bus
