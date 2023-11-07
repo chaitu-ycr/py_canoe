@@ -10,7 +10,7 @@ class Simulation:
     With the help of the Simulation object you can control the system time from an external source during the measurement.
     """
 
-    def __init__(self, app_com_obj: object, enable_sim_events=False):
+    def __init__(self, app_com_obj, enable_sim_events=False):
         self.log = logger_inst
         self.com_obj = win32com.client.Dispatch(app_com_obj.Simulation)
         if enable_sim_events:

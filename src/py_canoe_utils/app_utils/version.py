@@ -7,7 +7,7 @@ class Version:
     """The Version object represents the version of the CANoe application.
     """
 
-    def __init__(self, app_com_obj: object):
+    def __init__(self, app_com_obj):
         self.log = logging.getLogger('CANOE_LOG')
         self.com_obj = win32com.client.Dispatch(app_com_obj.Version)
 

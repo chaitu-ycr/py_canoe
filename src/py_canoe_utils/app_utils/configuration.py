@@ -27,7 +27,7 @@ class Configuration:
     """The Configuration object represents the active configuration.
     """
 
-    def __init__(self, app_com_obj: object, enable_config_events=False):
+    def __init__(self, app_com_obj, enable_config_events=False):
         self.log = logger_inst
         self.com_obj = win32com.client.Dispatch(app_com_obj.Configuration)
         if enable_config_events:
@@ -216,7 +216,7 @@ class Configuration:
 
 
 class TestSetup:
-    def __init__(self, conf_com_obj: object):
+    def __init__(self, conf_com_obj):
         self.com_obj = win32com.client.Dispatch(conf_com_obj.TestSetup)
 
     def save_all(self, prompt_user=False) -> None:
@@ -229,7 +229,7 @@ class TestSetup:
 
 
 class TestEnvironments:
-    def __init__(self, test_setup_com_obj: object):
+    def __init__(self, test_setup_com_obj):
         self.com_obj = win32com.client.Dispatch(test_setup_com_obj.TestEnvironments)
 
     @property
@@ -276,7 +276,7 @@ class TestEnvironments:
 
 
 class TestEnvironment:
-    def __init__(self, test_environment_com_obj: object):
+    def __init__(self, test_environment_com_obj):
         self.com_obj = test_environment_com_obj
         self.__test_modules = TestModules(self.com_obj)
 
@@ -371,7 +371,7 @@ class TestModules:
     This object should be preferred to the TestSetupItems object.
     """
 
-    def __init__(self, test_env_com_obj: object) -> None:
+    def __init__(self, test_env_com_obj) -> None:
         self.com_obj = test_env_com_obj.TestModules
 
     @property
@@ -488,7 +488,7 @@ class TestModuleEvents:
 
 class TestModule:
 
-    def __init__(self, test_module_com_obj: object):
+    def __init__(self, test_module_com_obj):
         self.com_obj = win32com.client.DispatchWithEvents(test_module_com_obj, TestModuleEvents)
         self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_started)
         self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_stopped)

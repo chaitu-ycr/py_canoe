@@ -4,7 +4,7 @@ import win32com.client
 
 
 class System:
-    def __init__(self, app_com_obj: object):
+    def __init__(self, app_com_obj):
         self.log = logging.getLogger('CANOE_LOG')
         self.com_obj = win32com.client.Dispatch(app_com_obj.System)
 
@@ -20,7 +20,7 @@ class VariablesFile:
 
 
 class Namespaces:
-    def __init__(self, namespaces_com_obj: object):
+    def __init__(self, namespaces_com_obj):
         self.namespaces_com_obj = namespaces_com_obj
 
     @property
@@ -48,7 +48,7 @@ class Namespaces:
 
 
 class Namespace:
-    def __init__(self, namespace_com_obj: object):
+    def __init__(self, namespace_com_obj):
         self.namespace_com_obj = namespace_com_obj
 
     @property

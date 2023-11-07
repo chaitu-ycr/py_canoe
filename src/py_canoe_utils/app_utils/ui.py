@@ -9,7 +9,7 @@ class Ui:
     """The UI object represents the user interface in CANoe.
     """
 
-    def __init__(self, app_com_obj: object):
+    def __init__(self, app_com_obj):
         self.__log = logger_inst
         self.com_obj = win32com.client.Dispatch(app_com_obj.UI)
         self.write = Write(self)

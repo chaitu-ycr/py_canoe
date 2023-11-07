@@ -10,7 +10,6 @@ from time import sleep as wait
 # import CANoe utils here
 from py_canoe_utils.py_canoe_logger import PyCanoeLogger
 from py_canoe_utils.application import Application
-from py_canoe_utils.app_utils.configuration import TestModule
 from py_canoe_utils.app_utils.system import Namespaces, Variables
 
 
