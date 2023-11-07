@@ -45,7 +45,7 @@ class Application:
     OPENED = False
     CLOSED = False
 
-    def __init__(self, user_capl_function_names: object, enable_app_events: object = False, enable_simulation: object = False):
+    def __init__(self, user_capl_function_names: tuple, enable_app_events=False, enable_simulation=False):
         self.log = logging.getLogger('CANOE_LOG')
         self.user_capl_function_names = user_capl_function_names
         self.enable_app_events = enable_app_events

@@ -110,6 +110,13 @@ def test_system_variable_methods():
     assert canoe_inst.stop_measurement()
     wait(1)
 
+def test_app_networks_class_methods():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    assert canoe_inst.start_measurement()
+    wait(1)
+    canoe_inst.execute_all_test_environments()
+    wait(1)
+    assert canoe_inst.stop_measurement()
 
 def test_diag_request_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
@@ -117,8 +124,12 @@ def test_diag_request_methods():
     wait(1)
     resp = canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
     assert resp == '50 01 00 00 00 00'
+    canoe_inst.control_tester_present('Door', True)
+    wait(2)
     resp = canoe_inst.send_diag_request('Door', '10 02')
     assert resp == '50 02 00 00 00 00'
+    canoe_inst.control_tester_present('Door', False)
+    wait(2)
     resp = canoe_inst.send_diag_request('Door', '10 03', return_sender_name=True)
     assert resp['Door'] == '50 03 00 00 00 00'
     assert canoe_inst.stop_measurement()

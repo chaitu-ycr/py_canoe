@@ -206,7 +206,7 @@ class Configuration:
     def get_all_test_setup_environments(self) -> dict:
         return self.__test_environments.fetch_all_test_environments()
 
-    def get_all_test_modules_in_test_environment(self) -> list:
+    def get_all_test_modules_in_test_environments(self) -> list:
         test_modules = list()
         tse = self.get_all_test_setup_environments()
         for te_name, te_inst in tse.items():
@@ -565,6 +565,7 @@ class TestModule:
         self.com_obj.Stop()
         logger_inst.info(f'stopping test module. waiting for completion...')
         self.wait_for_tm_to_stop()
+        logger_inst.info(f'completed stopping test module.')
 
     def reload(self) -> None:
         """This reloads the XML file with the test specification for XML test modules.
