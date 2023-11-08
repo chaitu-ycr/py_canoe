@@ -5,27 +5,30 @@ import win32com.client
 
 class System:
     def __init__(self, app_com_obj):
-        self.log = logging.getLogger('CANOE_LOG')
+        self.__log = logging.getLogger('CANOE_LOG')
         self.com_obj = win32com.client.Dispatch(app_com_obj.System)
+        self.__com_obj_dir = dir(self.com_obj)
 
+    @property
+    def namespaces(self):
+        return Namespaces(self.com_obj.Namespaces)
 
-class VariablesFiles:
-    def __init__(self):
-        pass
-
-
-class VariablesFile:
-    def __init__(self):
-        pass
+    @property
+    def variables_files(self):
+        return VariablesFiles(self.com_obj.VariablesFiles)
 
 
 class Namespaces:
+    """The Namespaces class represents the namespaces of the CANoe application"""
+
     def __init__(self, namespaces_com_obj):
-        self.namespaces_com_obj = namespaces_com_obj
+        self.com_obj = win32com.client.Dispatch(namespaces_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
 
     @property
     def count(self) -> int:
-        return self.namespaces_com_obj.Count
+        """The number of namespaces contained"""
+        return self.com_obj.Count
 
     def add(self, name: str) -> object:
         """Adds a new namespace.
@@ -36,7 +39,7 @@ class Namespaces:
         Returns:
             object: The new Namespace object.
         """
-        return self.namespaces_com_obj.Add(name)
+        return self.com_obj.Add(name)
 
     def remove(self, name: str) -> None:
         """Removes an Namespace from a group
@@ -44,21 +47,31 @@ class Namespaces:
         Args:
             name (str): A Namespace object.
         """
-        self.namespaces_com_obj.Remove(name)
+        self.com_obj.Remove(name)
+
+    def fetch_namespaces(self) -> dict:
+        namespaces_data = dict()
+        if self.count > 0:
+            for index in range(1, self.count + 1):
+                namespace_com_obj = self.com_obj.Item(index)
+                namespace = Namespace(namespace_com_obj)
+                namespaces_data[namespace.name] = namespace
+        return namespaces_data
 
 
 class Namespace:
     def __init__(self, namespace_com_obj):
-        self.namespace_com_obj = namespace_com_obj
+        self.com_obj = win32com.client.Dispatch(namespace_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
 
     @property
     def comment(self) -> str:
-        """Gets the comment for the Namespace.
+        """The comment for the namespace.
 
         Returns:
             str: The comment.
         """
-        return self.namespace_com_obj.Comment
+        return self.com_obj.Comment
 
     @comment.setter
     def comment(self, text: str) -> None:
@@ -67,7 +80,7 @@ class Namespace:
         Args:
             text (str): The comment
         """
-        self.namespace_com_obj.Comment = text
+        self.com_obj.Comment = text
 
     @property
     def name(self) -> str:
@@ -76,30 +89,25 @@ class Namespace:
         Returns:
             str: The name of the namespace.
         """
-        return self.namespace_com_obj.Name
+        return self.com_obj.Name
 
     @property
-    def namespaces(self) -> object:
+    def namespaces(self):
         """Returns the Namespaces object.
-
-        Returns:
-            object: The Namespaces object.
         """
-        return self.namespace_com_obj.Namespaces
+        return Namespaces(self.com_obj.Namespaces) if 'Namespaces' in self.__com_obj_dir else None
 
     @property
-    def variables(self) -> object:
+    def variables(self):
         """Returns the Variables object.
-
-        Returns:
-            object: The Variables object.
         """
-        return self.namespace_com_obj.Variables
+        return Variables(self.com_obj.Variables) if 'Variables' in self.__com_obj_dir else None
 
 
 class Variables:
     def __init__(self, variables_com_obj):
-        self.variables_com_obj = variables_com_obj
+        self.com_obj = win32com.client.Dispatch(variables_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
 
     @property
     def count(self) -> int:
@@ -108,7 +116,7 @@ class Variables:
         Returns:
             int: _description_
         """
-        return self.variables_com_obj.Count
+        return self.com_obj.Count
 
     def add(self, name: str, initial_value=0) -> object:
         """Adds a new read-only variable.
@@ -120,7 +128,7 @@ class Variables:
         Returns:
             object: The new Variable object.
         """
-        return self.variables_com_obj.Add(name, initial_value)
+        return self.com_obj.Add(name, initial_value)
 
     def add_ex(self, name: str, initial_value=0, min_value=0, max_value=0) -> object:
         """Adds a new read-only variable.
@@ -134,7 +142,7 @@ class Variables:
         Returns:
             object: The new Variable object.
         """
-        return self.variables_com_obj.AddEx(name, initial_value, min_value, max_value)
+        return self.com_obj.AddEx(name, initial_value, min_value, max_value)
 
     def add_writable(self, name: str, initial_value=0) -> object:
         """Adds a new writable variable.
@@ -146,7 +154,7 @@ class Variables:
         Returns:
             object: The new Variable object.
         """
-        return self.variables_com_obj.AddWriteable(name, initial_value)
+        return self.com_obj.AddWriteable(name, initial_value)
 
     def add_writable_ex(self, name: str, initial_value=0, min_value=0, max_value=0) -> object:
         """Adds a new writable variable.
@@ -160,7 +168,7 @@ class Variables:
         Returns:
             object: The new Variable object.
         """
-        return self.variables_com_obj.AddWritableEx(name, initial_value, min_value, max_value)
+        return self.com_obj.AddWritableEx(name, initial_value, min_value, max_value)
 
     def remove(self, variable: object) -> None:
         """Removes variable from a group
@@ -168,12 +176,22 @@ class Variables:
         Args:
             variable (str): Variable object.
         """
-        self.variables_com_obj.Remove(variable)
+        self.com_obj.Remove(variable)
+
+    def fetch_variables(self):
+        variables_data = dict()
+        if self.count > 0:
+            for index in range(1, self.count + 1):
+                variable_com_obj = self.com_obj.Item(index)
+                variable = Variable(variable_com_obj)
+                variables_data[variable.name] = variable
+        return variables_data
 
 
 class Variable:
     def __init__(self, variable_com_obj):
-        self.variable_com_obj = variable_com_obj
+        self.com_obj = win32com.client.Dispatch(variable_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
 
     @property
     def analysis_only(self) -> bool:
@@ -182,7 +200,7 @@ class Variable:
         Returns:
             bool: false (default) ,true
         """
-        return self.variable_com_obj.AnalysisOnly
+        return self.com_obj.AnalysisOnly
 
     @analysis_only.setter
     def analysis_only(self, value: bool) -> None:
@@ -192,7 +210,7 @@ class Variable:
         Args:
             value (bool): false (default) ,true.
         """
-        self.variable_com_obj.AnalysisOnly = value
+        self.com_obj.AnalysisOnly = value
 
     @property
     def bit_count(self) -> int:
@@ -201,7 +219,7 @@ class Variable:
         Returns:
             int: The number of bits of the variable data type.
         """
-        return self.variable_com_obj.BitCount
+        return self.com_obj.BitCount
 
     @property
     def comment(self) -> str:
@@ -210,7 +228,7 @@ class Variable:
         Returns:
             str: The comment.
         """
-        return self.variable_com_obj.Comment
+        return self.com_obj.Comment
 
     @comment.setter
     def comment(self, text: str) -> None:
@@ -219,7 +237,7 @@ class Variable:
         Args:
             text (str): The comment
         """
-        self.variable_com_obj.Comment = text
+        self.com_obj.Comment = text
 
     @property
     def element_count(self) -> int:
@@ -228,7 +246,7 @@ class Variable:
         Returns:
             int: The maximum number of elements in the array.
         """
-        return self.variable_com_obj.ElementCount
+        return self.com_obj.ElementCount
 
     @property
     def full_name(self) -> str:
@@ -237,7 +255,7 @@ class Variable:
         Returns:
             str: The full name, including namespace, variable name and member name.
         """
-        return self.variable_com_obj.FullName
+        return self.com_obj.FullName
 
     @full_name.setter
     def full_name(self, full_name: str) -> None:
@@ -246,7 +264,7 @@ class Variable:
         Args:
             full_name (str): The new complete path of the object.
         """
-        self.variable_com_obj.FullName = full_name
+        self.com_obj.FullName = full_name
 
     @property
     def name(self) -> str:
@@ -255,7 +273,7 @@ class Variable:
         Returns:
             str: The name of the system variable.
         """
-        return self.variable_com_obj.Name
+        return self.com_obj.Name
 
     @property
     def init_value(self) -> tuple[int, float, str]:
@@ -264,7 +282,7 @@ class Variable:
         Returns:
             tuple[int, float, str]: The initial value of the variable.
         """
-        return self.variable_com_obj.InitValue
+        return self.com_obj.InitValue
 
     @property
     def min_value(self) -> tuple[int, float, str]:
@@ -273,7 +291,7 @@ class Variable:
         Returns:
             tuple[int, float, str]: minimum value of the variable.
         """
-        return self.variable_com_obj.MinValue
+        return self.com_obj.MinValue
 
     @property
     def max_value(self) -> tuple[int, float, str]:
@@ -282,7 +300,7 @@ class Variable:
         Returns:
             tuple[int, float, str]: The maximum value of the variable.
         """
-        return self.variable_com_obj.MaxValue
+        return self.com_obj.MaxValue
 
     @property
     def is_array(self) -> bool:
@@ -291,7 +309,7 @@ class Variable:
         Returns:
             bool: Whether the variable data type is an array.
         """
-        return self.variable_com_obj.IsArray
+        return self.com_obj.IsArray
 
     @property
     def is_signed(self) -> bool:
@@ -300,7 +318,7 @@ class Variable:
         Returns:
             bool: Whether the data type is signed.
         """
-        return self.variable_com_obj.IsSigned
+        return self.com_obj.IsSigned
 
     @property
     def read_only(self) -> bool:
@@ -309,7 +327,7 @@ class Variable:
         Returns:
             bool: If the variable is write protected True is returned; otherwise False is returned.
         """
-        return self.variable_com_obj.ReadOnly
+        return self.com_obj.ReadOnly
 
     @property
     def type(self) -> int:
@@ -318,7 +336,7 @@ class Variable:
         Returns:
             int: The type of the system variable. The following types are define- 0: Integer 1: Float 2: String 4: Float Array 5: Integer Array 6: LongLong 7: Byte Array 98: Generic Array 99: Struct 65535: Invalid
         """
-        return self.variable_com_obj.Type
+        return self.com_obj.Type
 
     @property
     def unit(self) -> str:
@@ -327,7 +345,7 @@ class Variable:
         Returns:
             str: The unit of the variable.
         """
-        return self.variable_com_obj.Unit
+        return self.com_obj.Unit
 
     @property
     def value(self) -> tuple[int, float, str]:
@@ -336,7 +354,7 @@ class Variable:
         Returns:
             tuple[int, float, str]: The value of the variable.
         """
-        return self.variable_com_obj.Value
+        return self.com_obj.Value
 
     @value.setter
     def value(self, value: tuple[int, float, str]) -> None:
@@ -345,14 +363,143 @@ class Variable:
         Args:
             value (tuple[int, float, str]): The new value of the variable.
         """
-        self.variable_com_obj.Value = value
+        self.com_obj.Value = value
+
+    def get_member_phys_value(self, member_name: str):
+        """The current physical value of the member."""
+        return self.com_obj.GetMemberPhysValue(member_name)
+
+    def get_member_value(self, member_name: str):
+        """The current (raw) value of the member."""
+        return self.com_obj.GetMemberValue(member_name)
+
+    def get_symbolic_value_name(self, value: int):
+        """Returns the symbolic name for the value.
+        Symbolic value names can only be used with variables of type Integer.
+        """
+        return self.com_obj.GetSymbolicValueName(value)
+
+    def set_member_phys_value(self, member_name: str, value):
+        """Sets the physical value of a member of a variable of type Struct or Generic Array."""
+        return self.com_obj.setMemberPhysValue(member_name, value)
+
+    def set_member_value(self, member_name: str, value):
+        """Sets the value of a member of a variable of type Struct or Generic Array."""
+        return self.com_obj.setMemberValue(member_name, value)
+
+    def set_symbolic_value_name(self, value: int, name: str):
+        """Defines the symbolic name for the value.
+        An existing name for the value is replaced.
+        Symbolic value names can only be used with variables of type Integer.
+        """
+        self.com_obj.setSymbolicValueName(value, name)
+
+
+class VariablesFiles:
+    def __init__(self, variables_files_com_obj):
+        self.com_obj = win32com.client.Dispatch(variables_files_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
+
+    @property
+    def count(self):
+        return self.com_obj.Count
+
+    def fetch_variables_files(self):
+        variables_files_dict = dict()
+        if self.count > 0:
+            for index in range(1, self.count + 1):
+                variable_file_com_obj = self.com_obj.Item(index)
+                variable_file = VariablesFile(variable_file_com_obj)
+                variables_files_dict[variable_file.name] = variable_file
+        return variables_files_dict
+
+
+class VariablesFile:
+    def __init__(self, variable_file_com_obj):
+        self.com_obj = win32com.client.Dispatch(variable_file_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
+
+    @property
+    def full_name(self):
+        """The complete path of the system variables file."""
+        return self.com_obj.FullName
+
+    @property
+    def name(self):
+        """The name of the system variables file."""
+        return self.com_obj.Name
+
+    @property
+    def path(self):
+        """The complete path to the system variables file."""
+        return self.com_obj.Path
 
 
 class Encodings:
-    def __init__(self):
-        pass
+    def __init__(self, encodings_com_obj):
+        self.com_obj = win32com.client.Dispatch(encodings_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
+
+    @property
+    def count(self):
+        """The number of encodings contained"""
+        return self.com_obj.Count
+
+    def fetch_encodings(self):
+        encodings_list = list()
+        if self.count > 0:
+            for index in range(1, self.count + 1):
+                encoding_com_obj = self.com_obj.Item(index)
+                encoding = Encoding(encoding_com_obj)
+                encodings_list.append(encoding)
+        return encodings_list
 
 
 class Encoding:
-    def __init__(self):
-        pass
+    """The linear or textual encodings of the variable."""
+
+    def __init__(self, encoding_com_obj):
+        self.com_obj = win32com.client.Dispatch(encoding_com_obj)
+        self.__com_obj_dir = dir(self.com_obj)
+
+    @property
+    def factor(self):
+        """The factor of a linear encoding.
+        Type: double
+        """
+        return self.com_obj.Factor
+
+    @property
+    def lower_bound(self):
+        """The lower bound of the encoding.
+        Type: 64 bit integer
+        """
+        return self.com_obj.LowerBound
+
+    @property
+    def offset(self):
+        """The offset of a linear encoding.
+        Type: double
+        """
+        return self.com_obj.Offset
+
+    @property
+    def text(self):
+        """The textual value of a textual encoding.
+        Type: string
+        """
+        return self.com_obj.Text
+
+    @property
+    def unit(self):
+        """The unit of a linear encoding.
+        Type: string
+        """
+        return self.com_obj.Unit
+
+    @property
+    def upper_bound(self):
+        """The upper bound of the encoding.
+        Type: 64 bit integer
+        """
+        return self.com_obj.UpperBound

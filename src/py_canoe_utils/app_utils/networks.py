@@ -33,7 +33,7 @@ class Networks:
         diag_devices = dict()
         networks = self.fetch_all_networks()
         if len(networks) > 0:
-            for n_name, n_value in networks.items():
+            for _, n_value in networks.items():
                 devices = n_value.devices
                 n_devices = devices.get_all_devices()
                 if len(n_devices) > 0:
@@ -94,7 +94,7 @@ class Devices:
         for index in range(1, self.count + 1):
             device_com_obj = self.com_obj.Item(index)
             device = Device(device_com_obj)
-            devices[device_com_obj.Name] = device
+            devices[device.name] = device
         return devices
 
 

@@ -99,7 +99,7 @@ class Configuration:
         Returns:
             int: The currently active mode.
         """
-        return self.com_obj.Mode
+        return self.com_obj.mode
 
     @mode.setter
     def mode(self, mode: int) -> None:
@@ -108,7 +108,7 @@ class Configuration:
         Args:
             mode (int): The active mode; valid values are: 0-Online mode is activated. 1-Offline mode is activated.
         """
-        self.com_obj.Mode = mode
+        self.com_obj.mode = mode
         self.log.info(f'offline/online mode set to {mode}.')
 
     @property

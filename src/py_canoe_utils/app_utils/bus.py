@@ -137,7 +137,8 @@ class Bus:
     def database_objects(self):
         db_objects = dict()
         databases = self.com_obj.Databases
-        for database in databases:
+        for index in range(1, databases.Count + 1):
+            database = databases.Item(index)
             db_objects[database.Name] = database
         return db_objects
     
@@ -145,6 +146,7 @@ class Bus:
     def node_objects(self):
         n_objects = dict()
         nodes = self.com_obj.Nodes
-        for node in nodes:
+        for index in range(1, nodes.Count + 1):
+            node = nodes.Item(index)
             n_objects[node.Name] = node
         return n_objects
