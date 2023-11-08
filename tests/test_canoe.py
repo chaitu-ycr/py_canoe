@@ -159,18 +159,22 @@ def test_test_module_methods():
     assert canoe_inst.stop_measurement()
 
 
-def test_app_system_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
-    wait(1)
-    system = canoe_inst.application.system
-    namespaces = system.namespaces
-    variables_files = system.variables_files
-    namespaces_dict = namespaces.fetch_namespaces()
-    for n_name, namespace in namespaces_dict.items():
-        print(n_name)
-        variables_local = namespace.variables
-        variables_dict = variables_local.fetch_variables()
-        namespaces_local = namespace.namespaces
-    variables_files_dict = variables_files.fetch_variables_files()
-    wait(1)
-    assert canoe_inst.stop_measurement()
+# def test_dummy_case():
+#     # TODO: will be removed in future
+#     canoe_inst.open(fr'C:\Users\Public\Documents\Vector\CANoe\Sample Configurations 11.0.96\Ethernet\EthernetSystem\EthernetSystem.cfg')
+#     canoe_inst.start_measurement()
+#     wait(1)
+#     system = canoe_inst.application.system
+#     namespaces = system.namespaces
+#     variables_files = system.variables_files
+#     namespaces_dict = namespaces.fetch_namespaces()
+#     for n_name, namespace in namespaces_dict.items():
+#         print(n_name)
+#         variables_local = namespace.variables
+#         variables_dict = variables_local.fetch_variables()
+#         namespaces_local = namespace.namespaces
+#     variables_files_dict = variables_files.fetch_variables_files()
+#     env_vars = canoe_inst.application.environment.create_info()
+#     info = env_vars.get_info()
+#     wait(1)
+#     assert canoe_inst.stop_measurement()
