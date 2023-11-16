@@ -8,6 +8,7 @@ from logging import handlers
 class PyCanoeLogger:
     def __init__(self, py_canoe_log_dir='') -> None:
         self.log = logging.getLogger('CANOE_LOG')
+        self.log.handlers.clear()
         self.log.propagate = False
         self.__py_canoe_log_initialisation(py_canoe_log_dir)
 
