@@ -9,10 +9,13 @@ class Ui:
     """The UI object represents the user interface in CANoe.
     """
 
-    def __init__(self, app_com_obj: object):
+    def __init__(self, app_com_obj):
         self.__log = logger_inst
         self.com_obj = win32com.client.Dispatch(app_com_obj.UI)
-        self.write = Write(self)
+
+    @property
+    def write(self):
+        return Write(self.com_obj.Write)
 
     def get_command_availability(self, command: str) -> bool:
         """defines the availability of a command on the user interface.
@@ -57,9 +60,9 @@ class Write:
     It is part of the user interface.
     """
 
-    def __init__(self, ui_obj):
+    def __init__(self, write_com_obj):
         self.__log = logger_inst
-        self.com_obj = win32com.client.Dispatch(ui_obj.com_obj.Write)
+        self.com_obj = win32com.client.Dispatch(write_com_obj)
 
     @property
     def text(self) -> str:
@@ -115,4 +118,4 @@ class Write:
             text (str): The text
         """
         self.com_obj.Output(text)
-        self.__log.info(f'Outputed {text} in the Write Window.')
+        self.__log.info(f'Outputed "{text}" in the Write Window.')

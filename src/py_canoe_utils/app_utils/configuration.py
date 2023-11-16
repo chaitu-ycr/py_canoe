@@ -27,7 +27,7 @@ class Configuration:
     """The Configuration object represents the active configuration.
     """
 
-    def __init__(self, app_com_obj: object, enable_config_events=False):
+    def __init__(self, app_com_obj, enable_config_events=False):
         self.log = logger_inst
         self.com_obj = win32com.client.Dispatch(app_com_obj.Configuration)
         if enable_config_events:
@@ -99,7 +99,7 @@ class Configuration:
         Returns:
             int: The currently active mode.
         """
-        return self.com_obj.Mode
+        return self.com_obj.mode
 
     @mode.setter
     def mode(self, mode: int) -> None:
@@ -108,7 +108,7 @@ class Configuration:
         Args:
             mode (int): The active mode; valid values are: 0-Online mode is activated. 1-Offline mode is activated.
         """
-        self.com_obj.Mode = mode
+        self.com_obj.mode = mode
         self.log.info(f'offline/online mode set to {mode}.')
 
     @property
@@ -167,6 +167,10 @@ class Configuration:
         """
         return self.com_obj.Saved
 
+    @property
+    def simulation_setup(self):
+        return SimulationSetup(self.com_obj)
+
     def compile_and_verify(self):
         """Compiles all CAPL test modules and verifies all XML test modules.
         All test modules in the Simulation Setup and in the Test Setup are taken into consideration.
@@ -206,7 +210,7 @@ class Configuration:
     def get_all_test_setup_environments(self) -> dict:
         return self.__test_environments.fetch_all_test_environments()
 
-    def get_all_test_modules_in_test_environment(self) -> list:
+    def get_all_test_modules_in_test_environments(self) -> list:
         test_modules = list()
         tse = self.get_all_test_setup_environments()
         for te_name, te_inst in tse.items():
@@ -216,7 +220,7 @@ class Configuration:
 
 
 class TestSetup:
-    def __init__(self, conf_com_obj: object):
+    def __init__(self, conf_com_obj):
         self.com_obj = win32com.client.Dispatch(conf_com_obj.TestSetup)
 
     def save_all(self, prompt_user=False) -> None:
@@ -229,7 +233,7 @@ class TestSetup:
 
 
 class TestEnvironments:
-    def __init__(self, test_setup_com_obj: object):
+    def __init__(self, test_setup_com_obj):
         self.com_obj = win32com.client.Dispatch(test_setup_com_obj.TestEnvironments)
 
     @property
@@ -276,7 +280,7 @@ class TestEnvironments:
 
 
 class TestEnvironment:
-    def __init__(self, test_environment_com_obj: object):
+    def __init__(self, test_environment_com_obj):
         self.com_obj = test_environment_com_obj
         self.__test_modules = TestModules(self.com_obj)
 
@@ -371,7 +375,7 @@ class TestModules:
     This object should be preferred to the TestSetupItems object.
     """
 
-    def __init__(self, test_env_com_obj: object) -> None:
+    def __init__(self, test_env_com_obj) -> None:
         self.com_obj = test_env_com_obj.TestModules
 
     @property
@@ -488,7 +492,7 @@ class TestModuleEvents:
 
 class TestModule:
 
-    def __init__(self, test_module_com_obj: object):
+    def __init__(self, test_module_com_obj):
         self.com_obj = win32com.client.DispatchWithEvents(test_module_com_obj, TestModuleEvents)
         self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_started)
         self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_stopped)
@@ -565,6 +569,7 @@ class TestModule:
         self.com_obj.Stop()
         logger_inst.info(f'stopping test module. waiting for completion...')
         self.wait_for_tm_to_stop()
+        logger_inst.info(f'completed stopping test module.')
 
     def reload(self) -> None:
         """This reloads the XML file with the test specification for XML test modules.
@@ -576,3 +581,110 @@ class TestModule:
 
     def set_execution_time(self, days: int, hours: int, minutes: int):
         pass
+
+
+class SimulationSetup:
+    def __init__(self, conf_com_obj):
+        self.com_obj = win32com.client.Dispatch(conf_com_obj.SimulationSetup)
+
+    @property
+    def replay_collection(self):
+        return ReplayCollection(self.com_obj)
+
+    @property
+    def buses(self):
+        return Buses(self.com_obj)
+
+    @property
+    def nodes(self):
+        return Nodes(self.com_obj)
+
+
+class ReplayCollection:
+    """The ReplayCollection object represents the Replay Blocks of the CANoe application.
+    """
+    def __init__(self, sim_setup_com_obj):
+        self.com_obj = win32com.client.Dispatch(sim_setup_com_obj.ReplayCollection)
+
+    @property
+    def count(self) -> int:
+        """The number of Replay Blocks contained.
+
+        Returns:
+            int: The number of Replay Blocks contained.
+        """
+        return self.com_obj.Count
+
+    def add(self, name: str) -> object:
+        """TODO: documentation update pending."""
+        return self.com_obj.Add(name)
+
+    def remove(self, index: int) -> None:
+        """TODO: documentation update pending."""
+        self.com_obj.Remove(index)
+
+    def fetch_replay_blocks(self) -> dict:
+        replay_blocks = dict()
+        for index in range(1, self.count + 1):
+            rb_com_obj = self.com_obj.Item(index)
+            rb_inst = ReplayBlock(rb_com_obj)
+            replay_blocks[rb_inst.name] = rb_inst
+        return replay_blocks
+
+
+class ReplayBlock:
+    def __init__(self, replay_block_com_obj):
+        self.com_obj = win32com.client.Dispatch(replay_block_com_obj)
+
+    @property
+    def name(self) -> str:
+        """The name of the Replay Block."""
+        return self.com_obj.Name
+
+    @property
+    def path(self) -> str:
+        """The path of the replay file."""
+        return self.com_obj.Path
+
+    @path.setter
+    def path(self, path: str):
+        """The path of the replay file."""
+        self.com_obj.Path = path
+
+    def start(self):
+        """Starts the replay.
+        TODO: documentation update pending.
+        """
+        self.com_obj.Start()
+
+    def stop(self):
+        """Stops the replay.
+        TODO: documentation update pending.
+        """
+        self.com_obj.Stop()
+
+
+class Buses:
+    """The Buses object represents the buses of the Simulation Setup of the CANoe application.
+    The Buses object is only available in CANoe.
+    """
+    def __init__(self, sim_setup_com_obj):
+        self.com_obj = win32com.client.Dispatch(sim_setup_com_obj.Buses)
+
+    @property
+    def count(self) -> int:
+        """TODO: documentation update pending."""
+        return self.com_obj.Count
+
+
+class Nodes:
+    """The Nodes object represents the CAPL node of the Simulation Setup of the CANoe application.
+    The Nodes object is only available in CANoe.
+    """
+    def __init__(self, sim_setup_com_obj):
+        self.com_obj = win32com.client.Dispatch(sim_setup_com_obj.Nodes)
+
+    @property
+    def count(self) -> int:
+        """TODO: documentation update pending."""
+        return self.com_obj.Count

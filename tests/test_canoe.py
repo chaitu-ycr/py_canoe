@@ -8,6 +8,7 @@ root_path = file_path
 canoe_inst = CANoe(fr'{root_path}\.py_canoe_log', ('addition_function', 'hello_world'))
 logger_inst = logging.getLogger('CANOE_LOG')
 
+
 def test_application_class_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     print(f'application name: {canoe_inst.application.name}')
@@ -111,14 +112,27 @@ def test_system_variable_methods():
     wait(1)
 
 
+def test_app_networks_class_methods():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    assert canoe_inst.start_measurement()
+    wait(1)
+    canoe_inst.execute_all_test_environments()
+    wait(1)
+    assert canoe_inst.stop_measurement()
+
+
 def test_diag_request_methods():
     canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
     resp = canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
     assert resp == '50 01 00 00 00 00'
+    canoe_inst.control_tester_present('Door', True)
+    wait(2)
     resp = canoe_inst.send_diag_request('Door', '10 02')
     assert resp == '50 02 00 00 00 00'
+    canoe_inst.control_tester_present('Door', False)
+    wait(2)
     resp = canoe_inst.send_diag_request('Door', '10 03', return_sender_name=True)
     assert resp['Door'] == '50 03 00 00 00 00'
     assert canoe_inst.stop_measurement()
@@ -142,3 +156,38 @@ def test_test_module_methods():
     canoe_inst.execute_test_module('demo_test_node_002')
     wait(1)
     assert canoe_inst.stop_measurement()
+
+
+def test_replay_block_methods():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    assert canoe_inst.start_measurement()
+    wait(1)
+    canoe_inst.set_replay_block_file(block_name='DemoReplayBlock',
+                                     recording_file_path=fr'{file_path}\demo_cfg\Logs\demo_log.blf')
+    wait(1)
+    canoe_inst.control_replay_block(block_name='DemoReplayBlock', start_stop=True)
+    wait(2)
+    canoe_inst.control_replay_block(block_name='DemoReplayBlock', start_stop=False)
+    wait(1)
+    assert canoe_inst.stop_measurement()
+
+
+# def test_dummy_case():
+#     # TODO: will be removed in future
+#     canoe_inst.open(fr'C:\Users\Public\Documents\Vector\CANoe\Sample Configurations 11.0.96\Ethernet\EthernetSystem\EthernetSystem.cfg')
+#     canoe_inst.start_measurement()
+#     wait(1)
+#     system = canoe_inst.application.system
+#     namespaces = system.namespaces
+#     variables_files = system.variables_files
+#     namespaces_dict = namespaces.fetch_namespaces()
+#     for n_name, namespace in namespaces_dict.items():
+#         print(n_name)
+#         variables_local = namespace.variables
+#         variables_dict = variables_local.fetch_variables()
+#         namespaces_local = namespace.namespaces
+#     variables_files_dict = variables_files.fetch_variables_files()
+#     env_vars = canoe_inst.application.environment.create_info()
+#     info = env_vars.get_info()
+#     wait(1)
+#     assert canoe_inst.stop_measurement()

@@ -9,7 +9,7 @@ class Capl:
     Please note that only user-defined CAPL functions can be accessed
     """
 
-    def __init__(self, app_com_obj: object):
+    def __init__(self, app_com_obj):
         self.__log = logging.getLogger('CANOE_LOG')
         self.com_obj = win32com.client.Dispatch(app_com_obj.CAPL)
 
@@ -30,7 +30,7 @@ class Capl:
         return self.com_obj.GetFunction(name)
 
     @staticmethod
-    def parameter_count(capl_function_object: object) -> int:
+    def parameter_count(capl_function_object: get_function) -> int:
         """Returns the number of parameters of the CAPL function.
 
         Args:
@@ -42,7 +42,7 @@ class Capl:
         return capl_function_object.ParameterCount
 
     @staticmethod
-    def parameter_types(capl_function_object: object) -> tuple:
+    def parameter_types(capl_function_object: get_function) -> tuple:
         """Returns the types of the parameters of the CAPL function as byte array.
         The parameter types are coded as follows:
         L: long (32 bit signed integer)
@@ -57,14 +57,14 @@ class Capl:
         """
         return capl_function_object.ParameterTypes
 
-    def call_capl_function(self, capl_function_obj: object, *arguments) -> bool:
+    def call_capl_function(self, capl_function_obj: get_function, *arguments) -> bool:
         """Calls a CAPL function.
         Please note that the number of parameters must agree with that of the CAPL function.
         The return value is only available for CAPL functions whose CAPL programs are configured in the Measurement Setup.
         Only integers are allowed as a return type.
 
         Args:
-            capl_function_obj (str): CAPL function object.
+            capl_function_obj (object): CAPL function object.
             arguments (tuple): Function parameters p1…p10 (optional).
 
         Returns:

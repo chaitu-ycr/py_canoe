@@ -10,7 +10,6 @@ from time import sleep as wait
 # import CANoe utils here
 from py_canoe_utils.py_canoe_logger import PyCanoeLogger
 from py_canoe_utils.application import Application
-from py_canoe_utils.app_utils.configuration import TestModule
 from py_canoe_utils.app_utils.system import Namespaces, Variables
 
 
@@ -39,7 +38,9 @@ class CANoe:
         self.log = pcl.log
         self.application: Application
         self.__diag_devices = dict()
+        self.__test_environments = dict()
         self.__test_modules = list()
+        self.__replay_blocks = dict()
         self.user_capl_function_names = user_capl_functions
 
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
@@ -56,13 +57,14 @@ class CANoe:
             >>> canoe_inst = CANoe()
             >>> canoe_inst.open(r'D:\_kms_local\vector_canoe\py_canoe\demo_cfg\demo.cfg')
         """
-        self.application = None
         pythoncom.CoInitialize()
         self.application = Application(self.user_capl_function_names)
         self.application.visible = visible
         self.application.open(path=canoe_cfg, auto_save=auto_save, prompt_user=prompt_user)
-        self.__diag_devices = self.application.networks.fetch_diag_devices()
-        self.__test_modules = self.application.configuration.get_all_test_modules_in_test_environment()
+        self.__diag_devices = self.application.networks.fetch_all_diag_devices()
+        self.__test_environments = self.application.configuration.get_all_test_setup_environments()
+        self.__test_modules = self.application.configuration.get_all_test_modules_in_test_environments()
+        self.__replay_blocks = self.application.configuration.simulation_setup.replay_collection.fetch_replay_blocks()
 
     def new(self, auto_save=False, prompt_user=False) -> None:
         """Creates a new configuration.
@@ -889,7 +891,8 @@ class CANoe:
                 wait(0.1)
                 self.log.info(f'system variable({sys_var_name}) value set to -> {variable_object.Value}.')
             else:
-                self.log.info(f'failed to set system variable({sys_var_name}) value. check variable length and index value.')
+                self.log.info(
+                    f'failed to set system variable({sys_var_name}) value. check variable length and index value.')
         except Exception as e:
             self.log.info(f'failed to set system variable({sys_var_name}) value. {e}')
 
@@ -930,32 +933,45 @@ class CANoe:
             if diag_ecu_qualifier_name in self.__diag_devices.keys():
                 self.log.info(f'{diag_ecu_qualifier_name}: Diagnostic Request --> {request}')
                 if request_in_bytes:
-                    diag_req_in_bytes = bytearray()
-                    request = ''.join(request.split(' '))
-                    for i in range(0, len(request), 2):
-                        diag_req_in_bytes.append(int(request[i:i + 2], 16))
-                    diag_req = self.__diag_devices[diag_ecu_qualifier_name].CreateRequestFromStream(diag_req_in_bytes)
+                    diag_req = self.__diag_devices[diag_ecu_qualifier_name].create_request_from_stream(request)
                 else:
-                    diag_req = self.__diag_devices[diag_ecu_qualifier_name].CreateRequest(request)
-                diag_req.Send()
-                while diag_req.Pending:
+                    diag_req = self.__diag_devices[diag_ecu_qualifier_name].create_request(request)
+                diag_req.send()
+                while diag_req.pending:
                     wait(0.1)
-                if diag_req.Responses.Count == 0:
+                diag_req_responses = diag_req.responses
+                if len(diag_req_responses) == 0:
                     self.log.info("Diagnostic Response Not Received.")
                 else:
-                    for k in range(1, diag_req.Responses.Count + 1):
-                        diag_res = diag_req.Responses(k)
-                        diag_response_data = " ".join(f"{d:02X}" for d in diag_res.Stream).upper()
-                        diag_response_including_sender_name[diag_res.Sender] = diag_response_data
-                        if diag_res.Positive:
-                            self.log.info(f"{diag_res.Sender}: Diagnostic Response +ve <-- {diag_response_data}")
+                    for diag_res in diag_req_responses:
+                        diag_response_data = diag_res.stream
+                        diag_response_including_sender_name[diag_res.sender] = diag_response_data
+                        if diag_res.positive:
+                            self.log.info(f"{diag_res.sender}: Diagnostic Response +ve <-- {diag_response_data}")
                         else:
                             self.log.info(f"{diag_res.Sender}: Diagnostic Response -ve <-- {diag_response_data}")
             else:
-                self.log.info(f'Diagnostic ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
+                self.log.info(
+                    f'Diagnostic ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
         except Exception as e:
             self.log.info(f'failed to send diagnostic request({request}). {e}')
         return diag_response_including_sender_name if return_sender_name else diag_response_data
+
+    def control_tester_present(self, diag_ecu_qualifier_name: str, value: bool) -> None:
+        if diag_ecu_qualifier_name in self.__diag_devices.keys():
+            diag_device = self.__diag_devices[diag_ecu_qualifier_name]
+            if diag_device.tester_present_status != value:
+                if value:
+                    diag_device.start_tester_present()
+                    self.log.info(f'{diag_ecu_qualifier_name}: started tester present')
+                else:
+                    diag_device.stop_tester_present()
+                    self.log.info(f'{diag_ecu_qualifier_name}: stopped tester present')
+                wait(.1)
+            else:
+                self.log.info(f'{diag_ecu_qualifier_name}: tester present already set to {value}')
+        else:
+            self.log.info(f'diag ECU qualifier "{diag_ecu_qualifier_name}" not available in configuration.')
 
     def __fetch_replay_blocks(self) -> dict:
         replay_blocks = dict()
@@ -981,9 +997,10 @@ class CANoe:
             >>> canoe_inst.set_replay_block_file(block_name='replay block name', recording_file_path='replay file including path')
             >>> canoe_inst.start_measurement()
         """
-        replay_blocks = self.__fetch_replay_blocks()
+        replay_blocks = self.__replay_blocks
         if block_name in replay_blocks.keys():
-            replay_blocks[block_name].Path = recording_file_path
+            replay_block = replay_blocks[block_name]
+            replay_block.path = recording_file_path
             self.log.info(f'Replay block "{block_name}" updated with "{recording_file_path}" path.')
         else:
             self.log.warning(f'Replay block "{block_name}" not available.')
@@ -1003,12 +1020,13 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.control_replay_block('replay block name', True)
         """
-        replay_blocks = self.__fetch_replay_blocks()
+        replay_blocks = self.__replay_blocks
         if block_name in replay_blocks.keys():
+            replay_block = replay_blocks[block_name]
             if start_stop:
-                replay_blocks[block_name].Start()
+                replay_block.start()
             else:
-                replay_blocks[block_name].Stop()
+                replay_block.stop()
             self.log.info(f'Replay block "{block_name}" {"Started" if start_stop else "Stopped"}.')
         else:
             self.log.warning(f'Replay block "{block_name}" not available.')
@@ -1043,7 +1061,8 @@ class CANoe:
             >>> canoe_inst.stop_measurement()
         """
         capl_obj = self.application.capl
-        exec_sts = capl_obj.call_capl_function(self.application.measurement.user_capl_function_obj_dict[name], *arguments)
+        exec_sts = capl_obj.call_capl_function(self.application.measurement.user_capl_function_obj_dict[name],
+                                               *arguments)
         self.log.info(f'triggered capl function({name}). execution status = {exec_sts}.')
         return exec_sts
 
@@ -1074,6 +1093,21 @@ class CANoe:
             self.log.info(f'invalid logging file ({absolute_log_file_path}). Failed to add.')
             return False
 
+    def get_test_environments(self) -> dict:
+        return self.__test_environments
+
+    def get_test_modules(self, test_env_name: str) -> dict:
+        test_environments = self.get_test_environments()
+        if len(test_environments) > 0:
+            if test_env_name in test_environments.keys():
+                return test_environments[test_env_name].get_all_test_modules()
+            else:
+                self.log.info(f'"{test_env_name}" not found in configuration.')
+                return {}
+        else:
+            self.log.info(f'Zero test environments found in configuration. Not possible to fetch test modules.')
+            return {}
+
     def execute_test_module(self, test_module_name: str) -> int:
         """use this method to execute test module.
 
@@ -1088,7 +1122,7 @@ class CANoe:
                         2: 'VerdictFailed',
                         3: 'VerdictNone (not available for test modules)',
                         4: 'VerdictInconclusive (not available for test modules)',
-                        5: 'VerdictErrorInTestSystem (not available for test modules)',}
+                        5: 'VerdictErrorInTestSystem (not available for test modules)', }
         execution_result = 0
         test_module_found = False
         test_env_name = ''
@@ -1104,12 +1138,60 @@ class CANoe:
             else:
                 continue
         if test_module_found and (execution_result == 1):
-            self.log.info(f'test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}.')
+            self.log.info(
+                f'test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}.')
         elif test_module_found and (execution_result != 1):
-            self.log.info(f'test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}.')
+            self.log.info(
+                f'test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}.')
         else:
             self.log.info(f'test module "{test_env_name}.{test_module_name}" not found. not possible to execute.')
         return execution_result
+
+    def stop_test_module(self, env_name: str, module_name: str) -> None:
+        test_modules = self.get_test_modules(test_env_name=env_name)
+        if test_modules:
+            if module_name in test_modules.keys():
+                test_modules[module_name].stop()
+            else:
+                self.log.info(f'test module not found in "{env_name}" test environment.')
+        else:
+            self.log.info(f'test modules not available in "{env_name}" test environment.')
+
+    def execute_all_test_modules_in_test_env(self, env_name: str) -> None:
+        test_modules = self.get_test_modules(test_env_name=env_name)
+        if test_modules:
+            for tm_name in test_modules.keys():
+                self.execute_test_module(tm_name)
+        else:
+            self.log.info(f'test modules not available in "{env_name}" test environment.')
+
+    def stop_all_test_modules_in_test_env(self, env_name: str) -> None:
+        test_modules = self.get_test_modules(test_env_name=env_name)
+        if test_modules:
+            for tm_name in test_modules.keys():
+                self.stop_test_module(env_name, tm_name)
+        else:
+            self.log.info(f'test modules not available in "{env_name}" test environment.')
+
+    def execute_all_test_environments(self) -> None:
+        test_environments = self.get_test_environments()
+        if len(test_environments) > 0:
+            for test_env_name in test_environments.keys():
+                self.log.info(f'started executing test environment "{test_env_name}"...')
+                self.execute_all_test_modules_in_test_env(test_env_name)
+                self.log.info(f'completed executing test environment "{test_env_name}"')
+        else:
+            self.log.info(f'Zero test environments found in configuration.')
+
+    def stop_all_test_environments(self):
+        test_environments = self.get_test_environments()
+        if len(test_environments) > 0:
+            for test_env_name in test_environments.keys():
+                self.log.info(f'stopping test environment "{test_env_name}" execution')
+                self.stop_all_test_modules_in_test_env(test_env_name)
+                self.log.info(f'completed stopping test environment "{test_env_name}"')
+        else:
+            self.log.info(f'Zero test environments found in configuration.')
 
     def get_bus_databases_info(self, bus: str):
         dbcs_info = dict()
@@ -1117,16 +1199,18 @@ class CANoe:
         bus_obj.reinit_bus(bus_type=bus)
         db_objects = bus_obj.database_objects()
         for db_object in db_objects.values():
-            dbcs_info[db_object.Name] = {'path': db_object.Path, 'channel': db_object.Channel, 'full_name': db_object.FullName}
+            dbcs_info[db_object.Name] = {'path': db_object.Path, 'channel': db_object.Channel,
+                                         'full_name': db_object.FullName}
         self.log.info(f'{bus} bus databases info -> {dbcs_info}.')
         return dbcs_info
-    
+
     def get_bus_nodes_info(self, bus: str):
         nodes_info = dict()
         bus_obj = self.application.bus
         bus_obj.reinit_bus(bus_type=bus)
         node_objects = bus_obj.node_objects()
         for n_object in node_objects.values():
-            nodes_info[n_object.Name] = {'path': n_object.Path, 'full_name': n_object.FullName, 'active': n_object.Active}
+            nodes_info[n_object.Name] = {'path': n_object.Path, 'full_name': n_object.FullName,
+                                         'active': n_object.Active}
         self.log.info(f'{bus} bus nodes info -> {nodes_info}.')
         return nodes_info
