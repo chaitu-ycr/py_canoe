@@ -40,6 +40,7 @@ class CANoe:
         self.__diag_devices = dict()
         self.__test_environments = dict()
         self.__test_modules = list()
+        self.__replay_blocks = dict()
         self.user_capl_function_names = user_capl_functions
 
     def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False) -> None:
@@ -63,6 +64,7 @@ class CANoe:
         self.__diag_devices = self.application.networks.fetch_all_diag_devices()
         self.__test_environments = self.application.configuration.get_all_test_setup_environments()
         self.__test_modules = self.application.configuration.get_all_test_modules_in_test_environments()
+        self.__replay_blocks = self.application.configuration.simulation_setup.replay_collection.fetch_replay_blocks()
 
     def new(self, auto_save=False, prompt_user=False) -> None:
         """Creates a new configuration.
@@ -995,9 +997,10 @@ class CANoe:
             >>> canoe_inst.set_replay_block_file(block_name='replay block name', recording_file_path='replay file including path')
             >>> canoe_inst.start_measurement()
         """
-        replay_blocks = self.__fetch_replay_blocks()
+        replay_blocks = self.__replay_blocks
         if block_name in replay_blocks.keys():
-            replay_blocks[block_name].Path = recording_file_path
+            replay_block = replay_blocks[block_name]
+            replay_block.path = recording_file_path
             self.log.info(f'Replay block "{block_name}" updated with "{recording_file_path}" path.')
         else:
             self.log.warning(f'Replay block "{block_name}" not available.')
@@ -1017,12 +1020,13 @@ class CANoe:
             >>> canoe_inst.start_measurement()
             >>> canoe_inst.control_replay_block('replay block name', True)
         """
-        replay_blocks = self.__fetch_replay_blocks()
+        replay_blocks = self.__replay_blocks
         if block_name in replay_blocks.keys():
+            replay_block = replay_blocks[block_name]
             if start_stop:
-                replay_blocks[block_name].Start()
+                replay_block.start()
             else:
-                replay_blocks[block_name].Stop()
+                replay_block.stop()
             self.log.info(f'Replay block "{block_name}" {"Started" if start_stop else "Stopped"}.')
         else:
             self.log.warning(f'Replay block "{block_name}" not available.')

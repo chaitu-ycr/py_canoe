@@ -167,6 +167,10 @@ class Configuration:
         """
         return self.com_obj.Saved
 
+    @property
+    def simulation_setup(self):
+        return SimulationSetup(self.com_obj)
+
     def compile_and_verify(self):
         """Compiles all CAPL test modules and verifies all XML test modules.
         All test modules in the Simulation Setup and in the Test Setup are taken into consideration.
@@ -577,3 +581,110 @@ class TestModule:
 
     def set_execution_time(self, days: int, hours: int, minutes: int):
         pass
+
+
+class SimulationSetup:
+    def __init__(self, conf_com_obj):
+        self.com_obj = win32com.client.Dispatch(conf_com_obj.SimulationSetup)
+
+    @property
+    def replay_collection(self):
+        return ReplayCollection(self.com_obj)
+
+    @property
+    def buses(self):
+        return Buses(self.com_obj)
+
+    @property
+    def nodes(self):
+        return Nodes(self.com_obj)
+
+
+class ReplayCollection:
+    """The ReplayCollection object represents the Replay Blocks of the CANoe application.
+    """
+    def __init__(self, sim_setup_com_obj):
+        self.com_obj = win32com.client.Dispatch(sim_setup_com_obj.ReplayCollection)
+
+    @property
+    def count(self) -> int:
+        """The number of Replay Blocks contained.
+
+        Returns:
+            int: The number of Replay Blocks contained.
+        """
+        return self.com_obj.Count
+
+    def add(self, name: str) -> object:
+        """TODO: documentation update pending."""
+        return self.com_obj.Add(name)
+
+    def remove(self, index: int) -> None:
+        """TODO: documentation update pending."""
+        self.com_obj.Remove(index)
+
+    def fetch_replay_blocks(self) -> dict:
+        replay_blocks = dict()
+        for index in range(1, self.count + 1):
+            rb_com_obj = self.com_obj.Item(index)
+            rb_inst = ReplayBlock(rb_com_obj)
+            replay_blocks[rb_inst.name] = rb_inst
+        return replay_blocks
+
+
+class ReplayBlock:
+    def __init__(self, replay_block_com_obj):
+        self.com_obj = win32com.client.Dispatch(replay_block_com_obj)
+
+    @property
+    def name(self) -> str:
+        """The name of the Replay Block."""
+        return self.com_obj.Name
+
+    @property
+    def path(self) -> str:
+        """The path of the replay file."""
+        return self.com_obj.Path
+
+    @path.setter
+    def path(self, path: str):
+        """The path of the replay file."""
+        self.com_obj.Path = path
+
+    def start(self):
+        """Starts the replay.
+        TODO: documentation update pending.
+        """
+        self.com_obj.Start()
+
+    def stop(self):
+        """Stops the replay.
+        TODO: documentation update pending.
+        """
+        self.com_obj.Stop()
+
+
+class Buses:
+    """The Buses object represents the buses of the Simulation Setup of the CANoe application.
+    The Buses object is only available in CANoe.
+    """
+    def __init__(self, sim_setup_com_obj):
+        self.com_obj = win32com.client.Dispatch(sim_setup_com_obj.Buses)
+
+    @property
+    def count(self) -> int:
+        """TODO: documentation update pending."""
+        return self.com_obj.Count
+
+
+class Nodes:
+    """The Nodes object represents the CAPL node of the Simulation Setup of the CANoe application.
+    The Nodes object is only available in CANoe.
+    """
+    def __init__(self, sim_setup_com_obj):
+        self.com_obj = win32com.client.Dispatch(sim_setup_com_obj.Nodes)
+
+    @property
+    def count(self) -> int:
+        """TODO: documentation update pending."""
+        return self.com_obj.Count

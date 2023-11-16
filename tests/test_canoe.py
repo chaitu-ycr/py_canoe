@@ -91,8 +91,7 @@ def test_system_variable_methods():
     wait(0.1)
     sys_var_val = canoe_inst.get_system_variable_value('demo::level_two_1::sys_var2')
     canoe_inst.set_system_variable_array_values('demo::int_array_var', (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
-    assert set(canoe_inst.get_system_variable_value('demo::int_array_var')) == set(
-        (00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
+    assert set(canoe_inst.get_system_variable_value('demo::int_array_var')) == set((00, 11, 22, 33, 44, 55, 66, 77, 88, 99))
     canoe_inst.set_system_variable_array_values('demo::double_array_var', (00.0, 11.1, 22.2, 33.3, 44.4))
     assert set(canoe_inst.get_system_variable_value('demo::double_array_var')) == set((00.0, 11.1, 22.2, 33.3, 44.4))
     canoe_inst.set_system_variable_value('demo::string_var', 'hey hello this is string variable')
@@ -155,6 +154,20 @@ def test_test_module_methods():
     wait(1)
     canoe_inst.execute_test_module('demo_test_node_001')
     canoe_inst.execute_test_module('demo_test_node_002')
+    wait(1)
+    assert canoe_inst.stop_measurement()
+
+
+def test_replay_block_methods():
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    assert canoe_inst.start_measurement()
+    wait(1)
+    canoe_inst.set_replay_block_file(block_name='DemoReplayBlock',
+                                     recording_file_path=fr'{file_path}\demo_cfg\Logs\demo_log.blf')
+    wait(1)
+    canoe_inst.control_replay_block(block_name='DemoReplayBlock', start_stop=True)
+    wait(2)
+    canoe_inst.control_replay_block(block_name='DemoReplayBlock', start_stop=False)
     wait(1)
     assert canoe_inst.stop_measurement()
 
