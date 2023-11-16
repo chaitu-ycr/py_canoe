@@ -32,8 +32,6 @@ class Configuration:
         self.com_obj = win32com.client.Dispatch(app_com_obj.Configuration)
         if enable_config_events:
             win32com.client.WithEvents(self.com_obj, CanoeConfigurationEvents)
-        self.__test_setup = TestSetup(self.com_obj)
-        self.__test_environments = TestEnvironments(self.__test_setup.com_obj)
 
     @property
     def comment(self) -> str:
@@ -83,7 +81,7 @@ class Configuration:
         return self.com_obj.FullName
 
     @full_name.setter
-    def full_name(self, full_name: str) -> None:
+    def full_name(self, full_name: str):
         """sets the complete path of the configuration.
 
         Args:
@@ -171,6 +169,10 @@ class Configuration:
     def simulation_setup(self):
         return SimulationSetup(self.com_obj)
 
+    @property
+    def test_setup(self):
+        return TestSetup(self.com_obj)
+
     def compile_and_verify(self):
         """Compiles all CAPL test modules and verifies all XML test modules.
         All test modules in the Simulation Setup and in the Test Setup are taken into consideration.
@@ -208,7 +210,7 @@ class Configuration:
         self.log.info(f'Saved configuration as {path}.')
 
     def get_all_test_setup_environments(self) -> dict:
-        return self.__test_environments.fetch_all_test_environments()
+        return self.test_setup.test_environments.fetch_all_test_environments()
 
     def get_all_test_modules_in_test_environments(self) -> list:
         test_modules = list()
@@ -230,6 +232,10 @@ class TestSetup:
             prompt_user (bool, optional): A boolean value that defines whether the user should interact in error situations (optional). Defaults to False.
         """
         self.com_obj.SaveAll(prompt_user)
+
+    @property
+    def test_environments(self):
+        return TestEnvironments(self.com_obj)
 
 
 class TestEnvironments:
