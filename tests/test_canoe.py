@@ -10,7 +10,7 @@ logger_inst = logging.getLogger('CANOE_LOG')
 
 
 def test_application_class_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     print(f'application name: {canoe_inst.application.name}')
     print(f'application full_name: {canoe_inst.application.full_name}')
     print(f'application path: {canoe_inst.application.path}')
@@ -19,14 +19,14 @@ def test_application_class_methods():
     canoe_inst.get_canoe_version_info()
     canoe_inst.quit()
     wait(1)
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     canoe_inst.new(auto_save=True)
     assert canoe_inst.save_configuration_as(fr'{file_path}\demo_cfg\demo_v10.cfg', 10, 0)
     wait(2)
 
 
 def test_app_measurement_class_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     canoe_inst.get_measurement_index()
     assert canoe_inst.start_measurement()
     assert canoe_inst.stop_measurement()
@@ -51,7 +51,7 @@ def test_app_measurement_class_methods():
 
 
 def test_app_bus_class_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     canoe_inst.get_bus_databases_info('CAN')
     canoe_inst.get_bus_nodes_info('CAN')
     assert canoe_inst.start_measurement()
@@ -68,7 +68,7 @@ def test_app_bus_class_methods():
 
 
 def test_app_ui_class_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     wait(1)
     canoe_inst.enable_write_window_output_file(fr'{file_path}\demo_cfg\Logs\write_win.txt')
     wait(1)
@@ -84,7 +84,7 @@ def test_app_ui_class_methods():
 
 
 def test_system_variable_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.set_system_variable_value('demo::level_two_1::sys_var2', 20)
@@ -113,7 +113,7 @@ def test_system_variable_methods():
 
 
 def test_app_networks_class_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.execute_all_test_environments()
@@ -122,7 +122,7 @@ def test_app_networks_class_methods():
 
 
 def test_diag_request_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_diag.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
     resp = canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
@@ -139,7 +139,7 @@ def test_diag_request_methods():
 
 
 def test_capl_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     canoe_inst.compile_all_capl_nodes()
     assert canoe_inst.start_measurement()
     wait(1)
@@ -149,7 +149,7 @@ def test_capl_methods():
 
 
 def test_test_module_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.execute_test_module('demo_test_node_001')
@@ -159,7 +159,7 @@ def test_test_module_methods():
 
 
 def test_replay_block_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo.cfg')
+    canoe_inst.open(fr'{file_path}\demo_cfg\demo_dev.cfg')
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.set_replay_block_file(block_name='DemoReplayBlock',

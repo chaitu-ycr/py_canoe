@@ -1,0 +1,56 @@
+VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYNNNYNNNNNN/4/%%%/4/'%**4NNN///"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 2 XCPResponse: 8 Vector__XXX
+ SG_ PID : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1 XCPRequest: 8 Vector__XXX
+ SG_ PID : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+
+
+CM_ "CAN communication matrix for body electronics
+*******************************************************
+
+implemented: turn lights, warning lights, windows
+
+
+";
+VAL_ 2 PID 255 "Response" 254 "Error" 253 "Event" 252 "Serv" ;
+VAL_ 1 PID 255 "Connect" 254 "Disconnect" 253 "Get_Status" 252 "Synch" 251 "Get_Comm_Mode_Info" 250 "Get_Id" 249 "Set_Request" 248 "Get_Seed" 247 "Unlock" 246 "Set_Mta" 245 "Upload" 244 "Short_Upload" 243 "Build_Checksum" 242 "Transport_Layer_Cmd" 241 "User_Cmd" 240 "Download" 239 "Download_Next" 238 "Download_Max" 237 "Short_Download" 236 "Modify_Bits" ;
+

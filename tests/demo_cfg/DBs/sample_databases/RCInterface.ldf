@@ -1,0 +1,133 @@
+/*************************************************************************************/
+//                                                                                     
+// Description: LIN Description file created using Vector's DaVinci Network Designer   
+// Created:     07 Sep 2007 15:05:09
+// Author:      Vector Informatik GmbH
+// Version:     0.1                                                                    
+//                                                                                     
+/*************************************************************************************/
+
+LIN_description_file;
+LIN_protocol_version = "2.2";
+LIN_language_version = "2.2";
+LIN_speed = 19.2 kbps;
+
+Nodes {
+  Master: GWI, 1 ms, 0 ms ;
+  Slaves: RCR ;
+}
+
+
+Signals {
+  GWI_DoorState: 1, 0, GWI, RCR ;
+  RCR_CentralLockingSystem: 1, 0, RCR, GWI ;
+  RCR_Passanger: 2, 1, RCR, GWI ;
+  RCR_ResponseError: 1, 0, RCR, GWI ;
+}
+
+Diagnostic_signals {
+  MasterReqB0: 8, 0 ;
+  MasterReqB1: 8, 0 ;
+  MasterReqB2: 8, 0 ;
+  MasterReqB3: 8, 0 ;
+  MasterReqB4: 8, 0 ;
+  MasterReqB5: 8, 0 ;
+  MasterReqB6: 8, 0 ;
+  MasterReqB7: 8, 0 ;
+  SlaveRespB0: 8, 0 ;
+  SlaveRespB1: 8, 0 ;
+  SlaveRespB2: 8, 0 ;
+  SlaveRespB3: 8, 0 ;
+  SlaveRespB4: 8, 0 ;
+  SlaveRespB5: 8, 0 ;
+  SlaveRespB6: 8, 0 ;
+  SlaveRespB7: 8, 0 ;
+}
+
+
+
+Frames {
+  GWI_01: 1, GWI, 1 {
+    GWI_DoorState, 0 ;
+  }
+  RCR_01: 2, RCR, 1 {
+    RCR_CentralLockingSystem, 0 ;
+    RCR_Passanger, 1 ;
+    RCR_ResponseError, 3 ;
+  }
+}
+
+
+
+Diagnostic_frames {
+  MasterReq: 0x3c {
+    MasterReqB0, 0 ;
+    MasterReqB1, 8 ;
+    MasterReqB2, 16 ;
+    MasterReqB3, 24 ;
+    MasterReqB4, 32 ;
+    MasterReqB5, 40 ;
+    MasterReqB6, 48 ;
+    MasterReqB7, 56 ;
+  }
+  SlaveResp: 0x3d {
+    SlaveRespB0, 0 ;
+    SlaveRespB1, 8 ;
+    SlaveRespB2, 16 ;
+    SlaveRespB3, 24 ;
+    SlaveRespB4, 32 ;
+    SlaveRespB5, 40 ;
+    SlaveRespB6, 48 ;
+    SlaveRespB7, 56 ;
+  }
+}
+
+Node_attributes {
+  RCR{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x1 ;
+    initial_NAD = 0x1 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = RCR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      RCR_01 ;
+      GWI_01 ;
+    }
+  }
+}
+
+Schedule_tables {
+ Table0 {
+    MasterReq delay 10 ms ;
+    SlaveResp delay 10 ms ;
+  }
+ Table1 {
+    GWI_01 delay 4 ms ;
+    RCR_01 delay 4 ms ;
+  }
+}
+
+
+Signal_encoding_types {
+  Enc_GWI_DoorState {
+    logical_value, 0, "Close" ;
+    logical_value, 1, "Open" ;
+  }
+  Enc_RCR_CentralLockingSystem {
+    logical_value, 0, "Locked" ;
+    logical_value, 1, "Unlocked" ;
+  }
+  Enc_RCR_Passanger {
+    logical_value, 1, "Passanger_1" ;
+    logical_value, 2, "Passanger_2" ;
+  }
+}
+
+Signal_representation {
+  Enc_GWI_DoorState: GWI_DoorState ;
+  Enc_RCR_CentralLockingSystem: RCR_CentralLockingSystem ;
+  Enc_RCR_Passanger: RCR_Passanger ;
+}
+

@@ -1,0 +1,65 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: NM_Tester
+
+
+BO_ 1280 NMMessage: 6 NM_Tester
+ SG_ NM_SleepInd : 12|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ NM_SleepAck : 13|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ NM_CmdReceiver : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ NM_NWake : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ NM_CmdRing : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ NM_CmdLimpHome : 10|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ NM_CmdAlive : 9|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ NM_CAN : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+
+
+
+BA_DEF_  "BusType" STRING ;
+BA_DEF_ BU_  "NodeLayerModules" STRING ;
+BA_DEF_ BU_  "ECU" STRING ;
+BA_DEF_ BU_  "CANoeJitterMax" INT 0 0;
+BA_DEF_ BU_  "CANoeJitterMin" INT 0 0;
+BA_DEF_ BU_  "CANoeDrift" INT 0 0;
+BA_DEF_ BU_  "CANoeStartDelay" INT 0 0;
+BA_DEF_DEF_  "BusType" "";
+BA_DEF_DEF_  "NodeLayerModules" "";
+BA_DEF_DEF_  "ECU" "";
+BA_DEF_DEF_  "CANoeJitterMax" 0;
+BA_DEF_DEF_  "CANoeJitterMin" 0;
+BA_DEF_DEF_  "CANoeDrift" 0;
+BA_DEF_DEF_  "CANoeStartDelay" 0;
+

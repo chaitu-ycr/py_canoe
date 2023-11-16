@@ -1,0 +1,148 @@
+/*************************************************************************************/
+//                                                                                     
+// Description: LIN Description file created using Vector's DaVinci Network Designer   
+// Created:     07 Sep 2007 15:05:33
+// Author:      Vector Informatik GmbH
+// Version:     0.1                                                                    
+//                                                                                     
+/*************************************************************************************/
+
+LIN_description_file;
+LIN_protocol_version = "2.2";
+LIN_language_version = "2.2";
+LIN_speed = 19.2 kbps;
+
+Nodes {
+  Master: GWI, 1 ms, 0 ms ;
+  Slaves: RUF, RUR ;
+}
+
+
+Signals {
+  GWI_CentralLockingSystem: 1, 0, GWI, RUF, RUR ;
+  GWI_DoorState: 1, 0, GWI, RUR, RUF ;
+  RUF_Brightness: 8, 0, RUF, GWI ;
+  RUF_ResponseError: 1, 0, RUF, GWI ;
+  RUR_Brightness: 8, 0, RUR, GWI ;
+  RUR_ResponseError: 1, 0, RUR, GWI ;
+}
+
+Diagnostic_signals {
+  MasterReqB0: 8, 0 ;
+  MasterReqB1: 8, 0 ;
+  MasterReqB2: 8, 0 ;
+  MasterReqB3: 8, 0 ;
+  MasterReqB4: 8, 0 ;
+  MasterReqB5: 8, 0 ;
+  MasterReqB6: 8, 0 ;
+  MasterReqB7: 8, 0 ;
+  SlaveRespB0: 8, 0 ;
+  SlaveRespB1: 8, 0 ;
+  SlaveRespB2: 8, 0 ;
+  SlaveRespB3: 8, 0 ;
+  SlaveRespB4: 8, 0 ;
+  SlaveRespB5: 8, 0 ;
+  SlaveRespB6: 8, 0 ;
+  SlaveRespB7: 8, 0 ;
+}
+
+
+
+Frames {
+  GWI_01: 1, GWI, 1 {
+    GWI_CentralLockingSystem, 0 ;
+    GWI_DoorState, 1 ;
+  }
+  RUF_01: 2, RUF, 2 {
+    RUF_Brightness, 0 ;
+    RUF_ResponseError, 8 ;
+  }
+  RUR_01: 3, RUR, 2 {
+    RUR_Brightness, 0 ;
+    RUR_ResponseError, 8 ;
+  }
+}
+
+
+
+Diagnostic_frames {
+  MasterReq: 0x3c {
+    MasterReqB0, 0 ;
+    MasterReqB1, 8 ;
+    MasterReqB2, 16 ;
+    MasterReqB3, 24 ;
+    MasterReqB4, 32 ;
+    MasterReqB5, 40 ;
+    MasterReqB6, 48 ;
+    MasterReqB7, 56 ;
+  }
+  SlaveResp: 0x3d {
+    SlaveRespB0, 0 ;
+    SlaveRespB1, 8 ;
+    SlaveRespB2, 16 ;
+    SlaveRespB3, 24 ;
+    SlaveRespB4, 32 ;
+    SlaveRespB5, 40 ;
+    SlaveRespB6, 48 ;
+    SlaveRespB7, 56 ;
+  }
+}
+
+Node_attributes {
+  RUF{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x2 ;
+    initial_NAD = 0x2 ;
+    product_id = 0x0, 0x0, 0 ;
+    response_error = RUF_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      RUF_01 ;
+      GWI_01 ;
+    }
+  }
+  RUR{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x3 ;
+    initial_NAD = 0x3 ;
+    product_id = 0x0, 0x0, 0 ;
+    response_error = RUR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      RUR_01 ;
+      GWI_01 ;
+    }
+  }
+}
+
+Schedule_tables {
+ Table0 {
+    MasterReq delay 10 ms ;
+    SlaveResp delay 10 ms ;
+  }
+ Table1 {
+    GWI_01 delay 10 ms ;
+    RUF_01 delay 10 ms ;
+    RUR_01 delay 10 ms ;
+  }
+}
+
+
+Signal_encoding_types {
+  Enc_GWI_CentralLockingSystem {
+    logical_value, 0, "Locked" ;
+    logical_value, 1, "Unlocked" ;
+  }
+  Enc_GWI_DoorState {
+    logical_value, 0, "Close" ;
+    logical_value, 1, "Open" ;
+  }
+}
+
+Signal_representation {
+  Enc_GWI_CentralLockingSystem: GWI_CentralLockingSystem ;
+  Enc_GWI_DoorState: GWI_DoorState ;
+}
+
