@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://chaitu-ycr.github.io/py_canoe/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-11-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://chaitu-ycr.github.io/py_canoe/002_prerequisites/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-11-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://chaitu-ycr.github.io/py_canoe/003_environment_setup/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-11-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://chaitu-ycr.github.io/py_canoe/004_usage/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-11-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://chaitu-ycr.github.io/py_canoe/999_reference/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-11-16</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
