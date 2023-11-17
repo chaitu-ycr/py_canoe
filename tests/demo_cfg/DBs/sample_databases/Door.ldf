@@ -1,0 +1,264 @@
+/*************************************************************************************/
+//                                                                                     
+// Description: LIN Description file created using Vector's DaVinci Network Designer   
+// Created:     12 Oct 2007 10:43:53
+// Author:      Vector Informatik GmbH
+// Version:     0.1                                                                    
+//                                                                                     
+/*************************************************************************************/
+
+LIN_description_file;
+LIN_protocol_version = "2.2";
+LIN_language_version = "2.2";
+LIN_speed = 19.2 kbps;
+
+Nodes {
+  Master: GWI, 1 ms, 0 ms ;
+  Slaves: DWF_Left, DWF_Right, DWR_Left, DWR_Right, RVM_Left, RVM_Right ;
+}
+
+
+Signals {
+  CLSStatusLeft: 1, 0, GWI, DWR_Left, DWF_Left ;
+  CLSStatusRight: 1, 0, GWI, DWF_Right ;
+  DWFL_ResponseError: 1, 0, DWF_Left, GWI ;
+  DWFL_WinPos: 8, 0, DWF_Left, GWI ;
+  DWFR_ResponseError: 1, 0, DWF_Right, GWI ;
+  DWFR_WinPos: 8, 0, DWF_Right, GWI ;
+  DWRL_ResponseError: 1, 0, DWR_Left, GWI ;
+  DWRL_WinPos: 8, 0, DWR_Left, GWI ;
+  DWRR_ResponseError: 1, 0, DWR_Right, GWI ;
+  DWRR_WinPos: 8, 0, DWR_Right, GWI ;
+  GWI_FrontWindowsLeft: 2, 1, GWI, DWF_Left ;
+  GWI_FrontWindowsRight: 2, 1, GWI, DWF_Right ;
+  GWI_MirrorCommandLeft: 4, 0, GWI, RVM_Left ;
+  GWI_MirrorCommandRight: 4, 0, GWI, RVM_Right ;
+  GWI_RearWindowsLeft: 2, 1, GWI, DWR_Left ;
+  GWI_RearWindowsRight: 2, 1, GWI, DWR_Right ;
+  RVML_MirrorPosition: 8, 0, RVM_Left, GWI ;
+  RVML_ResponseError: 1, 0, RVM_Left, GWI ;
+  RVMR_MirrorPosition: 8, 0, RVM_Right, GWI ;
+  RVMR_ResponseError: 1, 0, RVM_Right, GWI ;
+}
+
+Diagnostic_signals {
+  MasterReqB0: 8, 0 ;
+  MasterReqB1: 8, 0 ;
+  MasterReqB2: 8, 0 ;
+  MasterReqB3: 8, 0 ;
+  MasterReqB4: 8, 0 ;
+  MasterReqB5: 8, 0 ;
+  MasterReqB6: 8, 0 ;
+  MasterReqB7: 8, 0 ;
+  SlaveRespB0: 8, 0 ;
+  SlaveRespB1: 8, 0 ;
+  SlaveRespB2: 8, 0 ;
+  SlaveRespB3: 8, 0 ;
+  SlaveRespB4: 8, 0 ;
+  SlaveRespB5: 8, 0 ;
+  SlaveRespB6: 8, 0 ;
+  SlaveRespB7: 8, 0 ;
+}
+
+
+
+Frames {
+  DWFL_01: 3, DWF_Left, 2 {
+    DWFL_WinPos, 0 ;
+    DWFL_ResponseError, 8 ;
+  }
+  DWFR_01: 0, DWF_Right, 2 {
+    DWFR_ResponseError, 0 ;
+    DWFR_WinPos, 8 ;
+  }
+  DWRL_01: 2, DWR_Left, 2 {
+    DWRL_WinPos, 0 ;
+    DWRL_ResponseError, 8 ;
+  }
+  DWRR_01: 7, DWR_Right, 2 {
+    DWRR_ResponseError, 0 ;
+    DWRR_WinPos, 8 ;
+  }
+  GWI_01: 1, GWI, 1 {
+    GWI_FrontWindowsRight, 0 ;
+    GWI_RearWindowsLeft, 2 ;
+    GWI_RearWindowsRight, 4 ;
+    GWI_FrontWindowsLeft, 6 ;
+  }
+  GWI_02: 4, GWI, 1 {
+    CLSStatusLeft, 0 ;
+    CLSStatusRight, 1 ;
+  }
+  GWI_03: 5, GWI, 1 {
+    GWI_MirrorCommandLeft, 0 ;
+    GWI_MirrorCommandRight, 4 ;
+  }
+  RVML_01: 6, RVM_Left, 2 {
+    RVML_MirrorPosition, 0 ;
+    RVML_ResponseError, 8 ;
+  }
+  RVMR_01: 8, RVM_Right, 2 {
+    RVMR_ResponseError, 0 ;
+    RVMR_MirrorPosition, 8 ;
+  }
+}
+
+
+
+Diagnostic_frames {
+  MasterReq: 0x3c {
+    MasterReqB0, 0 ;
+    MasterReqB1, 8 ;
+    MasterReqB2, 16 ;
+    MasterReqB3, 24 ;
+    MasterReqB4, 32 ;
+    MasterReqB5, 40 ;
+    MasterReqB6, 48 ;
+    MasterReqB7, 56 ;
+  }
+  SlaveResp: 0x3d {
+    SlaveRespB0, 0 ;
+    SlaveRespB1, 8 ;
+    SlaveRespB2, 16 ;
+    SlaveRespB3, 24 ;
+    SlaveRespB4, 32 ;
+    SlaveRespB5, 40 ;
+    SlaveRespB6, 48 ;
+    SlaveRespB7, 56 ;
+  }
+}
+
+Node_attributes {
+  DWF_Left{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x1 ;
+    initial_NAD = 0x1 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = DWFL_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DWFL_01 ;
+      GWI_01 ;
+      GWI_02 ;
+    }
+  }
+  DWF_Right{
+    LIN_protocol = "2.1" ;
+    configured_NAD = 0x6 ;
+    initial_NAD = 0x6 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = DWFR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DWFR_01 ;
+      GWI_01 ;
+      GWI_02 ;
+    }
+  }
+  DWR_Left{
+    LIN_protocol = "2.1" ;
+    configured_NAD = 0x2 ;
+    initial_NAD = 0x2 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = DWRL_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DWRL_01 ;
+      GWI_01 ;
+      GWI_02 ;
+    }
+  }
+  DWR_Right{
+    LIN_protocol = "2.1" ;
+    configured_NAD = 0x5 ;
+    initial_NAD = 0x5 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = DWRR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DWRR_01 ;
+      GWI_01 ;
+    }
+  }
+  RVM_Left{
+    LIN_protocol = "2.1" ;
+    configured_NAD = 0x3 ;
+    initial_NAD = 0x3 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = RVML_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      GWI_03 ;
+      RVML_01 ;
+    }
+  }
+  RVM_Right{
+    LIN_protocol = "2.1" ;
+    configured_NAD = 0x4 ;
+    initial_NAD = 0x4 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = RVMR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      RVMR_01 ;
+      GWI_03 ;
+    }
+  }
+}
+
+Schedule_tables {
+ Table0 {
+    MasterReq delay 10 ms ;
+    SlaveResp delay 10 ms ;
+  }
+ Table1 {
+    DWRR_01 delay 5 ms ;
+    DWFL_01 delay 5 ms ;
+    DWFR_01 delay 5 ms ;
+    DWRL_01 delay 5 ms ;
+    GWI_01 delay 4 ms ;
+    GWI_02 delay 4 ms ;
+    GWI_03 delay 4 ms ;
+    RVML_01 delay 5 ms ;
+    RVMR_01 delay 5 ms ;
+  }
+}
+
+
+Signal_encoding_types {
+  Enc_CLSStatus {
+    logical_value, 0, "Close" ;
+    logical_value, 1, "Open" ;
+  }
+  Enc_GWI_FrontWindows {
+    logical_value, 0, "Down" ;
+    logical_value, 1, "Halt" ;
+    logical_value, 2, "Up" ;
+  }
+  Enc_GWI_MirrorCommand {
+    logical_value, 0, "Don't move" ;
+    logical_value, 1, "Move left" ;
+    logical_value, 2, "Move Up" ;
+    logical_value, 3, "Move Right" ;
+    logical_value, 4, "Move Down" ;
+  }
+  Enc_GWI_RearWindows {
+    logical_value, 0, "Down" ;
+    logical_value, 1, "Halt" ;
+    logical_value, 2, "Up" ;
+  }
+}
+
+Signal_representation {
+  Enc_CLSStatus: CLSStatusLeft, CLSStatusRight ;
+  Enc_GWI_FrontWindows: GWI_FrontWindowsLeft, GWI_FrontWindowsRight ;
+  Enc_GWI_MirrorCommand: GWI_MirrorCommandLeft, GWI_MirrorCommandRight ;
+  Enc_GWI_RearWindows: GWI_RearWindowsLeft, GWI_RearWindowsRight ;
+}
+

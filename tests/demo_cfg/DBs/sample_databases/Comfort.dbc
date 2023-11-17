@@ -1,0 +1,426 @@
+VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYNNNYNNNNNN/4/%%%/4/'%**4NNN///"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Gateway DOOR_ri DOOR_le Dashboard Console
+
+
+BO_ 1541 TP_Dashboard: 6 Dashboard
+ SG_ data : 0|48@1+ (1,0) [0|0] ""  Console
+
+BO_ 1792 Diag_Request: 8 Vector__XXX
+
+BO_ 1536 Diag_Response: 8 Vector__XXX
+
+BO_ 1537 DiagResponse_Motor: 8 Gateway
+ SG_ data : 0|64@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1543 DiagResponse_DoorLeft: 8 DOOR_le
+ SG_ data : 0|64@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1542 DiagRequest: 8 Vector__XXX
+ SG_ data : 0|64@1+ (1,0) [0|0] ""  DOOR_le
+
+BO_ 1540 TP_Console: 6 Console
+ SG_ data : 0|48@1+ (1,0) [0|0] ""  Dashboard
+
+BO_ 1053 NM_Gateway: 4 Gateway
+ SG_ SleepInd : 12|1@1+ (1,0) [0|0] ""  Gateway,DOOR_ri,DOOR_le
+
+BO_ 1052 NM_DOORright: 4 DOOR_ri
+ SG_ SleepInd : 12|1@1+ (1,0) [0|0] ""  Gateway,DOOR_le
+
+BO_ 1051 NM_DOORleft: 4 DOOR_le
+ SG_ SleepInd : 12|1@1+ (1,0) [0|0] ""  Gateway,DOOR_ri
+
+BO_ 1050 NM_Console: 4 Console
+ SG_ SleepInd : 12|1@1+ (1,0) [0|0] ""  Console,Gateway,DOOR_ri,DOOR_le
+
+BO_ 497 DOOR_r: 1 DOOR_ri
+ SG_ WN_Position : 0|8@1+ (1,0) [0|100] "" Vector__XXX
+
+BO_ 496 DOOR_l: 1 DOOR_le
+ SG_ WN_Position : 0|8@1+ (1,0) [0|100] "" Vector__XXX
+
+BO_ 417 Console_2: 2 Console
+ SG_ Phase : 8|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Active : 1|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Light : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 416 Console_1: 4 Console
+ SG_ WN_right_up : 30|1@1+ (1,0) [0|0] ""  DOOR_ri
+ SG_ WN_right_down : 29|1@1+ (1,0) [0|0] ""  DOOR_ri
+ SG_ WN_left_up : 26|1@1+ (1,0) [0|0] ""  DOOR_le
+ SG_ WN_left_down : 25|1@1+ (1,0) [0|0] ""  DOOR_le
+ SG_ Mirror_r2d : 7|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_r2u : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_r2r : 5|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_r2l : 4|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_l2d : 3|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_l2u : 2|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_l2r : 1|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Mirror_l2l : 0|1@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 273 Gateway_2: 8 Gateway
+ SG_ Voltage : 48|10@1+ (0.1,0) [0|102.3] "V" Vector__XXX
+ SG_ PetrolLevel : 40|8@1+ (1,0) [0|0] "l"  Dashboard
+ SG_ EngSpeed : 24|16@1+ (1,0) [0|0] "rpm"  Dashboard
+ SG_ CarSpeed : 8|16@1+ (0.5,0) [0|300] "mph"  Dashboard
+ SG_ EngineTemp : 0|8@1+ (1,0) [0|0] "degC"  Dashboard
+
+BO_ 272 Gateway_1: 3 Gateway
+ SG_ Gear : 8|4@1- (1,0) [0|0] ""  Dashboard
+ SG_ EngineRunning : 7|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Ig_15 : 2|1@1+ (1,0) [0|0] ""  Dashboard,Console
+ SG_ Ig_15R : 1|1@1+ (1,0) [0|0] ""  Dashboard
+ SG_ StarterKey : 0|1@1+ (1,0) [0|1] ""  Dashboard
+
+BO_ 256 DebugMsg1: 8 Vector__XXX
+ SG_ Data4 : 48|16@1- (1,0) [0|0] ""  Gateway
+ SG_ Data3 : 32|16@1- (1,0) [0|0] ""  Gateway
+ SG_ Data2 : 16|16@1- (1,0) [0|0] ""  Gateway
+ SG_ Data1 : 0|16@1- (1,0) [0|0] ""  Gateway
+
+
+
+CM_ "CAN communication matrix for body electronics
+*******************************************************
+
+implemented: turn lights, warning lights, windows
+
+
+";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_ BU_  "TpAddressingMode" INT 0 3;
+BA_DEF_ SG_  "GenSigAltSetting" STRING ;
+BA_DEF_ BO_  "GenMsgFastOnStart" INT 0 100000;
+BA_DEF_ BO_  "GenMsgStartDelayTime" INT 0 100000;
+BA_DEF_ BO_  "GenMsgILSupport" ENUM  "No","Yes";
+BA_DEF_ BO_  "GenMsgCycleTimeFast" INT 2 100000;
+BA_DEF_ BU_  "ILUsed" ENUM  "Yes","No";
+BA_DEF_  "GenNWMSleepTime" INT 0 1000000;
+BA_DEF_ EV_  "GenEnvIsGeneratedDsp" ENUM  "No","Yes";
+BA_DEF_  "GenEnvVarEndingDsp" STRING ;
+BA_DEF_  "GenEnvVarEndingSnd" STRING ;
+BA_DEF_  "GenEnvVarPrefix" STRING ;
+BA_DEF_ EV_  "GenEnvMsgOffset" INT 0 2147483647;
+BA_DEF_ EV_  "GenEnvMsgName" STRING ;
+BA_DEF_ EV_  "GenEnvIsGeneratedSnd" ENUM  "No","Yes";
+BA_DEF_ BU_  "NodeLayerModules" STRING ;
+BA_DEF_  "NmBaseAddress" HEX 1024 1055;
+BA_DEF_ BU_  "NmStationAddress" INT 0 63;
+BA_DEF_ BU_  "NmNode" ENUM  "no","yes";
+BA_DEF_ BO_  "NmMessage" ENUM  "no","yes";
+BA_DEF_ BO_  "DiagResponse" ENUM  "no","yes";
+BA_DEF_ BO_  "DiagRequest" ENUM  "no","yes";
+BA_DEF_ BU_  "TpTxIdentifier" HEX 0 536870911;
+BA_DEF_ BU_  "TpRxIdentifier" HEX 0 536870911;
+BA_DEF_ BU_  "Diagnose-Stationsadresse" HEX 0 255;
+BA_DEF_ BU_  "TpRxMask" HEX 0 65535;
+BA_DEF_ BU_  "TpCanBus" INT 1 2;
+BA_DEF_ BU_  "TpUseFC" INT 0 1;
+BA_DEF_ BU_  "TpNodeBaseAddress" HEX 0 33554431;
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "Cyclic","not_used","not_used","not_used","not_used","Cyclic","not_used","IfActive";
+BA_DEF_ SG_  "GenSigSendType" ENUM  "Cyclic","OnWrite","OnWriteWithRepetition","OnChange","OnChangeWithRepetition","IfActive","IfActiveWithRepetition";
+BA_DEF_ BO_  "GenMsgCycleTime" INT 2 50000;
+BA_DEF_ BO_  "GenMsgDelayTime" INT 1 1000;
+BA_DEF_ BO_  "GenMsgAutoGenSnd" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigAutoGenSnd" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigInactiveValue" INT 0 100000;
+BA_DEF_ SG_  "GenSigStartValue" FLOAT 0 100000000000;
+BA_DEF_ BU_  "GenNodSleepTime" INT 0 1000000;
+BA_DEF_ BU_  "GenNodAutoGenSnd" ENUM  "No","Yes";
+BA_DEF_ BU_  "GenNodAutoGenDsp" ENUM  "No","Yes";
+BA_DEF_ BO_  "GenMsgAutoGenDsp" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigAutoGenDsp" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigReceiveSetting" STRING ;
+BA_DEF_ SG_  "GenSigEVName" STRING ;
+BA_DEF_ BO_  "GenMsgEVName" STRING ;
+BA_DEF_ BO_  "GenMsgPreSetting" STRING ;
+BA_DEF_ SG_  "GenSigPreSetting" STRING ;
+BA_DEF_ BO_  "GenMsgPostSetting" STRING ;
+BA_DEF_ SG_  "GenSigPostSetting" STRING ;
+BA_DEF_ SG_  "GenSigAssignSetting" STRING ;
+BA_DEF_ BO_  "GenMsgConditionalSend" STRING ;
+BA_DEF_ SG_  "GenSigConditionalSend" STRING ;
+BA_DEF_ BO_  "GenMsgPreIfSetting" STRING ;
+BA_DEF_ BO_  "GenMsgPostIfSetting" STRING ;
+BA_DEF_ SG_  "GenSigPreIfSetting" STRING ;
+BA_DEF_ SG_  "GenSigPostIfSetting" STRING ;
+BA_DEF_ BO_  "GenMsgAltSetting" STRING ;
+BA_DEF_ BO_  "GenMsgNrOfRepetition" INT 0 999999;
+BA_DEF_ SG_  "NWM-WakeupAllowed" ENUM  "No","Yes";
+BA_DEF_ EV_  "GenEnvControlType" ENUM  "NoControl","SliderHoriz","SliderVert","PushButton","Edit","BitmapSwitch";
+BA_DEF_ EV_  "GenEnvAutoGenCtrl" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigEnvVarType" ENUM  "int","float","undef";
+BA_DEF_DEF_  "BusType" "";
+BA_DEF_DEF_  "TpAddressingMode" 1;
+BA_DEF_DEF_  "GenSigAltSetting" "";
+BA_DEF_DEF_  "GenMsgFastOnStart" 0;
+BA_DEF_DEF_  "GenMsgStartDelayTime" 0;
+BA_DEF_DEF_  "GenMsgILSupport" "Yes";
+BA_DEF_DEF_  "GenMsgCycleTimeFast" 100;
+BA_DEF_DEF_  "ILUsed" "Yes";
+BA_DEF_DEF_  "GenNWMSleepTime" 0;
+BA_DEF_DEF_  "GenEnvIsGeneratedDsp" "No";
+BA_DEF_DEF_  "GenEnvVarEndingDsp" "Dsp_";
+BA_DEF_DEF_  "GenEnvVarEndingSnd" "_";
+BA_DEF_DEF_  "GenEnvVarPrefix" "Env";
+BA_DEF_DEF_  "GenEnvMsgOffset" 0;
+BA_DEF_DEF_  "GenEnvMsgName" "";
+BA_DEF_DEF_  "GenEnvIsGeneratedSnd" "No";
+BA_DEF_DEF_  "NodeLayerModules" "oseknm01.dll";
+BA_DEF_DEF_  "NmBaseAddress" 1024;
+BA_DEF_DEF_  "NmStationAddress" 0;
+BA_DEF_DEF_  "NmNode" "no";
+BA_DEF_DEF_  "NmMessage" "no";
+BA_DEF_DEF_  "DiagResponse" "no";
+BA_DEF_DEF_  "DiagRequest" "no";
+BA_DEF_DEF_  "TpTxIdentifier" 1;
+BA_DEF_DEF_  "TpRxIdentifier" 1;
+BA_DEF_DEF_  "Diagnose-Stationsadresse" 0;
+BA_DEF_DEF_  "TpRxMask" 255;
+BA_DEF_DEF_  "TpCanBus" 1;
+BA_DEF_DEF_  "TpUseFC" 1;
+BA_DEF_DEF_  "TpNodeBaseAddress" 1536;
+BA_DEF_DEF_  "GenMsgSendType" "not_used";
+BA_DEF_DEF_  "GenSigSendType" "Cyclic";
+BA_DEF_DEF_  "GenMsgCycleTime" 2;
+BA_DEF_DEF_  "GenMsgDelayTime" 1;
+BA_DEF_DEF_  "GenMsgAutoGenSnd" "";
+BA_DEF_DEF_  "GenSigAutoGenSnd" "";
+BA_DEF_DEF_  "GenSigInactiveValue" 0;
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_DEF_DEF_  "GenNodSleepTime" 0;
+BA_DEF_DEF_  "GenNodAutoGenSnd" "";
+BA_DEF_DEF_  "GenNodAutoGenDsp" "";
+BA_DEF_DEF_  "GenMsgAutoGenDsp" "";
+BA_DEF_DEF_  "GenSigAutoGenDsp" "";
+BA_DEF_DEF_  "GenSigReceiveSetting" "";
+BA_DEF_DEF_  "GenSigEVName" "";
+BA_DEF_DEF_  "GenMsgEVName" "";
+BA_DEF_DEF_  "GenMsgPreSetting" "";
+BA_DEF_DEF_  "GenSigPreSetting" "";
+BA_DEF_DEF_  "GenMsgPostSetting" "";
+BA_DEF_DEF_  "GenSigPostSetting" "";
+BA_DEF_DEF_  "GenSigAssignSetting" "";
+BA_DEF_DEF_  "GenMsgConditionalSend" "";
+BA_DEF_DEF_  "GenSigConditionalSend" "";
+BA_DEF_DEF_  "GenMsgPreIfSetting" "";
+BA_DEF_DEF_  "GenMsgPostIfSetting" "";
+BA_DEF_DEF_  "GenSigPreIfSetting" "";
+BA_DEF_DEF_  "GenSigPostIfSetting" "";
+BA_DEF_DEF_  "GenMsgAltSetting" "";
+BA_DEF_DEF_  "GenMsgNrOfRepetition" 0;
+BA_DEF_DEF_  "NWM-WakeupAllowed" "";
+BA_DEF_DEF_  "GenEnvControlType" "";
+BA_DEF_DEF_  "GenEnvAutoGenCtrl" "No";
+BA_DEF_DEF_  "GenSigEnvVarType" "undef";
+BA_ "GenNWMSleepTime" 5000;
+BA_ "BusType" "CAN";
+BA_ "GenNodAutoGenDsp" BU_ Gateway 1;
+BA_ "GenNodAutoGenSnd" BU_ Gateway 1;
+BA_ "NmNode" BU_ Gateway 1;
+BA_ "NmStationAddress" BU_ Gateway 29;
+BA_ "NodeLayerModules" BU_ Gateway "dmoseknm.dll,osek_tp.dll,CANoeILNLVector.dll";
+BA_ "GenNodSleepTime" BU_ Gateway 5000;
+BA_ "TpTxIdentifier" BU_ Gateway 1537;
+BA_ "TpRxIdentifier" BU_ Gateway 1542;
+BA_ "Diagnose-Stationsadresse" BU_ Gateway 1;
+BA_ "Diagnose-Stationsadresse" BU_ DOOR_ri 0;
+BA_ "TpNodeBaseAddress" BU_ DOOR_ri 1536;
+BA_ "TpRxMask" BU_ DOOR_ri 0;
+BA_ "TpRxIdentifier" BU_ DOOR_ri 0;
+BA_ "TpTxIdentifier" BU_ DOOR_ri 0;
+BA_ "NodeLayerModules" BU_ DOOR_ri "dmoseknm.dll,CANoeILNLVector.dll";
+BA_ "NmStationAddress" BU_ DOOR_ri 28;
+BA_ "NmNode" BU_ DOOR_ri 1;
+BA_ "GenNodSleepTime" BU_ DOOR_ri 5000;
+BA_ "GenNodAutoGenSnd" BU_ DOOR_ri 1;
+BA_ "GenNodAutoGenDsp" BU_ DOOR_ri 1;
+BA_ "GenNodAutoGenDsp" BU_ DOOR_le 1;
+BA_ "GenNodAutoGenSnd" BU_ DOOR_le 1;
+BA_ "GenNodSleepTime" BU_ DOOR_le 5000;
+BA_ "Diagnose-Stationsadresse" BU_ DOOR_le 7;
+BA_ "TpNodeBaseAddress" BU_ DOOR_le 1536;
+BA_ "TpRxIdentifier" BU_ DOOR_le 1542;
+BA_ "TpRxMask" BU_ DOOR_le 255;
+BA_ "TpTxIdentifier" BU_ DOOR_le 1543;
+BA_ "NodeLayerModules" BU_ DOOR_le "dmoseknm.dll,CANoeILNLVector.dll";
+BA_ "NmStationAddress" BU_ DOOR_le 27;
+BA_ "NmNode" BU_ DOOR_le 1;
+BA_ "NmStationAddress" BU_ Dashboard 0;
+BA_ "NmNode" BU_ Dashboard 0;
+BA_ "NodeLayerModules" BU_ Dashboard "osek_tp.dll,CANoeILNLVector.dll";
+BA_ "TpTxIdentifier" BU_ Dashboard 1541;
+BA_ "TpRxIdentifier" BU_ Dashboard 1540;
+BA_ "Diagnose-Stationsadresse" BU_ Dashboard 5;
+BA_ "NmStationAddress" BU_ Console 26;
+BA_ "TpNodeBaseAddress" BU_ Console 1536;
+BA_ "TpRxMask" BU_ Console 255;
+BA_ "TpTxIdentifier" BU_ Console 1540;
+BA_ "NodeLayerModules" BU_ Console "dmoseknm.dll,osek_tp.dll,CANoeILNLVector.dll";
+BA_ "NmNode" BU_ Console 1;
+BA_ "TpRxIdentifier" BU_ Console 1541;
+BA_ "GenNodSleepTime" BU_ Console 5000;
+BA_ "GenNodAutoGenSnd" BU_ Console 1;
+BA_ "GenNodAutoGenDsp" BU_ Console 1;
+BA_ "Diagnose-Stationsadresse" BU_ Console 4;
+BA_ "GenMsgILSupport" BO_ 1541 0;
+BA_ "GenMsgAutoGenSnd" BO_ 1541 0;
+BA_ "GenMsgAutoGenDsp" BO_ 1541 0;
+BA_ "DiagRequest" BO_ 1541 1;
+BA_ "DiagRequest" BO_ 1792 1;
+BA_ "GenMsgILSupport" BO_ 1792 0;
+BA_ "DiagResponse" BO_ 1536 1;
+BA_ "GenMsgILSupport" BO_ 1536 0;
+BA_ "GenMsgSendType" BO_ 1537 1;
+BA_ "GenMsgAutoGenSnd" BO_ 1537 0;
+BA_ "GenMsgAutoGenDsp" BO_ 1537 0;
+BA_ "GenMsgILSupport" BO_ 1537 0;
+BA_ "DiagResponse" BO_ 1537 1;
+BA_ "GenMsgSendType" BO_ 1543 1;
+BA_ "NmMessage" BO_ 1543 0;
+BA_ "GenMsgILSupport" BO_ 1543 0;
+BA_ "DiagResponse" BO_ 1543 1;
+BA_ "GenMsgAutoGenDsp" BO_ 1542 0;
+BA_ "GenMsgAutoGenSnd" BO_ 1542 0;
+BA_ "GenMsgILSupport" BO_ 1542 0;
+BA_ "DiagRequest" BO_ 1542 1;
+BA_ "GenMsgAutoGenDsp" BO_ 1540 0;
+BA_ "GenMsgAutoGenSnd" BO_ 1540 0;
+BA_ "GenMsgILSupport" BO_ 1540 0;
+BA_ "DiagRequest" BO_ 1540 1;
+BA_ "GenMsgAutoGenDsp" BO_ 1053 0;
+BA_ "GenMsgAutoGenSnd" BO_ 1053 0;
+BA_ "NmMessage" BO_ 1053 1;
+BA_ "GenMsgILSupport" BO_ 1053 0;
+BA_ "NmMessage" BO_ 1052 1;
+BA_ "GenMsgAutoGenSnd" BO_ 1052 0;
+BA_ "GenMsgAutoGenDsp" BO_ 1052 0;
+BA_ "GenMsgILSupport" BO_ 1052 0;
+BA_ "GenMsgAutoGenDsp" BO_ 1051 0;
+BA_ "GenMsgAutoGenSnd" BO_ 1051 0;
+BA_ "NmMessage" BO_ 1051 1;
+BA_ "GenMsgILSupport" BO_ 1051 0;
+BA_ "NmMessage" BO_ 1050 1;
+BA_ "GenMsgAutoGenSnd" BO_ 1050 0;
+BA_ "GenMsgAutoGenDsp" BO_ 1050 0;
+BA_ "GenMsgILSupport" BO_ 1050 0;
+BA_ "GenMsgNrOfRepetition" BO_ 497 5;
+BA_ "GenMsgCycleTime" BO_ 497 30;
+BA_ "GenMsgAutoGenSnd" BO_ 497 1;
+BA_ "GenMsgAutoGenDsp" BO_ 497 1;
+BA_ "NmMessage" BO_ 497 0;
+BA_ "GenMsgPreSetting" BO_ 496 "";
+BA_ "GenMsgPostSetting" BO_ 496 "";
+BA_ "GenMsgNrOfRepetition" BO_ 496 5;
+BA_ "GenMsgAutoGenDsp" BO_ 496 1;
+BA_ "GenMsgAutoGenSnd" BO_ 496 1;
+BA_ "GenMsgCycleTime" BO_ 496 30;
+BA_ "NmMessage" BO_ 496 0;
+BA_ "GenMsgPostSetting" BO_ 417 "else putValue(EnvPhase_,0)";
+BA_ "GenMsgPreSetting" BO_ 417 "putValue(EnvPhase_, !_mConsole_2.Phase)";
+BA_ "GenMsgSendType" BO_ 417 2;
+BA_ "GenMsgCycleTime" BO_ 417 500;
+BA_ "GenMsgAutoGenSnd" BO_ 417 1;
+BA_ "GenMsgAutoGenDsp" BO_ 417 1;
+BA_ "GenMsgCycleTime" BO_ 416 20;
+BA_ "GenMsgAutoGenSnd" BO_ 416 1;
+BA_ "GenMsgAutoGenDsp" BO_ 416 1;
+BA_ "GenMsgAutoGenDsp" BO_ 273 1;
+BA_ "GenMsgAutoGenSnd" BO_ 273 1;
+BA_ "GenMsgCycleTime" BO_ 273 2;
+BA_ "GenMsgSendType" BO_ 273 1;
+BA_ "GenMsgAutoGenDsp" BO_ 272 1;
+BA_ "GenMsgAutoGenSnd" BO_ 272 1;
+BA_ "GenMsgCycleTime" BO_ 272 100;
+BA_ "GenMsgSendType" BO_ 272 2;
+BA_ "GenMsgILSupport" BO_ 256 0;
+BA_ "GenSigEnvVarType" SG_ 1543 data 0;
+BA_ "GenSigEVName" SG_ 1543 data "data0";
+BA_ "GenSigEnvVarType" SG_ 1542 data 0;
+BA_ "GenSigEVName" SG_ 1542 data "data1";
+BA_ "GenSigAutoGenDsp" SG_ 1053 SleepInd 1;
+BA_ "GenSigEnvVarType" SG_ 497 WN_Position 0;
+BA_ "GenSigEVName" SG_ 497 WN_Position "@Msgname@Signame";
+BA_ "GenSigAutoGenDsp" SG_ 497 WN_Position 1;
+BA_ "GenSigPostSetting" SG_ 496 WN_Position "_CancelOrResetSleepTimer()";
+BA_ "GenSigEnvVarType" SG_ 496 WN_Position 0;
+BA_ "GenSigEVName" SG_ 496 WN_Position "@Msgname@Signame";
+BA_ "GenSigAutoGenDsp" SG_ 496 WN_Position 1;
+BA_ "GenSigEnvVarType" SG_ 417 Phase 0;
+BA_ "GenSigEnvVarType" SG_ 417 Active 0;
+BA_ "GenSigSendType" SG_ 417 Light 5;
+BA_ "GenSigEnvVarType" SG_ 417 Light 0;
+BA_ "GenSigEnvVarType" SG_ 416 WN_right_up 0;
+BA_ "GenSigEnvVarType" SG_ 416 WN_right_down 0;
+BA_ "GenSigEnvVarType" SG_ 416 WN_left_up 0;
+BA_ "GenSigEnvVarType" SG_ 416 WN_left_down 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_r2d 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_r2u 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_r2r 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_r2l 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_l2d 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_l2u 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_l2r 0;
+BA_ "GenSigEnvVarType" SG_ 416 Mirror_l2l 0;
+BA_ "GenSigSendType" SG_ 273 Voltage 3;
+BA_ "GenSigEnvVarType" SG_ 273 Voltage 1;
+BA_ "GenSigStartValue" SG_ 273 Voltage 120;
+BA_ "GenSigInactiveValue" SG_ 273 Voltage 0;
+BA_ "GenSigSendType" SG_ 273 PetrolLevel 3;
+BA_ "GenSigAutoGenDsp" SG_ 273 PetrolLevel 1;
+BA_ "GenSigEnvVarType" SG_ 273 PetrolLevel 0;
+BA_ "GenSigSendType" SG_ 273 EngSpeed 3;
+BA_ "GenSigAutoGenSnd" SG_ 273 EngSpeed 1;
+BA_ "GenSigAutoGenDsp" SG_ 273 EngSpeed 1;
+BA_ "GenSigEnvVarType" SG_ 273 EngSpeed 1;
+BA_ "GenSigSendType" SG_ 273 CarSpeed 3;
+BA_ "GenSigAutoGenDsp" SG_ 273 CarSpeed 1;
+BA_ "GenSigEnvVarType" SG_ 273 CarSpeed 1;
+BA_ "GenSigSendType" SG_ 273 EngineTemp 3;
+BA_ "GenSigAutoGenDsp" SG_ 273 EngineTemp 1;
+BA_ "GenSigAutoGenSnd" SG_ 273 EngineTemp 1;
+BA_ "GenSigEnvVarType" SG_ 273 EngineTemp 0;
+BA_ "GenSigEnvVarType" SG_ 272 EngineRunning 0;
+BA_ "GenSigEnvVarType" SG_ 272 Ig_15 0;
+BA_ "GenSigEnvVarType" SG_ 272 Ig_15R 0;
+BA_ "GenSigEnvVarType" SG_ 272 StarterKey 0;
+BA_ "GenSigEnvVarType" SG_ 256 Data4 0;
+BA_ "GenSigEnvVarType" SG_ 256 Data3 0;
+BA_ "GenSigEnvVarType" SG_ 256 Data2 0;
+BA_ "GenSigEnvVarType" SG_ 256 Data1 0;
+VAL_ 417 Active 0 "None" 1 "Turn_right" 2 "Turn_left" 3 "Warning" ;
+

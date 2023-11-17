@@ -1,0 +1,214 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Engine Gateway
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ EngInjectionVol : 0|64@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 1793 FallbackMessage: 12 Engine
+ SG_ FallbackMessage_Byte_06_10 : 55|48@0- (1,0) [0|0] "" Vector__XXX
+ SG_ FallbackMessage_Byte_00_05 : 7|48@0- (1,0) [0|0] "" Vector__XXX
+
+BO_ 1792 DropOutMessage: 32 Engine
+ SG_ DropOutMessage_Byte_06_10 : 55|48@0- (1,0) [0|0] "" Vector__XXX
+ SG_ DropOutMessage_Byte_00_05 : 7|48@0- (1,0) [0|0] "" Vector__XXX
+
+BO_ 2047 Test_Message_CAN_FD: 64 Engine
+ SG_ Test_signal_Byte_56_62 : 448|52@1- (1,0) [-2.25179981368525E+015|2.25179981368525E+015] "" Vector__XXX
+ SG_ Test_signal_Byte_49_55 : 392|52@1- (1,0) [-2.25179981368525E+015|2.25179981368525E+015] "" Vector__XXX
+ SG_ Test_Signal_Byte_63 : 504|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Test_Signal_Byte_06_09 : 48|32@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Test_Signal_Byte_03_05 : 24|24@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Test_signal_Byte_42_48 : 336|52@1- (1,0) [-2.25179981368525E+015|2.25179981368525E+015] "" Vector__XXX
+ SG_ Test_Signal_Byte_35_41 : 280|52@1- (1,0) [-2.25179981368525E+015|2.25179981368525E+015] "" Vector__XXX
+ SG_ Test_Signal_Byte_28_34 : 224|52@1- (1,0) [-2.25179981368525E+015|2.25179981368525E+015] "" Vector__XXX
+ SG_ Test_Signal_Byte_21_27 : 168|52@1- (1,0) [-2.25179981368525E+015|2.25179981368525E+015] "" Vector__XXX
+ SG_ Test_Signal_Byte_15_20 : 120|48@1- (1,0) [-140737488355328|140737488355327] "" Vector__XXX
+ SG_ Test_Signal_Byte_10_14 : 80|40@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Test_Signal_Byte_01_02 : 8|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Test_Signal_Byte_00 : 0|8@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 512 Diag_Request: 8 Vector__XXX
+
+BO_ 1024 Diag_Response: 8 Vector__XXX
+
+BO_ 2147555696 Ignition_Info: 48 Gateway
+ SG_ StarterKey : 0|1@1+ (1,0) [0|1] ""  Engine
+
+BO_ 1544 DiagResponse_Motor: 8 Engine
+
+BO_ 1537 DiagRequest_Motor: 8 Gateway
+
+BO_ 1307 NM_Engine: 4 Engine
+ SG_ SleepInd : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 1306 NM_Gateway_PowerTrain: 4 Gateway
+
+BO_ 1020 GearBoxInfo: 32 Engine
+ SG_ Gear : 0|3@1+ (1,0) [0|5] "" Vector__XXX
+
+BO_ 101 EngineStatus: 24 Engine
+ SG_ EngStatusFD_FillByte4 : 64|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngStatusFD_FillByte3 : 32|24@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngStatusFD_FillByte2 : 16|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngStatusFD_FillByte1 : 8|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ ErrorCode : 2|6@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Status : 0|2@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 100 EngineData: 64 Engine
+ SG_ EngKnocking : 464|48@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngIgnitionAngle : 400|64@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngStates : 336|64@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngValvePos : 272|64@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngTubePressure : 208|64@1- (1,0) [0|0] "" Vector__XXX
+ SG_ SleepInd : 201|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ShiftRequest : 200|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Gear : 44|3@1+ (1,0) [0|5] "" Vector__XXX
+ SG_ EcoMode : 42|2@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ EngTorque : 128|64@1- (1,0) [0|0] "" Vector__XXX
+ SG_ EngSpeed : 96|16@1- (1,0) [-32768|32767] "rpm" Vector__XXX
+ SG_ EngForce : 64|32@1- (1,0) [0|0] "N" Vector__XXX
+ SG_ PetrolLevel : 24|8@1+ (1,0) [0|255] "l" Vector__XXX
+ SG_ EngPower : 48|16@1+ (0.01,0) [0|150] "kW" Vector__XXX
+ SG_ IdleRunning : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ EngTemp : 16|7@1+ (2,-50) [-50|150] "degC" Vector__XXX
+
+BO_ 2147535173 ABSdata: 12 Engine
+ SG_ AccelarationForce : 32|16@1+ (1,-10000) [0|0] "N" Vector__XXX
+ SG_ Diagnostics : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GearLock : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CarSpeed : 0|10@1+ (0.5,0) [0|300] "mph" Vector__XXX
+
+
+
+CM_ BO_ 3221225472 "This is a message for not used signals, created by Vector CANdb++ DBC OLE DB Provider.";
+BA_DEF_ SG_  "GenSigStartValue" FLOAT 0 100000000000;
+BA_DEF_ SG_  "GenSigSendType" ENUM  "Cyclic","OnWrite","OnWriteWithRepetition","OnChange","OnChangeWithRepetition","IfActive","IfActiveWithRepetition","NoSigSendType","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed";
+BA_DEF_ SG_  "GenSigInactiveValue" INT 0 100000;
+BA_DEF_ SG_  "NWM-WakeupAllowed" ENUM  "No","Yes";
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "Cyclic","NotUsed","NotUsed","NotUsed","NotUsed","Cyclic","NotUsed","IfActive","NoMsgSendType","NotUsed","vector_leerstring";
+BA_DEF_ BO_  "GenMsgNrOfRepetition" INT 0 999999;
+BA_DEF_ BO_  "GenMsgDelayTime" INT 0 1000;
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 50000;
+BA_DEF_ BO_  "GenMsgCycleTimeFast" INT 0 50000;
+BA_DEF_ BO_  "GenMsgILSupport" ENUM  "No","Yes";
+BA_DEF_ BO_  "NmMessage" ENUM  "no","yes";
+BA_DEF_ BO_  "GenMsgStartDelayTime" INT 0 65535;
+BA_DEF_ BU_  "NmStationAddress" INT 0 63;
+BA_DEF_ BU_  "NmNode" ENUM  "no","yes";
+BA_DEF_  "NmBaseAddress" HEX 1024 1087;
+BA_DEF_ BO_  "CANFD_BRS" ENUM  "0","1";
+BA_DEF_  "DBName" STRING ;
+BA_DEF_  "BusType" STRING ;
+BA_DEF_ BU_  "NodeLayerModules" STRING ;
+BA_DEF_ BU_  "ECU" STRING ;
+BA_DEF_ BU_  "CANoeJitterMax" INT 0 0;
+BA_DEF_ BU_  "CANoeJitterMin" INT 0 0;
+BA_DEF_ BU_  "CANoeDrift" INT 0 0;
+BA_DEF_ BU_  "CANoeStartDelay" INT 0 0;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","StandardCAN_FD","ExtendedCAN_FD";
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_DEF_DEF_  "GenSigSendType" "Cyclic";
+BA_DEF_DEF_  "GenSigInactiveValue" 0;
+BA_DEF_DEF_  "NWM-WakeupAllowed" "";
+BA_DEF_DEF_  "GenMsgSendType" "NoMsgSendType";
+BA_DEF_DEF_  "GenMsgNrOfRepetition" 0;
+BA_DEF_DEF_  "GenMsgDelayTime" 0;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_DEF_DEF_  "GenMsgCycleTimeFast" 0;
+BA_DEF_DEF_  "GenMsgILSupport" "Yes";
+BA_DEF_DEF_  "NmMessage" "no";
+BA_DEF_DEF_  "GenMsgStartDelayTime" 0;
+BA_DEF_DEF_  "NmStationAddress" 0;
+BA_DEF_DEF_  "NmNode" "no";
+BA_DEF_DEF_  "NmBaseAddress" 1024;
+BA_DEF_DEF_  "CANFD_BRS" "1";
+BA_DEF_DEF_  "DBName" "";
+BA_DEF_DEF_  "BusType" "";
+BA_DEF_DEF_  "NodeLayerModules" "";
+BA_DEF_DEF_  "ECU" "";
+BA_DEF_DEF_  "CANoeJitterMax" 0;
+BA_DEF_DEF_  "CANoeJitterMin" 0;
+BA_DEF_DEF_  "CANoeDrift" 0;
+BA_DEF_DEF_  "CANoeStartDelay" 0;
+BA_DEF_DEF_  "VFrameFormat" "StandardCAN";
+BA_ "BusType" "CAN FD";
+BA_ "DBName" "CAN_FD_Powertrain";
+BA_ "NodeLayerModules" BU_ Engine "CANoeILNLVector.dll";
+BA_ "NodeLayerModules" BU_ Gateway "CANoeILNLVector.dll";
+BA_ "GenMsgSendType" BO_ 1793 1;
+BA_ "VFrameFormat" BO_ 1793 14;
+BA_ "GenMsgSendType" BO_ 1792 1;
+BA_ "VFrameFormat" BO_ 1792 14;
+BA_ "GenMsgCycleTime" BO_ 2047 100;
+BA_ "VFrameFormat" BO_ 2047 14;
+BA_ "GenMsgSendType" BO_ 512 0;
+BA_ "VFrameFormat" BO_ 512 14;
+BA_ "GenMsgSendType" BO_ 1024 0;
+BA_ "VFrameFormat" BO_ 1024 14;
+BA_ "GenMsgCycleTime" BO_ 2147555696 50;
+BA_ "VFrameFormat" BO_ 2147555696 15;
+BA_ "GenMsgSendType" BO_ 1544 1;
+BA_ "VFrameFormat" BO_ 1544 14;
+BA_ "GenMsgSendType" BO_ 1537 1;
+BA_ "VFrameFormat" BO_ 1537 14;
+BA_ "GenMsgCycleTime" BO_ 1307 100;
+BA_ "VFrameFormat" BO_ 1307 14;
+BA_ "GenMsgSendType" BO_ 1306 1;
+BA_ "VFrameFormat" BO_ 1306 14;
+BA_ "GenMsgCycleTime" BO_ 1020 50;
+BA_ "VFrameFormat" BO_ 1020 14;
+BA_ "GenMsgCycleTime" BO_ 101 10;
+BA_ "VFrameFormat" BO_ 101 14;
+BA_ "GenMsgCycleTime" BO_ 100 100;
+BA_ "VFrameFormat" BO_ 100 14;
+BA_ "GenMsgCycleTime" BO_ 2147535173 50;
+BA_ "VFrameFormat" BO_ 2147535173 15;
+BA_ "GenSigSendType" SG_ 1793 FallbackMessage_Byte_06_10 7;
+BA_ "GenSigSendType" SG_ 1793 FallbackMessage_Byte_00_05 7;
+BA_ "GenSigSendType" SG_ 1792 DropOutMessage_Byte_06_10 7;
+BA_ "GenSigSendType" SG_ 1792 DropOutMessage_Byte_00_05 7;
+BA_ "GenSigSendType" SG_ 1307 SleepInd 1;
+BA_ "GenSigSendType" SG_ 100 SleepInd 1;
+VAL_ 1020 Gear 0 "Idle" 1 "Gear_1" 2 "Gear_2" 3 "Gear_3" 4 "Gear_4" 5 "Gear_5" ;
+VAL_ 101 Status 3 "Error" 2 "GoSleep" 1 "Running" 0 "WakeUp" ;
+VAL_ 100 ShiftRequest 1 "Shift_Request_On" 0 "Shift_Request_Off" ;
+VAL_ 100 Gear 0 "Idle" 1 "Gear_1" 2 "Gear_2" 3 "Gear_3" 4 "Gear_4" 5 "Gear_5" ;
+VAL_ 100 IdleRunning 0 "Running" 1 "Idle" ;
+VAL_ 2147535173 GearLock 1 "Gear_Lock_On" 0 "Gear_Lock_Off" ;
+SIG_VALTYPE_ 100 EngForce : 1;
+

@@ -1,0 +1,255 @@
+/*************************************************************************************/
+
+//                                                                                     
+
+// Description: LIN Description file created using Vector's DaVinci Network Designer   
+
+// Created:     11 Oct 2007 14:46:29
+
+// Author:      Vector Informatik GmbH
+
+// Version:     0.1                                                                    
+
+//                                                                                     
+
+/*************************************************************************************/
+
+
+LIN_description_file;
+LIN_protocol_version = "2.2";
+LIN_language_version = "2.2";
+LIN_speed = 19.2 kbps;
+
+Nodes {
+  Master: GWE, 1 ms, 0 ms ;
+  Slaves: DLF_Left, DLF_Right, DLR_Left, DLR_Right, WWS ;
+}
+
+
+Signals {
+  DLFL_CurvesLight: 1, 0, DLF_Left, GWE ;
+  DLFL_LightStatus: 8, 0, DLF_Left, GWE ;
+  DLFL_ResponseError: 1, 0, DLF_Left, GWE ;
+  DLFR_CurvesLight: 1, 0, DLF_Right, GWE ;
+  DLFR_LightStatus: 8, 0, DLF_Right, GWE ;
+  DLFR_ResponseError: 1, 0, DLF_Right, GWE ;
+  DLRL_LightStatus: 8, 0, DLR_Left, GWE ;
+  DLRL_ResponseError: 1, 0, DLR_Left, GWE ;
+  DLRR_LightStatus: 8, 0, DLR_Right, GWE ;
+  DLRR_ResponseError: 1, 0, DLR_Right, GWE ;
+  GWE_DrivingLight: 1, 0, GWE, DLR_Right, DLF_Right, DLF_Left, DLR_Left ;
+  GWE_Reserved: 8, 0, GWE, DLR_Right, DLF_Right, DLF_Left, DLR_Left ;
+  GWE_TurnIndicationLeft: 1, 0, GWE, DLF_Left, DLR_Left ;
+  GWE_TurnIndicationRight: 1, 0, GWE, DLR_Right, DLF_Right ;
+  GWE_WarningLight: 1, 0, GWE, DLR_Right, DLF_Right, DLF_Left, DLR_Left ;
+  GWE_Wiper: 2, 0, GWE, WWS ;
+  RUF_ResponseError: 1, 0, WWS, GWE ;
+  WWS_RainSensor: 1, 0, WWS, GWE ;
+  WWS_WiperPos: 8, 0, WWS, GWE ;
+}
+
+Diagnostic_signals {
+  MasterReqB0: 8, 0 ;
+  MasterReqB1: 8, 0 ;
+  MasterReqB2: 8, 0 ;
+  MasterReqB3: 8, 0 ;
+  MasterReqB4: 8, 0 ;
+  MasterReqB5: 8, 0 ;
+  MasterReqB6: 8, 0 ;
+  MasterReqB7: 8, 0 ;
+  SlaveRespB0: 8, 0 ;
+  SlaveRespB1: 8, 0 ;
+  SlaveRespB2: 8, 0 ;
+  SlaveRespB3: 8, 0 ;
+  SlaveRespB4: 8, 0 ;
+  SlaveRespB5: 8, 0 ;
+  SlaveRespB6: 8, 0 ;
+  SlaveRespB7: 8, 0 ;
+}
+
+
+
+Frames {
+  DLFLeft_01: 2, DLF_Left, 2 {
+    DLFL_CurvesLight, 0 ;
+    DLFL_ResponseError, 1 ;
+    DLFL_LightStatus, 8 ;
+  }
+  DLFRight_01: 6, DLF_Right, 2 {
+    DLFR_CurvesLight, 0 ;
+    DLFR_ResponseError, 1 ;
+    DLFR_LightStatus, 8 ;
+  }
+  DLRLeft_01: 3, DLR_Left, 2 {
+    DLRL_LightStatus, 0 ;
+    DLRL_ResponseError, 8 ;
+  }
+  DLRRight_01: 5, DLR_Right, 2 {
+    DLRR_LightStatus, 0 ;
+    DLRR_ResponseError, 8 ;
+  }
+  GWE_01: 1, GWE, 2 {
+    GWE_TurnIndicationLeft, 0 ;
+    GWE_TurnIndicationRight, 1 ;
+    GWE_WarningLight, 2 ;
+    GWE_DrivingLight, 4 ;
+    GWE_Reserved, 8 ;
+  }
+  GWE_02: 0, GWE, 1 {
+    GWE_Wiper, 0 ;
+  }
+  WWS_01: 4, WWS, 2 {
+    RUF_ResponseError, 0 ;
+    WWS_RainSensor, 1 ;
+    WWS_WiperPos, 8 ;
+  }
+}
+
+
+
+Diagnostic_frames {
+  MasterReq: 0x3c {
+    MasterReqB0, 0 ;
+    MasterReqB1, 8 ;
+    MasterReqB2, 16 ;
+    MasterReqB3, 24 ;
+    MasterReqB4, 32 ;
+    MasterReqB5, 40 ;
+    MasterReqB6, 48 ;
+    MasterReqB7, 56 ;
+  }
+  SlaveResp: 0x3d {
+    SlaveRespB0, 0 ;
+    SlaveRespB1, 8 ;
+    SlaveRespB2, 16 ;
+    SlaveRespB3, 24 ;
+    SlaveRespB4, 32 ;
+    SlaveRespB5, 40 ;
+    SlaveRespB6, 48 ;
+    SlaveRespB7, 56 ;
+  }
+}
+
+Node_attributes {
+  DLF_Left{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x3 ;
+    initial_NAD = 0x3 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = DLFL_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DLFLeft_01 ;
+      GWE_01 ;
+    }
+  }
+  DLF_Right{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x5 ;
+    initial_NAD = 0x5 ;
+    product_id = 0x1e, 0x1, 0 ;
+    response_error = DLFR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DLFRight_01 ;
+      GWE_01 ;
+    }
+  }
+  DLR_Left{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x2 ;
+    initial_NAD = 0x2 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = DLRL_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DLRLeft_01 ;
+      GWE_01 ;
+    }
+  }
+  DLR_Right{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x4 ;
+    initial_NAD = 0x4 ;
+    product_id = 0x1e, 0x1, 0 ;
+    response_error = DLRR_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      DLRRight_01 ;
+      GWE_01 ;
+    }
+  }
+  WWS{
+    LIN_protocol = "2.2" ;
+    configured_NAD = 0x1 ;
+    initial_NAD = 0x1 ;
+    product_id = 0x1e, 0x1, 1 ;
+    response_error = RUF_ResponseError ;
+    N_As_timeout = 1000 ms ;
+    N_Cr_timeout = 1000 ms ;
+    configurable_frames {
+      GWE_02 ;
+      WWS_01 ;
+    }
+  }
+}
+
+Schedule_tables {
+ Table0 {
+    MasterReq delay 10 ms ;
+    SlaveResp delay 10 ms ;
+  }
+ Table1 {
+    GWE_02 delay 4 ms ;
+    GWE_01 delay 10 ms ;
+    WWS_01 delay 5 ms ;
+    DLFLeft_01 delay 5 ms ;
+    DLFRight_01 delay 5 ms ;
+    DLRLeft_01 delay 5 ms ;
+    DLRRight_01 delay 5 ms ;
+  }
+}
+
+
+Signal_encoding_types {
+  Enc_DLF_CurvesLight {
+    logical_value, 0, "Inactive" ;
+    logical_value, 1, "Active" ;
+  }
+  Enc_GWE_DrivingLight {
+    logical_value, 0, "Off" ;
+    logical_value, 1, "On" ;
+  }
+  Enc_GWE_TurnIndication {
+    logical_value, 0, "Off" ;
+    logical_value, 1, "On" ;
+  }
+  Enc_GWE_WarningLight {
+    logical_value, 0, "Off" ;
+    logical_value, 1, "On" ;
+  }
+  Enc_GWE_Wiper {
+    logical_value, 0, "Park" ;
+    logical_value, 1, "Level1" ;
+    logical_value, 2, "Level2" ;
+    logical_value, 3, "Interval" ;
+  }
+  Enc_WWS_RainSensor {
+    logical_value, 0, "Inactive" ;
+    logical_value, 1, "Active" ;
+  }
+}
+
+Signal_representation {
+  Enc_DLF_CurvesLight: DLFL_CurvesLight, DLFR_CurvesLight ;
+  Enc_GWE_DrivingLight: GWE_DrivingLight ;
+  Enc_GWE_TurnIndication: GWE_TurnIndicationLeft, GWE_TurnIndicationRight ;
+  Enc_GWE_WarningLight: GWE_WarningLight ;
+  Enc_GWE_Wiper: GWE_Wiper ;
+  Enc_WWS_RainSensor: WWS_RainSensor ;
+}
+

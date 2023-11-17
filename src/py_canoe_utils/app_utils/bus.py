@@ -13,12 +13,14 @@ class Bus:
             app_com_obj (object): application com object.
             bus_type (str, optional): The desired bus type. Valid types are: CAN, LIN, FlexRay, AFDX, Ethernet. Defaults to 'CAN'.
         """
+        self.bus_type = bus_type
         self.app_com_obj = app_com_obj
         self.log = logging.getLogger('CANOE_LOG')
-        self.com_obj = self.app_com_obj.GetBus(bus_type)
+        self.com_obj = self.app_com_obj.GetBus(self.bus_type)
 
     def reinit_bus(self, bus_type='CAN'):
-        self.com_obj = self.app_com_obj.GetBus(bus_type)
+        self.bus_type = bus_type
+        self.com_obj = self.app_com_obj.GetBus(self.bus_type)
 
     def get_signal(self, channel: int, message: str, signal: str) -> object:
         """Returns a Signal object.
@@ -107,7 +109,11 @@ class Bus:
             signal_object (object): signal object.
 
         Returns:
-            int: State of the signal; possible values are: 0: The default value of the signal is returned. 1: The measurement is not running; the value set by the application is returned. 3: The signal has been received in the current measurement; the current value is returned.
+            int: State of the signal.
+                possible values are:
+                    0: The default value of the signal is returned.
+                    1: The measurement is not running; the value set by the application is returned.
+                    3: The signal has been received in the current measurement; the current value is returned.
         """
         return signal_object.State
 
