@@ -161,7 +161,7 @@ class Configuration:
         """Indicates whether changes to the configuration have already been saved.
 
         Returns:
-            bool: If changes were made to the configuration and they have not been saved yet, False is returned; otherwise True is returned.
+            bool: False is returned, If changes were made to the configuration and not been saved yet. otherwise True is returned.
         """
         return self.com_obj.Saved
 
@@ -197,13 +197,13 @@ class Configuration:
             self.log.info('CANoe Configuration already in saved state.')
         return self.saved
 
-    def save_as(self, path: str, major: str, minor: str, prompt_user: bool):
+    def save_as(self, path: str, major: int, minor: int, prompt_user: bool):
         """Saves the configuration as a different CANoe version
 
         Args:
             path (str): The complete path.
-            major (str): The major version number of the target version, e.g. 10 for CANoe 10.1.
-            minor (str): The minor version number of the target version, e.g. 1 for CANoe 10.1
+            major (int): The major version number of the target version, e.g. 10 for CANoe 10.1.
+            minor (int): The minor version number of the target version, e.g. 1 for CANoe 10.1
             prompt_user (bool): A boolean value that defines whether the user should interact in error situations.
         """
         self.com_obj.SaveAs(path, major, minor, prompt_user)
@@ -347,7 +347,9 @@ class TestEnvironment:
         """Saves the test environment.
 
         Args:
-            name (str): Sets the (new) path for the test environment, if applicable. If no path is specified, the test environment is saved under its current name. If it is not saved yet, the user will be prompted for a name.
+            name (str): Sets the (new) path for the test environment, if applicable.
+                If no path is specified, the test environment is saved under its current name.
+                If it is not saved yet, the user will be prompted for a name.
             prompt_user (bool, optional): A boolean value that determines whether the user will be prompted on error. Defaults to False.
         """
         self.com_obj.Save(name, prompt_user)
@@ -440,18 +442,14 @@ class TestModuleEvents:
     def __init__(self):
         self.tm_html_report_path = ''
         self.tm_report_generated = False
-        self.tm_started = False
-        self.tm_stopped = False
-        self.tm_running = self.tm_started
+        self.tm_running = False
 
     def OnStart(self):
         """OnStart is called after the test module started.
         """
         self.tm_html_report_path = ''
         self.tm_report_generated = False
-        self.tm_started = True
-        self.tm_stopped = False
-        self.tm_running = self.tm_started
+        self.tm_running = True
         # logger_inst.info(f'test module OnStart event.')
 
     @staticmethod
@@ -469,9 +467,7 @@ class TestModuleEvents:
                             1: The test module was stopped by the user.
                             2: The test module was stopped by measurement stop.
         """
-        self.tm_started = False
-        self.tm_stopped = True
-        self.tm_running = self.tm_started
+        self.tm_running = False
         # logger_inst.info(f'test module OnStop event. reason -> {reason}')
 
     def OnReportGenerated(self, success, source_full_name, generated_full_name):
@@ -486,10 +482,10 @@ class TestModuleEvents:
         """
         self.tm_html_report_path = generated_full_name
         self.tm_report_generated = success
+        self.tm_running = False
         logger_inst.info(f'test module OnReportGenerated event. {success} # {source_full_name} # {generated_full_name}')
 
-    @staticmethod
-    def OnVerdictFail():
+    def OnVerdictFail(self):
         """OnVerdictFail occurs whenever a test case fails.
         """
         # logger_inst.info(f'test module OnVerdictFail event.')
@@ -500,8 +496,9 @@ class TestModule:
 
     def __init__(self, test_module_com_obj):
         self.com_obj = win32com.client.DispatchWithEvents(test_module_com_obj, TestModuleEvents)
-        self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_started)
-        self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_stopped)
+        self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_running)
+        self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: not self.com_obj.tm_running)
+        self.wait_for_tm_report_gen = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_report_generated)
 
     @property
     def name(self) -> str:
@@ -549,8 +546,12 @@ class TestModule:
         """Starts the test module.
         """
         self.com_obj.Start()
+        self.wait_for_tm_to_start()
         logger_inst.info(f'started executing test module. waiting for completion...')
+    
+    def wait_for_completion(self):
         self.wait_for_tm_to_stop()
+        wait(1)
         logger_inst.info(f'completed executing test module. verdict = {self.verdict}')
 
     def pause(self) -> None:

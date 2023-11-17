@@ -1,5 +1,7 @@
 # Import Python Libraries here
+import pythoncom
 import win32com.client
+from time import sleep as wait
 
 
 class Environment:
@@ -73,11 +75,32 @@ class EnvironmentArray:
         return self.com_obj.Count
 
 
+def DoEvents():
+    pythoncom.PumpWaitingMessages()
+    wait(.1)
+
+
+def DoEventsUntil(condition):
+    while not condition():
+        DoEvents()
+
+
+class EnvironmentVariableEvents:
+    def __init__(self):
+        self.var_event_occurred = False
+
+    def OnChange(self, value):
+        """Occurs when the value of an environment variable changes.
+        """
+        self.var_event_occurred = True
+
+
 class EnvironmentVariable:
     """The EnvironmentVariable class represents an environment variable.
     """
     def __init__(self, env_var_com_obj):
-        self.com_obj = env_var_com_obj
+        self.com_obj = win32com.client.DispatchWithEvents(env_var_com_obj, EnvironmentVariableEvents)
+        self.wait_for_tm_to_start = lambda: DoEventsUntil(lambda: self.com_obj.var_event_occurred)
 
     @property
     def handle(self):
@@ -106,6 +129,7 @@ class EnvironmentVariable:
     @value.setter
     def value(self, value):
         self.com_obj.Value = value
+        wait(.1)
 
 
 class EnvironmentInfo:

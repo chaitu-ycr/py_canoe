@@ -46,6 +46,15 @@ BO_ 801 LightState: 1 Light
 
 
 
+EV_ float_var: 1 [0|0] "" 123.123 1 DUMMY_NODE_VECTOR0 Vector__XXX;
+
+EV_ data_var: 0 [0|0] "" 0 2 DUMMY_NODE_VECTOR0 Vector__XXX;
+
+EV_ string_var: 0 [0|0] "" 0 3 DUMMY_NODE_VECTOR8000 Vector__XXX;
+
+EV_ int_var: 0 [0|0] "" 0 4 DUMMY_NODE_VECTOR0 Vector__XXX;
+ENVVAR_DATA_ data_var: 64;
+
 BA_DEF_ BO_  "GenMsgFastOnStart" INT 0 0;
 BA_DEF_ SG_  "GenSigInactiveValue" INT 0 0;
 BA_DEF_ BU_  "ILUsed" ENUM  "Yes","No";
