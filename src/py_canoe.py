@@ -1236,7 +1236,7 @@ class CANoe:
         else:
             self.log.info(f'Zero test environments found in configuration.')
 
-    def get_environment_variable(self, env_var_name: str) -> Union[int, float, str, tuple, None]:
+    def get_environment_variable_value(self, env_var_name: str) -> Union[int, float, str, tuple, None]:
         r"""returns a environment variable value.
 
         Args:
@@ -1249,7 +1249,7 @@ class CANoe:
             >>> canoe_inst = CANoe()
             >>> canoe_inst.open(r'D:\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.start_measurement()
-            >>> env_var_val = canoe_inst.get_environment_variable('float_var')
+            >>> env_var_val = canoe_inst.get_environment_variable_value('float_var')
             >>> print(env_var_val)
         """
         var_value = None
@@ -1261,7 +1261,7 @@ class CANoe:
             self.log.info(f'failed to get environment variable({env_var_name}) value. {e}')
         return var_value
     
-    def set_environment_variable(self, env_var_name: str, value: Union[int, float, str, tuple]) -> None:
+    def set_environment_variable_value(self, env_var_name: str, value: Union[int, float, str, tuple]) -> None:
         r"""sets a value to environment variable.
 
         Args:
@@ -1272,10 +1272,10 @@ class CANoe:
             >>> canoe_inst = CANoe()
             >>> canoe_inst.open(r'D:\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.start_measurement()
-            >>> canoe_inst.set_environment_variable('int_var', 123)
-            >>> canoe_inst.set_environment_variable('float_var', 111.123)
-            >>> canoe_inst.set_environment_variable('string_var', 'this is string variable')
-            >>> canoe_inst.set_environment_variable('data_var', (1, 2, 3, 4, 5, 6))
+            >>> canoe_inst.set_environment_variable_value('int_var', 123)
+            >>> canoe_inst.set_environment_variable_value('float_var', 111.123)
+            >>> canoe_inst.set_environment_variable_value('string_var', 'this is string variable')
+            >>> canoe_inst.set_environment_variable_value('data_var', (1, 2, 3, 4, 5, 6))
         """
         try:
             variable = self.application.environment.get_variable(env_var_name)
