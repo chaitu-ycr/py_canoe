@@ -1113,7 +1113,7 @@ class CANoe:
             >>> canoe_inst = CANoe(user_capl_functions=('addition_function', ))
             >>> canoe_inst.open(r'D:\py_canoe\demo_cfg\demo.cfg')
             >>> canoe_inst.start_measurement()
-            >>> canoe_inst.call_capl_function('addition_function', (100, 200))
+            >>> canoe_inst.call_capl_function('addition_function', 100, 200)
             >>> canoe_inst.stop_measurement()
         """
         capl_obj = self.application.capl

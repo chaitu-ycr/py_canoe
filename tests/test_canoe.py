@@ -176,7 +176,7 @@ def test_capl_methods():
     canoe_inst.compile_all_capl_nodes()
     assert canoe_inst.start_measurement()
     wait(1)
-    assert canoe_inst.call_capl_function('addition_function', (100, 200))
+    assert canoe_inst.call_capl_function('addition_function', 100, 200)
     assert canoe_inst.call_capl_function('hello_world')
     assert canoe_inst.stop_measurement()
 
