@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_canoe"
-version = "2.0.6"
+version = "2.1.0"
 description = "Python CANoe library"
 authors = ["chaitu-ycr <chaitu.ycr@gmail.com>"]
 license = "LICENSE"
