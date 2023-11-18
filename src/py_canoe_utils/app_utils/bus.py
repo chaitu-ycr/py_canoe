@@ -7,7 +7,7 @@ class Bus:
     """
 
     def __init__(self, app_com_obj, bus_type='CAN'):
-        """Returns a Signal object.
+        """The Bus object init method.
 
         Args:
             app_com_obj (object): application com object.
@@ -19,6 +19,11 @@ class Bus:
         self.com_obj = self.app_com_obj.GetBus(self.bus_type)
 
     def reinit_bus(self, bus_type='CAN'):
+        """reinitialize bus com_obj if there is change in bus_type.
+
+        Args:
+            bus_type (str, optional): The desired bus type. Valid types are: CAN, LIN, FlexRay, AFDX, Ethernet. Defaults to 'CAN'.
+        """
         self.bus_type = bus_type
         self.com_obj = self.app_com_obj.GetBus(self.bus_type)
 
@@ -35,8 +40,7 @@ class Bus:
         """
         return self.com_obj.GetSignal(channel, message, signal)
 
-    def get_j1939_signal(self, channel: int, message: str, signal: str, source_address: int,
-                         destination_address: int) -> object:
+    def get_j1939_signal(self, channel: int, message: str, signal: str, source_address: int, destination_address: int) -> object:
         """Returns a Signal object.
 
         Args:

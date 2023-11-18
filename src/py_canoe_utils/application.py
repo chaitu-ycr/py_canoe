@@ -166,7 +166,7 @@ class Application:
             prompt_user (bool, optional): A boolean value that indicates whether the user should intervene in error situations. Defaults to False.
 
         Raises:
-            FileNotFoundError: _description_
+            FileNotFoundError: error when canoe config file not available in pc.
         """
         if not auto_save:
             self.com_obj.Configuration.Modified = False

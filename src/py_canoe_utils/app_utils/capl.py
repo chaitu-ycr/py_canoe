@@ -10,6 +10,11 @@ class Capl:
     """
 
     def __init__(self, app_com_obj):
+        """The CAPL object init method.
+
+        Args:
+            app_com_obj (object): application com object.
+        """
         self.__log = logging.getLogger('CANOE_LOG')
         self.com_obj = win32com.client.Dispatch(app_com_obj.CAPL)
 

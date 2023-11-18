@@ -1,4 +1,4 @@
-# python environment setup
+# package environment setup and installation
 
 create python virtual environment
 
@@ -18,7 +18,7 @@ upgrade pip
 python -m pip install pip --upgrade
 ```
 
-install [py_canoe](https://pypi.org/project/py_canoe/) module
+Install [py_canoe](https://pypi.org/project/py_canoe/) package
 
 ```bat
 pip install py_canoe --upgrade

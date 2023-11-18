@@ -15,6 +15,8 @@ class Ui:
 
     @property
     def write(self):
+        """Returns the Write object of CANoe.
+        """
         return Write(self.com_obj.Write)
 
     def get_command_availability(self, command: str) -> bool:
