@@ -22,6 +22,8 @@ class Networks:
         return self.com_obj.Count
 
     def fetch_all_networks(self) -> dict:
+        """returns all networks available in configuration.
+        """
         networks = dict()
         for index in range(1, self.count + 1):
             network_com_obj = win32com.client.Dispatch(self.com_obj.Item(index))
@@ -30,6 +32,8 @@ class Networks:
         return networks
 
     def fetch_all_diag_devices(self) -> dict:
+        """returns all diagnostic devices available in configuration.
+        """
         diag_devices = dict()
         networks = self.fetch_all_networks()
         if len(networks) > 0:

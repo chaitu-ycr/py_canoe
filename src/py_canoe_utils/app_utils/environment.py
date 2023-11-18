@@ -49,18 +49,40 @@ class EnvironmentGroup:
 
     @property
     def array(self):
+        """Returns the EnvironmentArray object of the group.
+        """
         return EnvironmentArray(self.com_obj.Array)
 
     def add(self, variable):
+        """Adds an environment variable to the group.
+
+        Args:
+            variable: EnvironmentVariable com object.
+        """
         self.com_obj.Add(variable)
 
     def get_values(self):
+        """Determines the values of the environment variables contained in the group.
+
+        Returns:
+            The values of the environment variables.
+        """
         return self.com_obj.GetValues()
 
     def remove(self, variable):
+        """Removes an environment variable from a group.
+
+        Args:
+            variable: EnvironmentVariable com object.
+        """
         self.com_obj.Variable(variable)
 
     def set_values(self, values):
+        """Sets the values of the environment variables contained in the group.
+
+        Args:
+            values: The values of the environment variables
+        """
         self.com_obj.SetValues(values)
 
 
@@ -71,7 +93,12 @@ class EnvironmentArray:
         self.com_obj = env_array_com_obj
 
     @property
-    def count(self):
+    def count(self) -> int:
+        """The number of environment arrays contained
+
+        Returns:
+            int: The number of environment arrays contained.
+        """
         return self.com_obj.Count
 
 
@@ -104,30 +131,61 @@ class EnvironmentVariable:
 
     @property
     def handle(self):
+        """Determines the current handle of the environment variable.
+
+        Returns:
+            The value of the handle
+        """
         return self.com_obj.Handle
 
     @handle.setter
     def handle(self, value):
+        """sets the current handle of the environment variable.
+
+        Args:
+            value: The value of the handle
+        """
         self.com_obj.Handle = value
 
     @property
     def notification_type(self):
+        """returns the notification type for OnChangeAndTime handler.
+        """
         return self.com_obj.NotificationType
 
     @notification_type.setter
-    def notification_type(self, value):
+    def notification_type(self, value: int):
+        """Sets the notification type for OnChangeAndTime handler.
+
+        Args:
+            value (int): The notification type. 0-Value, 1-ValueAndTime, 2-ValueAndTimeU .
+        """
         self.com_obj.NotificationType = value
 
     @property
     def type(self):
+        """Determines the type of the environment variable.
+        The following types are defined:
+            0: Integer
+            1: Float
+            2: String
+            3: Data 
+        """
         return self.com_obj.Type
 
     @property
     def value(self):
+        """returns the value of the EnvironmentVariable object.
+        """
         return self.com_obj.Value
 
     @value.setter
     def value(self, value):
+        """sets the value of the EnvironmentVariable object.
+
+        Args:
+            value: The new value of variable.
+        """
         self.com_obj.Value = value
         wait(.1)
 
@@ -141,11 +199,16 @@ class EnvironmentInfo:
 
     @property
     def read(self):
+        """Determines whether an environment variable is readable.
+        """
         return self.com_obj.Read
 
     @property
     def write(self):
+        """Determines whether an environment variable is writable.
+        """
         return self.com_obj.Write
 
     def get_info(self):
+        """Returns an array that contains the information for each environment variable."""
         return self.com_obj.GetInfo()

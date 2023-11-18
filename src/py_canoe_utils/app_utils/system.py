@@ -4,6 +4,9 @@ import win32com.client
 
 
 class System:
+    """The System object represents the system of the CANoe application.
+    The System object offers access to the namespaces for data exchange with external applications.
+    """
     def __init__(self, app_com_obj):
         self.__log = logging.getLogger('CANOE_LOG')
         self.com_obj = win32com.client.Dispatch(app_com_obj.System)
@@ -11,10 +14,14 @@ class System:
 
     @property
     def namespaces(self):
+        """Returns the Namespaces object.
+        """
         return Namespaces(self.com_obj.Namespaces)
 
     @property
     def variables_files(self):
+        """Returns the VariablesFiles object.
+        """
         return VariablesFiles(self.com_obj.VariablesFiles)
 
 
@@ -402,6 +409,8 @@ class VariablesFiles:
 
     @property
     def count(self):
+        """returns the number of variables contained.
+        """
         return self.com_obj.Count
 
     def fetch_variables_files(self):

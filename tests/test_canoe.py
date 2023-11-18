@@ -5,7 +5,7 @@ from py_canoe import CANoe
 
 file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
 root_path = file_path
-canoe_inst = CANoe(fr'{root_path}\.py_canoe_log', ('addition_function', 'hello_world'))
+canoe_inst = CANoe(py_canoe_log_dir=fr'{root_path}\.py_canoe_log', user_capl_functions=('addition_function', 'hello_world'))
 logger_inst = logging.getLogger('CANOE_LOG')
 
 
@@ -59,7 +59,7 @@ def test_meas_index_methods():
 
 def test_meas_save_saveas_methods():
     canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
-    assert canoe_inst.save_configuration()    
+    assert canoe_inst.save_configuration()
     canoe_inst.new(auto_save=True)
     assert canoe_inst.save_configuration_as(path=fr'{file_path}\demo_cfg\demo_v10.cfg',
                                             major=10, minor=0, create_dir=True)

@@ -28,6 +28,12 @@ class Configuration:
     """
 
     def __init__(self, app_com_obj, enable_config_events=False):
+        """The Configuration object init method.
+
+        Args:
+            app_com_obj (_type_): application com object.
+            enable_config_events (bool, optional): option to enable config events. Defaults to False.
+        """
         self.log = logger_inst
         self.com_obj = win32com.client.Dispatch(app_com_obj.Configuration)
         if enable_config_events:
@@ -121,7 +127,7 @@ class Configuration:
 
     @modified.setter
     def modified(self, modified: bool) -> None:
-        """sets Modified property to flase/true.
+        """sets Modified property to false/true.
 
         Args:
             modified (bool): Value to be assigned to the Modified property.
@@ -167,10 +173,14 @@ class Configuration:
 
     @property
     def simulation_setup(self):
+        """Returns the SimulationSetup object.
+        """
         return SimulationSetup(self.com_obj)
 
     @property
     def test_setup(self):
+        """Returns the TestSetup object.
+        """
         return TestSetup(self.com_obj)
 
     def compile_and_verify(self):
@@ -210,9 +220,13 @@ class Configuration:
         self.log.info(f'Saved configuration as {path}.')
 
     def get_all_test_setup_environments(self) -> dict:
+        """returns all test setup environments.
+        """
         return self.test_setup.test_environments.fetch_all_test_environments()
 
     def get_all_test_modules_in_test_environments(self) -> list:
+        """returns all test setup modules.
+        """
         test_modules = list()
         tse = self.get_all_test_setup_environments()
         for te_name, te_inst in tse.items():
@@ -222,6 +236,8 @@ class Configuration:
 
 
 class TestSetup:
+    """The TestSetup object represents CANoe's test setup.
+    """
     def __init__(self, conf_com_obj):
         self.com_obj = win32com.client.Dispatch(conf_com_obj.TestSetup)
 
@@ -235,6 +251,8 @@ class TestSetup:
 
     @property
     def test_environments(self):
+        """Returns the TestEnvironments object.
+        """
         return TestEnvironments(self.com_obj)
 
 
@@ -276,7 +294,9 @@ class TestEnvironments:
         """
         self.com_obj.Remove(index, prompt_user)
 
-    def fetch_all_test_environments(self):
+    def fetch_all_test_environments(self) -> dict:
+        """returns all test setup test environments.
+        """
         test_environments = dict()
         for index in range(1, self.count + 1):
             te_com_obj = win32com.client.Dispatch(self.com_obj.Item(index))
@@ -286,6 +306,8 @@ class TestEnvironments:
 
 
 class TestEnvironment:
+    """The TestEnvironment object represents a test environment within CANoe's test setup.
+    """
     def __init__(self, test_environment_com_obj):
         self.com_obj = test_environment_com_obj
         self.__test_modules = TestModules(self.com_obj)
@@ -375,6 +397,8 @@ class TestEnvironment:
         self.com_obj.StopSequence()
 
     def get_all_test_modules(self):
+        """returns all test modules in a test environment.
+        """
         return self.__test_modules.fetch_test_modules()
 
 
@@ -420,6 +444,8 @@ class TestModules:
         self.com_obj.Remove(index, prompt_user)
 
     def fetch_test_modules(self) -> dict:
+        """returns all test modules in a test environment.
+        """
         test_modules = dict()
         for index in range(1, self.count + 1):
             tm_com_obj = self.com_obj.Item(index)
@@ -429,16 +455,20 @@ class TestModules:
 
 
 def TmDoEvents():
+    """pumps wait message and waits for 100 ms."""
     pythoncom.PumpWaitingMessages()
     wait(.1)
 
 
 def TmDoEventsUntil(condition):
+    """triggers wait event every 100ms till condition is satisfied."""
     while not condition():
         TmDoEvents()
 
 
 class TestModuleEvents:
+    """test module events object.
+    """
     def __init__(self):
         self.tm_html_report_path = ''
         self.tm_report_generated = False
@@ -493,6 +523,8 @@ class TestModuleEvents:
 
 
 class TestModule:
+    """The TestModule object represents a test module in CANoe's test setup.
+    """
 
     def __init__(self, test_module_com_obj):
         self.com_obj = win32com.client.DispatchWithEvents(test_module_com_obj, TestModuleEvents)
@@ -550,6 +582,7 @@ class TestModule:
         logger_inst.info(f'started executing test module. waiting for completion...')
     
     def wait_for_completion(self):
+        """waits for test module execution completion."""
         self.wait_for_tm_to_stop()
         wait(1)
         logger_inst.info(f'completed executing test module. verdict = {self.verdict}')
@@ -587,23 +620,39 @@ class TestModule:
         self.com_obj.Reload()
 
     def set_execution_time(self, days: int, hours: int, minutes: int):
-        pass
+        """Sets the amount of time to run the test configuration repeatedly.
+
+        Args:
+            days (int): Specifies for how many days the test module is executed.
+            hours (int): Specifies for how many hours the test module is executed (additionally).
+            minutes (int): Specifies for how many minutes the test module is executed (additionally).
+        """
+        self.com_obj.SetExecutionTime(days, hours, minutes)
 
 
 class SimulationSetup:
+    """The SimulationSetup object represents the Simulation Setup of CANoe.
+    """
     def __init__(self, conf_com_obj):
         self.com_obj = win32com.client.Dispatch(conf_com_obj.SimulationSetup)
 
     @property
     def replay_collection(self):
+        """Returns the ReplayCollection object.
+        """
         return ReplayCollection(self.com_obj)
 
     @property
     def buses(self):
+        """The Buses object represents the buses of the Simulation Setup of the CANoe application.
+        The Buses object is only available in CANoe.
+        """
         return Buses(self.com_obj)
 
     @property
     def nodes(self):
+        """Returns the Nodes object.
+        """
         return Nodes(self.com_obj)
 
 
@@ -623,14 +672,27 @@ class ReplayCollection:
         return self.com_obj.Count
 
     def add(self, name: str) -> object:
-        """TODO: documentation update pending."""
+        """adds a new replay block.
+
+        Args:
+            name (str): name of new replay block.
+
+        Returns:
+            object: replay block com object.
+        """
         return self.com_obj.Add(name)
 
     def remove(self, index: int) -> None:
-        """TODO: documentation update pending."""
+        """remove replay block by index.
+
+        Args:
+            index (int): index value of replay block to be removed.
+        """
         self.com_obj.Remove(index)
 
     def fetch_replay_blocks(self) -> dict:
+        """returns all replay blocks in configuration.
+        """
         replay_blocks = dict()
         for index in range(1, self.count + 1):
             rb_com_obj = self.com_obj.Item(index)
@@ -655,18 +717,20 @@ class ReplayBlock:
 
     @path.setter
     def path(self, path: str):
-        """The path of the replay file."""
+        """The path of the replay file.
+
+        Args:
+            path (str): new path off replay block.
+        """
         self.com_obj.Path = path
 
     def start(self):
-        """Starts the replay.
-        TODO: documentation update pending.
+        """Starts the replay block.
         """
         self.com_obj.Start()
 
     def stop(self):
-        """Stops the replay.
-        TODO: documentation update pending.
+        """Stops the replay block.
         """
         self.com_obj.Stop()
 
@@ -680,7 +744,8 @@ class Buses:
 
     @property
     def count(self) -> int:
-        """TODO: documentation update pending."""
+        """returns the number of buses contained.
+        """
         return self.com_obj.Count
 
 
@@ -693,5 +758,6 @@ class Nodes:
 
     @property
     def count(self) -> int:
-        """TODO: documentation update pending."""
+        """returns the number of nodes contained.
+        """
         return self.com_obj.Count
