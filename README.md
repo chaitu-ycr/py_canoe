@@ -8,7 +8,7 @@ for ideas/discussions please create new discussion [here](https://github.com/cha
 
 create issue or request feature [here](https://github.com/chaitu-ycr/py_canoe/issues/new/choose)
 
-## GitHub Releases 👉 [link]([py_canoe](https://github.com/chaitu-ycr/py_canoe))
+## GitHub Releases 👉 [link](https://github.com/chaitu-ycr/py_canoe/releases)
 
 ## PyPi Package 👉 [link](https://pypi.org/project/py_canoe/)
 
