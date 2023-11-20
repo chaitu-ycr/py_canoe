@@ -16,7 +16,7 @@ nav:
 
 theme:
   name: material
-  logo: images/py_canoe_logo_transperent.png
+  logo: images/py_canoe_logo.jpeg
   features:
     - toc.integrate
 
