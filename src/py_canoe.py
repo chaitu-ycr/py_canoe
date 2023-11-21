@@ -73,28 +73,40 @@ class CANoe:
         """
         self.application.quit()
 
-    def start_measurement(self) -> bool:
+    def start_measurement(self, timeout=60) -> bool:
         r"""Starts the measurement.
+        
+        Args:
+            timeout (int, optional): measurement start/stop event timeout in seconds. Defaults to 60.
 
         Returns:
             True if measurement started. else False.
         """
+        self.application.measurement.meas_start_stop_timeout = timeout
         return self.application.measurement.start()
 
-    def stop_measurement(self) -> bool:
+    def stop_measurement(self, timeout=60) -> bool:
         r"""Stops the measurement.
+        
+        Args:
+            timeout (int, optional): measurement start/stop event timeout in seconds. Defaults to 60.
 
         Returns:
             True if measurement stopped. else False.
         """
+        self.application.measurement.meas_start_stop_timeout = timeout
         return self.application.measurement.stop()
 
-    def stop_ex_measurement(self) -> bool:
+    def stop_ex_measurement(self, timeout=60) -> bool:
         r"""StopEx repairs differences in the behavior of the Stop method on deferred stops concerning simulated and real mode in CANoe.
+        
+        Args:
+            timeout (int, optional): measurement start/stop event timeout in seconds. Defaults to 60.
 
         Returns:
             True if measurement stopped. else False.
         """
+        self.application.measurement.meas_start_stop_timeout = timeout
         return self.application.measurement.stop_ex()
 
     def reset_measurement(self) -> bool:
