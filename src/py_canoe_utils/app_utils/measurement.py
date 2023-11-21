@@ -1,8 +1,10 @@
 # Import Python Libraries here
+import sys
 import logging
 import pythoncom
 import win32com.client
 from time import sleep as wait
+from datetime import datetime
 
 logger_inst = logging.getLogger('CANOE_LOG')
 
@@ -12,9 +14,16 @@ def DoEvents():
     wait(.1)
 
 
-def DoEventsUntil(cond):
+def DoEventsUntil(cond, timeout):
+    base_time = datetime.now()
     while not cond():
         DoEvents()
+        now = datetime.now()
+        difference = now - base_time
+        seconds = difference.seconds
+        if seconds > timeout():
+            logger_inst.info(f'measurement event timeout({timeout()} s).')
+            break
 
 
 class CanoeMeasurementEvents:
@@ -70,8 +79,9 @@ class Measurement:
         CanoeMeasurementEvents.app_com_obj = app_com_obj
         CanoeMeasurementEvents.user_capl_function_names = user_capl_function_names
         self.com_obj = win32com.client.Dispatch(app_com_obj.Measurement)
-        self.wait_for_canoe_meas_to_start = lambda: DoEventsUntil(lambda: Measurement.STARTED)
-        self.wait_for_canoe_meas_to_stop = lambda: DoEventsUntil(lambda: Measurement.STOPPED)
+        self.meas_start_stop_timeout = 60   # default value set to 60 seconds (1 minute)
+        self.wait_for_canoe_meas_to_start = lambda: DoEventsUntil(lambda: Measurement.STARTED, lambda: self.meas_start_stop_timeout)
+        self.wait_for_canoe_meas_to_stop = lambda: DoEventsUntil(lambda: Measurement.STOPPED, lambda: self.meas_start_stop_timeout)
         if enable_meas_events:
             win32com.client.WithEvents(self.com_obj, CanoeMeasurementEvents)
 
@@ -148,14 +158,15 @@ class Measurement:
     def start(self) -> bool:
         """Starts the measurement.
         """
+        meas_run_sts = {True: "Started", False: "Not Started"}
         if not self.running:
             self.com_obj.Start()
             if not self.running:
                 self.__log.info(f'waiting for measurement to start...')
                 self.wait_for_canoe_meas_to_start()
-            self.__log.info(f'CANoe Measurement Started. Measurement running status = {self.running}')
+            self.__log.info(f'CANoe Measurement {meas_run_sts[self.running]}.')
         else:
-            self.__log.info(f'CANoe Measurement Already Running. Measurement running status = {self.running}')
+            self.__log.info(f'CANoe Measurement Already {meas_run_sts[self.running]}.')
         return self.running
 
     def step(self) -> None:
@@ -174,12 +185,13 @@ class Measurement:
         """StopEx repairs differences in the behavior of the Stop method on deferred stops concerning simulated and real mode in CANoe.
         Calling the StopEx method correlates to clicking the Stop button.
         """
+        meas_run_sts = {True: "Not Stopped", False: "Stopped"}
         if self.running:
             self.com_obj.StopEx()
             if self.running:
                 self.__log.info(f'waiting for measurement to stop...')
                 self.wait_for_canoe_meas_to_stop()
-            self.__log.info(f'CANoe Measurement Stopped. Measurement running status = {self.running}')
+            self.__log.info(f'CANoe Measurement {meas_run_sts[self.running]}.')
         else:
-            self.__log.info(f'CANoe Measurement Already Stopped. Measurement running status = {self.running}')
+            self.__log.info(f'CANoe Measurement Already {meas_run_sts[self.running]}.')
         return not self.running
