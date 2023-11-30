@@ -26,10 +26,8 @@ python = "^3.9"
 pywin32 = "^305"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.2"
-mkdocs = "^1.5.3"
-mkdocstrings-python = {extras = ["python"], version = "^1.7.3"}
-mkdocs-material = "^9.4.6"
+mkdocstrings-python = "^1.7.5"
+pytest = "^7.4.3"
 
 [build-system]
 requires = ["poetry-core"]

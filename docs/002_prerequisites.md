@@ -1,6 +1,6 @@
 # Prerequisites
 
-- [X] Python(>=3.9)
-- [X] Vector CANoe software(>=v11)
-- [X] Windows PC(recomended win 10 os)
-- [X] visual studio code
+- Python(>=3.9)
+- Vector CANoe software(>=v11)
+- Windows PC(recommended win 10 os)
+- visual studio code

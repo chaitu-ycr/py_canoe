@@ -15,16 +15,16 @@ nav:
   - reference: 999_reference.md
 
 theme:
-  name: material
-  logo: images/py_canoe_logo.jpeg
+  name: readthedocs
   features:
     - toc.integrate
 
 plugins:
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            merge_init_into_class: true
   - search
-
-markdown_extensions:
-  - def_list
-  - pymdownx.tasklist:
-      custom_checkbox: true
