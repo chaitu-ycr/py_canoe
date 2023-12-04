@@ -170,7 +170,12 @@ class Configuration:
             bool: False is returned, If changes were made to the configuration and not been saved yet. otherwise True is returned.
         """
         return self.com_obj.Saved
-
+    
+    @property
+    def general_setup(self):
+        """The GeneralSetup object represents the general settings of a CANoe configuration."""
+        return GeneralSetup(self.com_obj)
+    
     @property
     def simulation_setup(self):
         """Returns the SimulationSetup object.
@@ -761,3 +766,173 @@ class Nodes:
         """returns the number of nodes contained.
         """
         return self.com_obj.Count
+
+
+class GeneralSetup:
+    """The GeneralSetup object represents the general settings of a CANoe configuration."""
+    def __init__(self, conf_com_obj):
+        self.com_obj = win32com.client.Dispatch(conf_com_obj.GeneralSetup)
+    
+    @property
+    def ccp_setup(self):
+        """The CCPSetup object represents the CCP settings of the CANoe application."""
+        return self.com_obj.CCPSetup
+    
+    @property
+    def database_setup(self):
+        """The DatabaseSetup object represents the assigned databases of the current configuration."""
+        return DatabaseSetup(self.com_obj)
+    
+    @property
+    def diagnostics_setup(self):
+        """The DiagnosticsSetup object allows to access the set of diagnostic descriptions currently loaded."""
+        return self.com_obj.DiagnosticsSetup
+    
+    @property
+    def macro_setup(self):
+        """The MacroSetup object represents the configured macros of the current configuration."""
+        return self.com_obj.MacroSetup
+    
+    @property
+    def panel_setup(self):
+        """The PanelSetup object represents the panel settings of the CANoe application."""
+        return self.com_obj.PanelSetup
+    
+    @property
+    def xcp_setup(self):
+        """The XCPSetup object represents the XCP settings of the CANoe application."""
+        return self.com_obj.XCPSetup
+    
+    @property
+    def snippet_setup(self):
+        """The SnippetSetup object represents the configured snippets of the current configuration."""
+        return self.com_obj.SnippetSetup
+        
+    def get_controller_setup(self, bus_type: int, channel: int):
+        """Returns a CANController object.
+        Currently only 1 (CAN) bus type is supported!
+        """
+        return self.com_obj.ControllerSetup(bus_type, channel)
+    
+    def get_channels(self, bus_type: str) -> int:
+        """returns the configured channels.
+        The following bus types are defined: 1=CAN , 2=J1939, 4=TTP, 5=LIN, 6=MOST, 14=KLine
+
+        Args:
+            bus_type (str): The bus type for which the channels should be set or returned.
+
+        Returns:
+            returns the configured channels (Channels object).
+        """
+        return self.com_obj.Channels(bus_type)
+    
+    def set_channels(self, bus_type: str, number_of_channels: int) -> None:
+        """Sets the configured channels .
+        The following bus types are defined: 1=CAN , 2=J1939, 4=TTP, 5=LIN, 6=MOST, 14=KLine
+
+        Args:
+            bus_type (str): The bus type for which the channels should be set or returned. 1=CAN , 2=J1939, 4=TTP, 5=LIN, 6=MOST, 14=KLine
+            number_of_channels (int): The number of channels to be set.
+        """
+        bus_type_dict = {1: 'CAN', 2: 'J1939', 4: 'TTP', 5:'LIN', 6:'MOST', 14: 'KLine'}
+        self.com_obj.SetChannels(bus_type, number_of_channels)
+        logger_inst.info(f'Configured number of {bus_type_dict[bus_type]} channels to --> {number_of_channels}')
+
+
+class DatabaseSetupEvents:
+    def OnChange():
+        logger_inst.info(f'Databases have changed!')
+
+
+class DatabaseSetup:
+    """The DatabaseSetup object represents the assigned databases of the current configuration."""
+    def __init__(self, general_setup_com_obj):
+        self.com_obj = win32com.client.DispatchWithEvents(general_setup_com_obj.DatabaseSetup, TestModuleEvents)
+    
+    @property
+    def databases(self):
+        """The Databases object represents the assigned databases of CANoe"""
+        return self.com_obj.Databases
+    
+    @property
+    def databases_count(self) -> int:
+        return self.databases.Count
+    
+    def fetch_all_databases(self):
+        databases = dict()
+        for index in range(1, self.databases_count + 1):
+            db_com_obj = self.databases.Item(index)
+            databases[db_com_obj.Name] = Database(db_com_obj)
+        return databases
+
+    def add_database(self, name: str):
+        """Adds a database to the DatabaseSetup.
+
+        Args:
+            name (str): The name of the new database. e.g, "powertrain.dbc"
+
+        Returns:
+            The Database object.
+        """
+        return Database(self.databases.Add(name))
+    
+    def add_network(self, database_name: str, network_name: str):
+        """Adds a database to the DatabaseSetup.
+        FIBEX and AUTOSAR databases can have several networks in a file. With this function the desired network can be assigned.
+        e.g, add_network("MultipleNetworks.XML", "Network_2")
+
+        Args:
+            database_name (str): The name of the database file.
+            network_name (str): The name of the desired network of the database file.
+
+        Returns:
+            The Database object.
+        """
+        return Database(self.databases.AddNetwork(database_name, network_name))
+    
+    def add_to_channel(self, full_name: str, network_name: str, bus_type: int, channel_number: int):
+        return self.databases.AddToChannel(full_name, network_name, bus_type, channel_number)
+    
+    def remove_database(self, index: int):
+        """Removes a database from the configuration
+
+        Args:
+            index (int): The index of the object to be removed.
+        """
+        self.databases.Remove(index)
+
+
+class Database:
+    """The Database object represents the assigned database of the CANoe application"""
+    def __init__(self, database_com_obj):
+        self.com_obj = win32com.client.Dispatch(database_com_obj)
+    
+    @property
+    def channel(self) -> int:
+        """returns the assigned channel of the database"""
+        return self.com_obj.Channel
+    
+    @channel.setter
+    def channel(self, channel_number):
+        """assign channel of the database"""
+        self.com_obj.Channel = channel_number
+    
+    @property
+    def full_name(self) -> str:
+        """returns the complete path of the database."""
+        return self.com_obj.FullName
+    
+    @full_name.setter
+    def full_name(self, db_full_name: str) -> str:
+        """set the complete path of the database."""
+        self.com_obj.FullName = db_full_name
+    
+    @property
+    def name(self) -> str:
+        """The name of the database. it may differ from the file name"""
+        return self.com_obj.Name
+    
+    @property
+    def path(self) -> str:
+        """The path of the database"""
+        return self.com_obj.Path
