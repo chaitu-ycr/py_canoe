@@ -752,6 +752,84 @@ class Buses:
         """returns the number of buses contained.
         """
         return self.com_obj.Count
+    
+    def add(self, name: str):
+        """Adds a new bus.
+
+        Args:
+            name (str): The name of the new bus.
+
+        Returns:
+            The Bus object.
+        """
+        return self.com_obj.Add(name)
+    
+    def add_with_type(self, name: str, type: int):
+        """Adds a new bus of the specified type.
+
+        Args:
+            name (str): The name of the new bus.
+            type (int): The type of the new bus. Available types are: 1-CAN, 5-LIN, 6-MOST, 7-FLEXRAY, 9-J1708, 11-Ethernet, 13-Wlan
+
+        Returns:
+            The Bus object.
+        """
+        return self.com_obj.Add(name, type)
+    
+    def fetch_all_buses(self):
+        buses_info = dict()
+        for index in range(1, self.count + 1):
+            bus_com_obj = self.com_obj.Item(index)
+            bus_inst = Bus(win32com.client.Dispatch(bus_com_obj))
+            buses_info[bus_inst.name] = bus_inst
+        return buses_info
+
+
+class Bus:
+    """The Bus object represents a bus of the CANoe application.
+    The instantiation of the Bus object is done by the Bus property of the Application object.
+    If no bus type is handed over a CAN bus object will be instantiated: Set Bus_CAN = App.Bus.
+    """
+    def __init__(self, bus_com_obj):
+        self.com_obj = bus_com_obj
+
+    @property
+    def active(self):
+        """The status of the bus (simulated/not simulated).
+
+        Returns:
+            The status of the Bus object.
+        """
+        return self.com_obj.Active
+    
+    @active.setter
+    def active(self, value: bool):
+        """Sets the status of the Bus object
+
+        Args:
+            value (bool): A boolean value that indicates whether the bus is to be simulated: TRUE: The bus will be simulated. FALSE: The bus will not be simulated.
+        """
+        self.com_obj.Active = value
+    
+    def baudrate(self, channel: int):
+        """The current baud rate of the channel.
+
+        Args:
+            channel (int): The channel.
+
+        Returns:
+            The current baud rate of the channel.
+        """
+        return self.com_obj.Baudrate(channel)
+    
+    @property
+    def databases(self):
+        return Databases(self.com_obj)
+    
+    @property
+    def name(self):
+        """The bus name."""
+        return self.com_obj.Name
 
 
 class Nodes:
@@ -852,20 +930,28 @@ class DatabaseSetup:
     @property
     def databases(self):
         """The Databases object represents the assigned databases of CANoe"""
-        return self.com_obj.Databases
+        return Databases(self.com_obj)
+    
+
+class Databases:
+    """The Databases object represents the assigned databases of CANoe"""
+    def __init__(self, bus_com_obj):
+        self.com_obj = win32com.client.Dispatch(bus_com_obj.Databases)
     
     @property
-    def databases_count(self) -> int:
-        return self.databases.Count
+    def count(self):
+        """The number of databases contained."""
+        return self.com_obj.Count
     
     def fetch_all_databases(self):
-        databases = dict()
-        for index in range(1, self.databases_count + 1):
-            db_com_obj = self.databases.Item(index)
-            databases[db_com_obj.Name] = Database(db_com_obj)
-        return databases
+        databases_info = dict()
+        for index in range(1, self.count + 1):
+            db_com_obj = self.com_obj.Item(index)
+            db_inst = Database(win32com.client.Dispatch(db_com_obj))
+            databases_info[db_inst.name] = db_inst
+        return databases_info
 
-    def add_database(self, name: str):
+    def add(self, name: str):
         """Adds a database to the DatabaseSetup.
 
         Args:
@@ -874,7 +960,7 @@ class DatabaseSetup:
         Returns:
             The Database object.
         """
-        return Database(self.databases.Add(name))
+        return Database(self.com_obj.Add(name))
     
     def add_network(self, database_name: str, network_name: str):
         """Adds a database to the DatabaseSetup.
@@ -888,24 +974,24 @@ class DatabaseSetup:
         Returns:
             The Database object.
         """
-        return Database(self.databases.AddNetwork(database_name, network_name))
+        return Database(self.com_obj.AddNetwork(database_name, network_name))
     
-    def add_to_channel(self, full_name: str, network_name: str, bus_type: int, channel_number: int):
-        return self.databases.AddToChannel(full_name, network_name, bus_type, channel_number)
-    
-    def remove_database(self, index: int):
+    def remove(self, index: int):
         """Removes a database from the configuration
 
         Args:
             index (int): The index of the object to be removed.
         """
-        self.databases.Remove(index)
+        self.com_obj.Remove(index)
+
+    def add_to_channel(self, full_name: str, network_name: str, bus_type: int, channel_number: int):
+        return self.com_obj.AddToChannel(full_name, network_name, bus_type, channel_number)
 
 
 class Database:
     """The Database object represents the assigned database of the CANoe application"""
     def __init__(self, database_com_obj):
-        self.com_obj = win32com.client.Dispatch(database_com_obj)
+        self.com_obj = database_com_obj
     
     @property
     def channel(self) -> int:
@@ -923,7 +1009,7 @@ class Database:
         return self.com_obj.FullName
     
     @full_name.setter
-    def full_name(self, db_full_name: str) -> str:
+    def full_name(self, db_full_name: str):
         """set the complete path of the database."""
         self.com_obj.FullName = db_full_name
     
