@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_canoe"
-version = "2.1.1"
+version = "2.1.2"
 description = "Python CANoe Package"
 authors = ["chaitu-ycr <chaitu.ycr@gmail.com>"]
 license = "LICENSE"
@@ -22,8 +22,8 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-pywin32 = "^305"
+python = "^3.8"
+pywin32 = "^306"
 
 [tool.poetry.group.dev.dependencies]
 mkdocstrings-python = "^1.7.5"

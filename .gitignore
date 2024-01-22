@@ -132,6 +132,7 @@ ENV/
 env.bak/
 venv.bak/
 .venv_py*/
+.venv*/
 
 # Spyder project settings
 .spyderproject
