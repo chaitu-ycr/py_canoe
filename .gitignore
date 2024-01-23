@@ -188,3 +188,4 @@ tests/demo_cfg/demo_v10.cfg
 *.vtestreport
 *.settings
 *.ini
+tests/report/

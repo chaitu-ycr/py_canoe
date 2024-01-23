@@ -24,6 +24,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.8"
 pywin32 = "^306"
+pytest-html = "^4.1.1"
 
 [tool.poetry.group.dev.dependencies]
 mkdocstrings-python = "^1.7.5"

@@ -16,6 +16,7 @@ def test_open_new_quit_methods():
     canoe_inst.new(auto_save=True, prompt_user=False)
     canoe_inst.new(auto_save=True, prompt_user=True)
     canoe_inst.quit()
+    wait(5)
 
 
 def test_meas_start_stop_restart_methods():
