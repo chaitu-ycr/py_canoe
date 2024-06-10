@@ -1,5 +1,6 @@
 # Import Python Libraries here
 import logging
+import win32com.client
 
 
 class Bus:
@@ -16,7 +17,7 @@ class Bus:
         self.bus_type = bus_type
         self.app_com_obj = app_com_obj
         self.log = logging.getLogger('CANOE_LOG')
-        self.com_obj = self.app_com_obj.GetBus(self.bus_type)
+        self.com_obj = win32com.client.Dispatch(self.app_com_obj.GetBus(self.bus_type))
 
     def reinit_bus(self, bus_type='CAN'):
         """reinitialize bus com_obj if there is change in bus_type.
@@ -25,7 +26,7 @@ class Bus:
             bus_type (str, optional): The desired bus type. Valid types are: CAN, LIN, FlexRay, AFDX, Ethernet. Defaults to 'CAN'.
         """
         self.bus_type = bus_type
-        self.com_obj = self.app_com_obj.GetBus(self.bus_type)
+        self.com_obj = win32com.client.Dispatch(self.app_com_obj.GetBus(self.bus_type))
 
     def get_signal(self, channel: int, message: str, signal: str) -> object:
         """Returns a Signal object.
@@ -38,7 +39,7 @@ class Bus:
         Returns:
             object: The Signal object.
         """
-        return self.com_obj.GetSignal(channel, message, signal)
+        return win32com.client.Dispatch(self.com_obj.GetSignal(channel, message, signal))
 
     def get_j1939_signal(self, channel: int, message: str, signal: str, source_address: int, destination_address: int) -> object:
         """Returns a Signal object.

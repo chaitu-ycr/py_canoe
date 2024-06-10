@@ -23,7 +23,7 @@ class Ui:
         """defines the availability of a command on the user interface.
 
         Args:
-            command (str): The command. If no command is entered the function acts on all commands that can be influenced via this interface.
+            command (str): The command. Currently only the values start and stop can be input for the command parameter.
 
         Returns:
             bool: The availability of the command: If the command is available True is returned. Otherwise, False is returned.
@@ -34,7 +34,7 @@ class Ui:
         """sets the availability of a command on the user interface.
 
         Args:
-            command (str): The command. If no command is entered the function acts on all commands that can be influenced via this interface.
+            command (str): The command. Currently only the values start and stop can be input for the command parameter.
             value (bool): A boolean value that indicates whether the command should be available. Possible values are: True: The command is available. False: The command is not available.
         """
         ce_obj = self.com_obj.CommandEnabled(command)
