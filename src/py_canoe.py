@@ -998,3 +998,48 @@ class CANoe:
             self.log.info(f'environment variable({env_var_name}) value set to -> {converted_value}')
         except Exception as e:
             self.log.info(f'failed to set system variable({env_var_name}) value. {e}')
+
+    def add_database(self, path: str) -> bool:
+        r"""Adds database from provided path to the SimulationSetup.
+
+        Args:
+            path(str): Path to the database file.
+
+        Note:
+            CANoe application should be open and the measurement should be in IDLE state.
+
+        Returns:
+            bool: Database inclusion status. True-success, False-failed.
+        """
+        if self.application.measurement.running:
+            self.log.info("Failed to add the database while the system is in the running state.")
+            return False
+        if os.path.exists(path):
+            databases = self.application.configuration.GeneralSetup.DatabaseSetup.Databases
+            databases.Add(path)
+            self.log.info("Database has been successfully added.")
+            return True
+        self.log.info("No database is present in the provided path.")
+        return False
+
+    def remove_database(self, name: str) -> bool:
+        r"""Removes database with provided name from the Simulation Setup.
+
+        Args:
+            name(str): Database name.
+
+        Returns:
+            bool: Database exclusion status. True-success, False-failed.
+        """
+        if self.application.measurement.running:
+            self.log.info("Failed to remove the database while the system is in the running state.")
+            return False
+        databases_obj = self.application.configuration.GeneralSetup.DatabaseSetup.Databases
+        for index, database in enumerate(databases_obj, 1):
+            if database.Name == name:
+                databases_obj.Remove(index)
+                self.log.info("Database has been removed successfully.")
+                return True
+        self.log.info("No database available with the given name.")
+        return False
+
