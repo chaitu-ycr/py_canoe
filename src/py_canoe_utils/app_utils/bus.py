@@ -17,7 +17,7 @@ class Bus:
         self.bus_type = bus_type
         self.app_com_obj = app_com_obj
         self.log = logging.getLogger('CANOE_LOG')
-        self.com_obj = win32com.client.Dispatch(self.app_com_obj.GetBus(self.bus_type))
+        self.com_obj = self.app_com_obj.GetBus(self.bus_type)
 
     def reinit_bus(self, bus_type='CAN'):
         """reinitialize bus com_obj if there is change in bus_type.
@@ -26,7 +26,7 @@ class Bus:
             bus_type (str, optional): The desired bus type. Valid types are: CAN, LIN, FlexRay, AFDX, Ethernet. Defaults to 'CAN'.
         """
         self.bus_type = bus_type
-        self.com_obj = win32com.client.Dispatch(self.app_com_obj.GetBus(self.bus_type))
+        self.com_obj = self.app_com_obj.GetBus(self.bus_type)
 
     def get_signal(self, channel: int, message: str, signal: str) -> object:
         """Returns a Signal object.

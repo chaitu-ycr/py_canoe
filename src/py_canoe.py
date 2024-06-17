@@ -822,7 +822,7 @@ class CANoe:
 
         Args:
             name (str): The name of the CAPL function. Please make sure this name is already passed as argument during CANoe instance creation. see example for more info.
-            arguments (tuple): Function parameters p1…p10 (optional).
+            arguments: Function parameters p1, p2, …, p10 (optional).
 
         Returns:
             bool: CAPL function execution status. True-success, False-failed.
