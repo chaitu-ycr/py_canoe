@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py_canoe"
-version = "2.1.4"
+version = "3.0.0"
 description = "Python CANoe Package"
 authors = ["chaitu-ycr <chaitu.ycr@gmail.com>"]
 license = "LICENSE"
@@ -17,8 +17,8 @@ classifiers = [
 ]
 packages = [
     { include = "py_canoe.py", from = "src" },
-    { include = "py_canoe_utils/*.py", from = "src"},
-    { include = "py_canoe_utils/app_utils/*.py", from = "src"},
+    { include = "py_canoe_app/*.py", from = "src"},
+    { include = "py_canoe_app/app_utils/*.py", from = "src"},
 ]
 
 [tool.poetry.dependencies]
