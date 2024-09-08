@@ -113,7 +113,7 @@ class System:
         else:
             self.add_namespace(namespace)
             self.namespaces_dict[namespace].Variables.Add(variable, value)
-    
+
     def remove_system_variable(self, namespace, variable):
         self.fetch_namespaces()
         if f'{namespace}::{variable}' not in self.variables_dict.keys():

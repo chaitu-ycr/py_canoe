@@ -49,7 +49,7 @@ class Ui:
         """
         self.com_obj.OpenBaudrateDialog()
         self.__log.info(f'baudrate dialog opened. Configure the bus parameters.')
-    
+
     @property
     def get_write_window_text(self) -> str:
         """Gets the text contents of the Write window.

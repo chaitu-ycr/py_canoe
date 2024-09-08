@@ -4,5 +4,5 @@
 
 
 class Capl:
-    def __init__(self, parent_com_obj):
+    def __init__(self, app_com_obj):
         pass

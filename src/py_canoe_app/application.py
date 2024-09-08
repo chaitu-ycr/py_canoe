@@ -1,5 +1,6 @@
 # import external modules here
 import os
+import sys
 import logging
 import pythoncom
 import win32com.client
@@ -42,14 +43,16 @@ class ApplicationEvents:
 
 
 class Application:
+    """Represents a CANoe application."""
     def __init__(self, enable_app_events=False, enable_simulation=False):
         self.__log = logging.getLogger('CANOE_LOG')
         pythoncom.CoInitialize()
         try:
             self.com_obj = win32com.client.Dispatch('CANoe.Application')
         except Exception as e:
-            self.__log.error(f'Error initializing CANoe application: {str(e)}')
-    
+            self.__log.error(f'😡 Error initializing CANoe application: {str(e)}')
+            sys.exit(1)
+
     @property
     def channel_mapping_name(self) -> str:
         """get the application name which is used to map application channels to real existing Vector hardware interface channels.
@@ -58,7 +61,7 @@ class Application:
             str: The application name
         """
         return self.com_obj.ChannelMappingName
-    
+
     @channel_mapping_name.setter
     def channel_mapping_name(self, name: str):
         """set the application name which is used to map application channels to real existing Vector hardware interface channels.
@@ -120,11 +123,7 @@ class Application:
             auto_save (bool, optional): A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to False.
             prompt_user (bool, optional): A boolean value that indicates whether the user should intervene in error situations. Defaults to False.
         """
-        try:
-            self.com_obj.New(auto_save, prompt_user)
-            self.__log.info('created a new configuration...')
-        except Exception as e:
-            self.__log.error(f'Error creating new configuration: {str(e)}')
+        self.com_obj.New(auto_save, prompt_user)
 
     def open(self, path: str, auto_save=False, prompt_user=False) -> None:
         """Loads a configuration.
@@ -137,30 +136,39 @@ class Application:
         Raises:
             FileNotFoundError: error when canoe config file not available in pc.
         """
-        if not auto_save:
-            self.com_obj.Configuration.Modified = False
-            self.__log.info(f'CANoe.Configuration.Modified parameter set to False to avoid error.')
-
-        try:
-            if os.path.isfile(path):
-                self.__log.info(f'CANoe cfg "{path}" found.')
-                self.com_obj.Open(path, auto_save, prompt_user)
-                self.__log.info(f'loaded CANoe config "{path}"')
-            else:
-                self.__log.info(f'CANoe cfg "{path}" not found.')
-                raise FileNotFoundError(f'CANoe cfg file "{path}" not found!')
-        except Exception as e:
-            self.__log.error(f'Error opening CANoe config: {str(e)}')
+        self.com_obj.Open(path, auto_save, prompt_user)
 
     def quit(self):
-        """Quits the application.
+        """Quits the application."""
+        self.com_obj.Quit()
+
+    @property
+    def bus(self) -> Bus:
+        """Returns the Bus object.
+
+        Returns:
+            Bus: The Bus object.
         """
-        try:
-            self.com_obj.Quit()
-            self.__log.info('CANoe Application Closed.')
-        except Exception as e:
-            self.__log.error(f'Error quitting CANoe application: {str(e)}')
-    
+        return Bus(self.com_obj)
+
+    @property
+    def configuration(self) -> Configuration:
+        """Returns the Configuration object.
+
+        Returns:
+            Configuration: The Configuration object.
+        """
+        return Configuration(self.com_obj)
+
+    @property
+    def measurement(self) -> Measurement:
+        """Returns the Measurement object.
+
+        Returns:
+            Measurement: The Measurement object.
+        """
+        return Measurement(self.com_obj)
+
     @property
     def system(self) -> System:
         """Returns the System object.
@@ -178,7 +186,7 @@ class Application:
             Ui: The Ui object.
         """
         return Ui(self.com_obj)
-    
+
     @property
     def version(self) -> Version:
         """Returns the Version object.
