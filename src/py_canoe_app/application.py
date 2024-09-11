@@ -1,5 +1,4 @@
 # import external modules here
-import os
 import sys
 import logging
 import pythoncom
@@ -44,11 +43,15 @@ class ApplicationEvents:
 
 class Application:
     """Represents a CANoe application."""
-    def __init__(self, enable_app_events=False, enable_simulation=False):
-        self.__log = logging.getLogger('CANOE_LOG')
-        pythoncom.CoInitialize()
+    def __init__(self, user_capl_function_names: tuple, enable_app_events=False, enable_simulation=False):
         try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            pythoncom.CoInitialize()
+            self.user_capl_function_names = user_capl_function_names
+            self.enable_simulation = enable_simulation
             self.com_obj = win32com.client.Dispatch('CANoe.Application')
+            if enable_app_events:
+                win32com.client.WithEvents(self.com_obj, ApplicationEvents)
         except Exception as e:
             self.__log.error(f'😡 Error initializing CANoe application: {str(e)}')
             sys.exit(1)
@@ -150,6 +153,15 @@ class Application:
             Bus: The Bus object.
         """
         return Bus(self.com_obj)
+    
+    @property
+    def capl(self) -> Capl:
+        """Returns the Capl object.
+
+        Returns:
+            Capl: The Capl object.
+        """
+        return Capl(self.com_obj)
 
     @property
     def configuration(self) -> Configuration:
@@ -159,6 +171,15 @@ class Application:
             Configuration: The Configuration object.
         """
         return Configuration(self.com_obj)
+    
+    @property
+    def environment(self) -> Environment:
+        """Returns the Environment object.
+
+        Returns:
+            Environment: The Environment object.
+        """
+        return Environment(self.com_obj)
 
     @property
     def measurement(self) -> Measurement:
@@ -167,7 +188,34 @@ class Application:
         Returns:
             Measurement: The Measurement object.
         """
-        return Measurement(self.com_obj)
+        return Measurement(self.com_obj, self.user_capl_function_names)
+    
+    @property
+    def networks(self) -> Networks:
+        """Returns the Networks object.
+
+        Returns:
+            Networks: The Networks object.
+        """
+        return Networks(self.com_obj)
+    
+    @property
+    def performance(self) -> Performance:
+        """Returns the Performance object.
+
+        Returns:
+            Performance: The Performance object.
+        """
+        return Performance(self.com_obj)
+
+    @property
+    def simulation(self) -> Simulation:
+        """Returns the Simulation object.
+
+        Returns:
+            Simulation: The Simulation object.
+        """
+        return Simulation(self.com_obj, self.enable_simulation)
 
     @property
     def system(self) -> System:

@@ -3,7 +3,6 @@ import os
 import logging
 import win32com.client
 
-
 # import internal modules here
 
 
@@ -12,19 +11,22 @@ class System:
     The System object offers access to the namespaces for data exchange with external applications.
     """
     def __init__(self, app_com_obj):
-        self.__log = logging.getLogger('CANOE_LOG')
-        self.com_obj = win32com.client.Dispatch(app_com_obj.System)
-        self.namespaces_com_obj = win32com.client.Dispatch(self.com_obj.Namespaces)
-        self.variables_files_com_obj = win32com.client.Dispatch(self.com_obj.VariablesFiles)
-        self.namespaces_dict = {}
-        self.variables_files_dict = {}
-        self.variables_dict = {}
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(app_com_obj.System)
+            self.namespaces_com_obj = win32com.client.Dispatch(self.com_obj.Namespaces)
+            self.variables_files_com_obj = win32com.client.Dispatch(self.com_obj.VariablesFiles)
+            self.namespaces_dict = {}
+            self.variables_files_dict = {}
+            self.variables_dict = {}
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe System: {str(e)}')
 
     @property
     def namespaces_count(self) -> int:
         return self.namespaces_com_obj.Count
 
-    def fetch_namespaces(self) -> list:
+    def fetch_namespaces(self) -> dict:
         if self.namespaces_count > 0:
             for index in range(1, self.namespaces_count + 1):
                 namespace_com_obj = win32com.client.Dispatch(self.namespaces_com_obj.Item(index))
@@ -34,13 +36,13 @@ class System:
                     self.fetch_namespace_namespaces(namespace_com_obj, namespace_name)
                 if 'Variables' in dir(namespace_com_obj):
                     self.fetch_namespace_variables(namespace_com_obj)
-        return set(self.namespaces_dict)
+        return self.namespaces_dict
 
     def add_namespace(self, name: str):
         self.fetch_namespaces()
         if name not in self.namespaces_dict.keys():
             namespace_com_obj = self.namespaces_com_obj.Add(name)
-            self.__log.info(f'Added the new namespace ({name}).')
+            self.__log.debug(f'Added the new namespace ({name}).')
             return namespace_com_obj
         else:
             self.__log.warning(f'The given namespace ({name}) already exists.')
@@ -51,7 +53,7 @@ class System:
         if name in self.namespaces_list:
             self.namespaces_com_obj.Remove(name)
             self.fetch_namespaces()
-            self.__log.info(f'Removed the namespace ({name}) from the collection.')
+            self.__log.debug(f'Removed the namespace ({name}) from the collection.')
         else:
             self.__log.warning(f'The given namespace ({name}) does not exist.')
 
@@ -73,7 +75,7 @@ class System:
         if os.path.isfile(variables_file):
             self.variables_files_com_obj.Add(variables_file)
             self.fetch_variables_files()
-            self.__log.info(f'Added the Variables file ({variables_file}) to the collection.')
+            self.__log.debug(f'Added the Variables file ({variables_file}) to the collection.')
         else:
             self.__log.warning(f'The given file ({variables_file}) does not exist.')
 
@@ -82,7 +84,7 @@ class System:
         if variables_file_name in self.variables_files_dict:
             self.variables_files_com_obj.Remove(variables_file_name)
             self.fetch_variables_files()
-            self.__log.info(f'Removed the Variables file ({variables_file_name}) from the collection.')
+            self.__log.debug(f'Removed the Variables file ({variables_file_name}) from the collection.')
         else:
             self.__log.warning(f'The given file ({variables_file_name}) does not exist.')
 
@@ -112,7 +114,7 @@ class System:
             return None
         else:
             self.add_namespace(namespace)
-            self.namespaces_dict[namespace].Variables.Add(variable, value)
+            return self.namespaces_dict[namespace].Variables.Add(variable, value)
 
     def remove_system_variable(self, namespace, variable):
         self.fetch_namespaces()
@@ -125,7 +127,10 @@ class System:
 
 class Variable:
     def __init__(self, variable_com_obj):
-        self.com_obj = win32com.client.Dispatch(variable_com_obj)
+        try:
+            self.com_obj = win32com.client.Dispatch(variable_com_obj)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe Variable: {str(e)}')
 
     @property
     def analysis_only(self) -> bool:

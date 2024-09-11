@@ -6,13 +6,24 @@ from py_canoe import CANoe
 file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
 root_path = file_path
 canoe_inst = CANoe(py_canoe_log_dir=fr'{root_path}\.py_canoe_log', user_capl_functions=('addition_function', 'hello_world'))
+# canoe_inst = CANoe(py_canoe_log_dir=fr'{root_path}\.py_canoe_log')
 logger_inst = logging.getLogger('CANOE_LOG')
+
+canoe_cfg_one_ch = fr'{file_path}\demo_cfg\demo_can_one_ch.cfg'
+canoe_cfg_two_ch = fr'{file_path}\demo_cfg\demo_can_two_ch.cfg'
+canoe_cfg_gen_db_setup = fr'{file_path}\demo_cfg\demo_conf_gen_db_setup.cfg'
+canoe_cfg_dev = fr'{file_path}\demo_cfg\demo_dev.cfg'
+canoe_cfg_diag = fr'{file_path}\demo_cfg\demo_diag.cfg'
+canoe_cfg_eth_one_ch = fr'{file_path}\demo_cfg\demo_eth_one_ch.cfg'
+canoe_cfg_offline = fr'{file_path}\demo_cfg\demo_offline.cfg'
+canoe_cfg_test_setup = fr'{file_path}\demo_cfg\demo_test_setup.cfg'
+canoe_cfg_demo = fr'{file_path}\demo_cfg\demo.cfg'
 
 
 def test_open_new_quit_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=True, prompt_user=True)
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=False, auto_save=True, prompt_user=True)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=True, prompt_user=True)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=False, auto_save=True, prompt_user=True)
     canoe_inst.new(auto_save=True, prompt_user=False)
     canoe_inst.new(auto_save=True, prompt_user=True)
     canoe_inst.quit()
@@ -20,7 +31,7 @@ def test_open_new_quit_methods():
 
 
 def test_meas_start_stop_restart_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
     assert canoe_inst.start_measurement()
     assert canoe_inst.stop_measurement()
     assert canoe_inst.start_measurement()
@@ -31,7 +42,7 @@ def test_meas_start_stop_restart_methods():
 
 
 def test_meas_offline_start_stop_restart_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo_offline.cfg')
+    canoe_inst.open(canoe_cfg=canoe_cfg_offline, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     canoe_inst.add_offline_source_log_file(fr'{file_path}\demo_cfg\Logs\demo_log.blf')
     canoe_inst.start_measurement_in_animation_mode(animation_delay=200)
     wait(1)
@@ -46,7 +57,7 @@ def test_meas_offline_start_stop_restart_methods():
 
 
 def test_meas_index_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
     canoe_inst.get_measurement_index()
     assert canoe_inst.start_measurement()
     assert canoe_inst.stop_measurement()
@@ -59,7 +70,7 @@ def test_meas_index_methods():
 
 
 def test_meas_save_saveas_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     assert canoe_inst.save_configuration()
     canoe_inst.new(auto_save=True)
     assert canoe_inst.save_configuration_as(path=fr'{file_path}\demo_cfg\demo_v10.cfg',
@@ -68,7 +79,7 @@ def test_meas_save_saveas_methods():
 
 
 def test_bus_stats_canoe_ver_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
     canoe_inst.get_canoe_version_info()
     assert canoe_inst.start_measurement()
     wait(2)
@@ -77,11 +88,11 @@ def test_bus_stats_canoe_ver_methods():
 
 
 def test_bus_signal_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
     canoe_inst.get_bus_databases_info('CAN')
     canoe_inst.get_bus_nodes_info('CAN')
     assert canoe_inst.start_measurement()
-    wait(1)
+    wait(5)
     canoe_inst.get_signal_full_name(bus='CAN', channel=1, message='LightState', signal='FlashLight')
     canoe_inst.get_signal_value(bus='CAN', channel=1, message='LightState', signal='FlashLight', raw_value=False)
     canoe_inst.set_signal_value(bus='CAN', channel=1, message='LightState', signal='FlashLight', value=1, raw_value=False)
@@ -95,7 +106,7 @@ def test_bus_signal_methods():
 
 
 def test_ui_class_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     canoe_inst.ui_activate_desktop('Configuration')
     canoe_inst.enable_write_window_output_file(fr'{file_path}\demo_cfg\Logs\write_win.txt')
     wait(1)
@@ -112,7 +123,7 @@ def test_ui_class_methods():
 
 
 def test_system_variable_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.set_system_variable_value('demo::level_two_1::sys_var2', 20)
@@ -141,7 +152,7 @@ def test_system_variable_methods():
 
 
 def test_diag_request_methods():
-    canoe_inst.open(fr'{file_path}\demo_cfg\demo_diag.cfg')
+    canoe_inst.open(canoe_cfg=canoe_cfg_diag, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     assert canoe_inst.start_measurement()
     wait(1)
     resp = canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
@@ -160,7 +171,7 @@ def test_diag_request_methods():
 
 
 def test_replay_block_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.set_replay_block_file(block_name='DemoReplayBlock', recording_file_path=fr'{file_path}\demo_cfg\Logs\demo_log.blf')
@@ -173,7 +184,7 @@ def test_replay_block_methods():
 
 
 def test_capl_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=True, prompt_user=False, auto_stop=True)
     canoe_inst.compile_all_capl_nodes()
     assert canoe_inst.start_measurement()
     wait(1)
@@ -183,7 +194,7 @@ def test_capl_methods():
 
 
 def test_test_setup_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     canoe_inst.ui_activate_desktop('TestSetup')
     assert canoe_inst.start_measurement()
     wait(1)
@@ -201,7 +212,7 @@ def test_test_setup_methods():
 
 
 def test_env_var_methods():
-    canoe_inst.open(canoe_cfg=fr'{file_path}\demo_cfg\demo_dev.cfg', visible=True, auto_save=False, prompt_user=False)
+    canoe_inst.open(canoe_cfg=canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
     assert canoe_inst.start_measurement()
     wait(1)
     canoe_inst.set_environment_variable_value('int_var', 123.12)

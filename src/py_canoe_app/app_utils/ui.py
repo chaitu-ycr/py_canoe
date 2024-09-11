@@ -9,9 +9,12 @@ class Ui:
     """The UI object represents the user interface in CANoe.
     """
     def __init__(self, app_com_obj):
-        self.__log = logging.getLogger('CANOE_LOG')
-        self.com_obj = win32com.client.Dispatch(app_com_obj.UI)
-        self.write_window_com_obj = win32com.client.Dispatch(self.com_obj.Write)
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(app_com_obj.UI)
+            self.write_window_com_obj = win32com.client.Dispatch(self.com_obj.Write)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe UI: {str(e)}')
 
     def get_command_availability(self, command: str) -> bool:
         """defines the availability of a command on the user interface.
@@ -33,7 +36,6 @@ class Ui:
         """
         ce_obj = self.com_obj.CommandEnabled(command)
         ce_obj = value
-        self.__log.info(f'enabled command {command}.')
 
     def activate_desktop(self, name: str) -> None:
         """Activates the desktop with the given name.
@@ -42,13 +44,11 @@ class Ui:
             name (str): The name of the desktop to be activated.
         """
         self.com_obj.ActivateDesktop(name)
-        self.__log.info(f'Activated the desktop with the given name({name}.')
 
     def open_baudrate_dialog(self) -> None:
         """Configures the bus parameters.
         """
         self.com_obj.OpenBaudrateDialog()
-        self.__log.info(f'baudrate dialog opened. Configure the bus parameters.')
 
     @property
     def get_write_window_text(self) -> str:
@@ -63,13 +63,11 @@ class Ui:
         """Clears the contents of the Write Window
         """
         self.write_window_com_obj.Clear()
-        self.__log.info(f'Cleared the contents of the Write Window.')
 
     def copy_write_window_content(self) -> None:
         """Copies the contents of the Write Window to the clipboard.
         """
         self.write_window_com_obj.Copy()
-        self.__log.info(f'Copied the contents of the Write Window to the clipboard.')
 
     def disable_write_window_output_file(self, tab_index=None) -> None:
         """Disables logging of all outputs of the Write Window for the certain page.
@@ -81,7 +79,6 @@ class Ui:
             self.write_window_com_obj.DisableOutputFile(tab_index)
         else:
             self.write_window_com_obj.DisableOutputFile()
-        self.__log.info(f'Disabled logging of outputs of the Write Window. tab_index={tab_index}')
 
     def enable_write_window_output_file(self, output_file: str, tab_index=None) -> None:
         """Enables logging of all outputs of the Write Window in the output file for the certain page.
@@ -94,8 +91,6 @@ class Ui:
             self.write_window_com_obj.EnableOutputFile(output_file, tab_index)
         else:
             self.write_window_com_obj.EnableOutputFile(output_file)
-        self.__log.info(
-            f'Enabled logging of outputs of the Write Window. output_file={output_file} and tab_index={tab_index}')
 
     def output_text_in_write_window(self, text: str) -> None:
         """Outputs a line of text in the Write Window.
@@ -104,4 +99,3 @@ class Ui:
             text (str): The text
         """
         self.write_window_com_obj.Output(text)
-        self.__log.info(f'Outputed "{text}" in the Write Window.')

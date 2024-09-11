@@ -1,4 +1,5 @@
 # import external modules here
+import logging
 import win32com.client
 
 # import internal modules here
@@ -8,7 +9,11 @@ class Version:
     """The Version object represents the version of the CANoe application.
     """
     def __init__(self, app_com_obj):
-        self.com_obj = win32com.client.Dispatch(app_com_obj.Version)
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(app_com_obj.Version)
+        except Exception as e:
+            self.__log.error(f"Error while creating Version object: {e}")
 
     @property
     def build(self) -> int:

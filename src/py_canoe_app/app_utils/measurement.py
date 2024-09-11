@@ -2,8 +2,8 @@
 import logging
 import pythoncom
 import win32com.client
-from time import sleep as wait
 from datetime import datetime
+from time import sleep as wait
 
 # import internal modules here
 
@@ -19,7 +19,7 @@ def DoEventsUntil(cond, timeout):
         difference = now - base_time
         seconds = difference.seconds
         if seconds > timeout():
-            logging.getLogger('CANOE_LOG').info(f'⌛ measurement event timeout({timeout()} s).')
+            logging.getLogger('CANOE_LOG').debug(f'⌛ measurement event timeout({timeout()} s).')
             break
 
 class CanoeMeasurementEvents:
@@ -89,7 +89,6 @@ class Measurement:
             delay (int): The animation delay.
         """
         self.com_obj.AnimationDelay = delay
-        self.__log.info(f"Animation delay set to {delay}.")
 
     @property
     def measurement_index(self) -> int:
@@ -104,7 +103,6 @@ class Measurement:
             index (int): The index of the measurement.
         """
         self.com_obj.MeasurementIndex = index
-        self.__log.info(f"Measurement index set to {index}.")
 
     @property
     def running(self) -> bool:

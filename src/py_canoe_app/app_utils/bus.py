@@ -8,9 +8,12 @@ import win32com.client
 class Bus:
     """The Bus object represents a bus of the CANoe application."""
     def __init__(self, app_com_obj):
-        self.__log = logging.getLogger('CANOE_LOG')
-        self.app_com_obj = app_com_obj
-        self.com_obj = win32com.client.Dispatch(app_com_obj.Bus)
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.app_com_obj = app_com_obj
+            self.com_obj = win32com.client.Dispatch(app_com_obj.Bus)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing bus: {str(e)}')
 
     def get_signal(self, bus: str, channel: int, message: str, signal: str) -> object:
         try:

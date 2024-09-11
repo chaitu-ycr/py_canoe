@@ -30,13 +30,13 @@ class PyCanoeLogger:
             py_canoe_log_dir (str): The directory path where the log files will be stored.
         """
         self.log.setLevel(logging.DEBUG)
-        log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-5.5s] %(message)s")
+        log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-4.8s] %(message)s")
         ch = logging.StreamHandler(sys.stdout)
         ch.setFormatter(log_format)
         self.log.addHandler(ch)
         if py_canoe_log_dir != '' and not os.path.exists(py_canoe_log_dir):
             os.makedirs(py_canoe_log_dir, exist_ok=True)
         if os.path.exists(py_canoe_log_dir):
-            fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=0)
+            fh = handlers.RotatingFileHandler(fr'{py_canoe_log_dir}\py_canoe.log', maxBytes=0, encoding='utf-8')
             fh.setFormatter(log_format)
             self.log.addHandler(fh)
