@@ -6,7 +6,6 @@ from py_canoe import CANoe
 file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
 root_path = file_path
 canoe_inst = CANoe(py_canoe_log_dir=fr'{root_path}\.py_canoe_log', user_capl_functions=('addition_function', 'hello_world'))
-# canoe_inst = CANoe(py_canoe_log_dir=fr'{root_path}\.py_canoe_log')
 logger_inst = logging.getLogger('CANOE_LOG')
 
 canoe_cfg_one_ch = fr'{file_path}\demo_cfg\demo_can_one_ch.cfg'
@@ -200,10 +199,10 @@ def test_test_setup_methods():
     wait(1)
     canoe_inst.execute_all_test_environments()
     test_environments = canoe_inst.get_test_environments()
-    logger_inst.info(f'test environments names -> {list(test_environments.keys())}')
+    logger_inst.debug(f'👉 test environments names -> {list(test_environments.keys())}')
     for te_name, _ in test_environments.items():
         test_modules = canoe_inst.get_test_modules(te_name)
-        logger_inst.info(f'test modules of test env({te_name}) -> {list(test_modules.keys())}')
+        logger_inst.debug(f'👉 test modules of test env({te_name}) -> {list(test_modules.keys())}')
         canoe_inst.execute_all_test_modules_in_test_env(te_name)
     canoe_inst.execute_test_module('demo_test_node_001')
     canoe_inst.execute_test_module('demo_test_node_002')

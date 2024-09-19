@@ -1,6 +1,8 @@
 # import external modules here
 import logging
+import pythoncom
 import win32com.client
+from time import sleep as wait
 
 # import internal modules here
 
@@ -47,7 +49,7 @@ class Configuration:
             text (str): The comment.
         """
         self.com_obj.Comment = text
-        self.__log.debug(f'configuration comment set to {text}.')
+        self.__log.debug(f'👉configuration comment set to {text}.')
 
     @property
     def fdx_enabled(self) -> int:
@@ -66,7 +68,7 @@ class Configuration:
             enabled (int): The activation state of the FDX protocol. 0: deactivate FDX protocol. ≠0: activate FDX protocol.
         """
         self.com_obj.FDXEnabled = enabled
-        self.__log.debug(f'FDX protocol set to {enabled}.')
+        self.__log.debug(f'👉FDX protocol set to {enabled}.')
 
     @property
     def full_name(self) -> str:
@@ -85,7 +87,7 @@ class Configuration:
             full_name (str): The new complete path of the configuration.
         """
         self.com_obj.FullName = full_name
-        self.__log.debug(f'complete path of the configuration set to {full_name}.')
+        self.__log.debug(f'👉complete path of the configuration set to {full_name}.')
 
     @property
     def mode(self) -> int:
@@ -104,7 +106,7 @@ class Configuration:
             mode (int): The active mode; valid values are: 0-Online mode is activated. 1-Offline mode is activated.
         """
         self.com_obj.mode = mode
-        self.__log.debug(f'offline/online mode set to {mode}.')
+        self.__log.debug(f'👉offline/online mode set to {mode}.')
 
     @property
     def modified(self) -> bool:
@@ -184,7 +186,7 @@ class Configuration:
         All test modules in the Simulation Setup and in the Test Setup are taken into consideration.
         """
         self.com_obj.CompileAndVerify()
-        self.__log.info(f'Compiled all test modules in the Simulation Setup and in the Test Setup.')
+        self.__log.debug(f'👉Compiled all test modules in the Simulation Setup and in the Test Setup.')
 
     def get_all_test_setup_environments(self) -> dict:
         """returns all test setup environments.
@@ -212,7 +214,7 @@ class Configuration:
             self.com_obj.Save()
         else:
             self.com_obj.Save(path, prompt_user)
-            self.__log.debug(f'Saved configuration({path}).')
+            self.__log.debug(f'👉Saved configuration({path}).')
         return self.saved
 
     def save_as(self, path: str, major: int, minor: int, prompt_user: bool):
@@ -225,7 +227,7 @@ class Configuration:
             prompt_user (bool): A boolean value that defines whether the user should interact in error situations.
         """
         self.com_obj.SaveAs(path, major, minor, prompt_user)
-        self.__log.debug(f'Saved configuration as {path}.')
+        self.__log.debug(f'👉Saved configuration as {path}.')
         return self.saved
 
 
@@ -233,7 +235,11 @@ class TestSetup:
     """The TestSetup object represents CANoe's test setup.
     """
     def __init__(self, conf_com_obj):
-        self.com_obj = win32com.client.Dispatch(conf_com_obj.TestSetup)
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(conf_com_obj.TestSetup)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe test setup: {str(e)}')
 
     def save_all(self, prompt_user=False) -> None:
         """Saves all test environments of the test setup. If no storage path has been set, the user is prompted for input.
@@ -252,7 +258,11 @@ class TestSetup:
 
 class TestEnvironments:
     def __init__(self, test_setup_com_obj):
-        self.com_obj = win32com.client.Dispatch(test_setup_com_obj.TestEnvironments)
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(test_setup_com_obj.TestEnvironments)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe test environments: {str(e)}')
 
     @property
     def count(self) -> int:
@@ -474,13 +484,13 @@ class TestModuleEvents:
         self.tm_html_report_path = ''
         self.tm_report_generated = False
         self.tm_running = True
-        # logger_inst.info(f'test module OnStart event.')
+        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnStart event.')
 
     @staticmethod
     def OnPause():
         """OnPause is called when the test module execution has been aborted.
         """
-        logger_inst.info(f'test module OnPause event.')
+        logging.getLogger('CANOE_LOG').debug(f'👉test module OnPause event.')
 
     def OnStop(self, reason):
         """OnStop is called after the execution of a test module is stopped.
@@ -492,7 +502,7 @@ class TestModuleEvents:
                             2: The test module was stopped by measurement stop.
         """
         self.tm_running = False
-        # logger_inst.info(f'test module OnStop event. reason -> {reason}')
+        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnStop event. reason -> {reason}')
 
     def OnReportGenerated(self, success, source_full_name, generated_full_name):
         """OnReportGenerated is called after an HTML test report has been generated (successfully or not) from an XML test report.
@@ -507,12 +517,12 @@ class TestModuleEvents:
         self.tm_html_report_path = generated_full_name
         self.tm_report_generated = success
         self.tm_running = False
-        logger_inst.info(f'test module OnReportGenerated event. {success} # {source_full_name} # {generated_full_name}')
+        logging.getLogger('CANOE_LOG').debug(f'👉test module OnReportGenerated event. {success} # {source_full_name} # {generated_full_name}')
 
     def OnVerdictFail(self):
         """OnVerdictFail occurs whenever a test case fails.
         """
-        # logger_inst.info(f'test module OnVerdictFail event.')
+        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnVerdictFail event.')
         pass
 
 
@@ -521,10 +531,14 @@ class TestModule:
     """
 
     def __init__(self, test_module_com_obj):
-        self.com_obj = win32com.client.DispatchWithEvents(test_module_com_obj, TestModuleEvents)
-        self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_running)
-        self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: not self.com_obj.tm_running)
-        self.wait_for_tm_report_gen = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_report_generated)
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.DispatchWithEvents(test_module_com_obj, TestModuleEvents)
+            self.wait_for_tm_to_start = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_running)
+            self.wait_for_tm_to_stop = lambda: TmDoEventsUntil(lambda: not self.com_obj.tm_running)
+            self.wait_for_tm_report_gen = lambda: TmDoEventsUntil(lambda: self.com_obj.tm_report_generated)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe test module: {str(e)}')
 
     @property
     def name(self) -> str:
@@ -573,13 +587,13 @@ class TestModule:
         """
         self.com_obj.Start()
         self.wait_for_tm_to_start()
-        logger_inst.info(f'started executing test module. waiting for completion...')
+        logging.getLogger('CANOE_LOG').debug(f'👉 started executing test module. waiting for completion...')
     
     def wait_for_completion(self):
         """waits for test module execution completion."""
         self.wait_for_tm_to_stop()
         wait(1)
-        logger_inst.info(f'completed executing test module. verdict = {self.verdict}')
+        logging.getLogger('CANOE_LOG').debug(f'👉 completed executing test module. verdict = {self.verdict}')
 
     def pause(self) -> None:
         """Instructs the test module to pause.
@@ -601,9 +615,9 @@ class TestModule:
         Therefore, as recently as the OnStop event is received one can be sure that the test module really stopped.
         """
         self.com_obj.Stop()
-        logger_inst.info(f'stopping test module. waiting for completion...')
+        logging.getLogger('CANOE_LOG').debug(f'👉stopping test module. waiting for completion...')
         self.wait_for_tm_to_stop()
-        logger_inst.info(f'completed stopping test module.')
+        logging.getLogger('CANOE_LOG').debug(f'👉completed stopping test module.')
 
     def reload(self) -> None:
         """This reloads the XML file with the test specification for XML test modules.

@@ -42,6 +42,7 @@ class System:
         self.fetch_namespaces()
         if name not in self.namespaces_dict.keys():
             namespace_com_obj = self.namespaces_com_obj.Add(name)
+            self.namespaces_dict[name] = namespace_com_obj
             self.__log.debug(f'Added the new namespace ({name}).')
             return namespace_com_obj
         else:

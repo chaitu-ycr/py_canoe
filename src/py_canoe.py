@@ -71,6 +71,7 @@ class CANoe:
             self.application.open(canoe_cfg, auto_save, prompt_user)
             self.__diag_devices = self.application.networks.fetch_all_diag_devices()
             self.__test_environments = self.application.configuration.get_all_test_setup_environments()
+            self.__test_modules = self.application.configuration.get_all_test_modules_in_test_environments()
             self.__namespaces = self.application.system.fetch_namespaces()
             self.__variable_files = self.application.system.fetch_variables_files()
             self.__replay_blocks = self.application.configuration.simulation_setup.replay_collection.fetch_replay_blocks()
@@ -1142,4 +1143,3 @@ class CANoe:
             self.__log.debug(f'👉 environment variable({env_var_name}) value set to ➡️ {converted_value}')
         except Exception as e:
             self.__log.error(f'😡 failed to set system variable({env_var_name}) value. {e}')
-
