@@ -13,22 +13,12 @@ class PyCanoeLogger:
     """
 
     def __init__(self, py_canoe_log_dir='') -> None:
-        """
-        Initializes the PyCanoeLogger object.
-        Args:
-            py_canoe_log_dir (str): The directory path where the log files will be stored. Defaults to an empty string.
-        """
         self.log = logging.getLogger('CANOE_LOG')
         self.log.handlers.clear()
         self.log.propagate = False
         self.__py_canoe_log_initialization(py_canoe_log_dir)
 
     def __py_canoe_log_initialization(self, py_canoe_log_dir):
-        """
-        Performs the initialization of the logger.
-        Args:
-            py_canoe_log_dir (str): The directory path where the log files will be stored.
-        """
         self.log.setLevel(logging.DEBUG)
         log_format = logging.Formatter("%(asctime)s [CANOE_LOG] [%(levelname)-4.8s] %(message)s")
         ch = logging.StreamHandler(sys.stdout)

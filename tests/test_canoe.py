@@ -186,7 +186,7 @@ class TestPyCanoe:
         wait(1)
         self.canoe_inst.execute_all_test_environments()
         test_environments = self.canoe_inst.get_test_environments()
-        for te_name, _ in test_environments.items(self):
+        for te_name, _ in test_environments.items():
             self.canoe_inst.execute_all_test_modules_in_test_env(te_name)
         self.canoe_inst.execute_test_module('demo_test_node_001')
         self.canoe_inst.execute_test_module('demo_test_node_002')

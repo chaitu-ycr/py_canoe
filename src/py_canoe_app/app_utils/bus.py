@@ -2,8 +2,6 @@
 import logging
 import win32com.client
 
-# import internal modules here
-
 
 class Bus:
     """The Bus object represents a bus of the CANoe application."""

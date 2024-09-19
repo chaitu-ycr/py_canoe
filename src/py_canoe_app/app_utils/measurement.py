@@ -5,7 +5,6 @@ import win32com.client
 from datetime import datetime
 from time import sleep as wait
 
-# import internal modules here
 
 def DoEvents():
     pythoncom.PumpWaitingMessages()
@@ -22,6 +21,7 @@ def DoEventsUntil(cond, timeout):
             logging.getLogger('CANOE_LOG').debug(f'⌛ measurement event timeout({timeout()} s).')
             break
 
+
 class CanoeMeasurementEvents:
     """Handler for CANoe Measurement events"""
     app_com_obj = object
@@ -30,7 +30,6 @@ class CanoeMeasurementEvents:
 
     @staticmethod
     def OnInit():
-        """Occurs when the measurement is initialized."""
         app_com_obj_loc = CanoeMeasurementEvents.app_com_obj
         for fun in CanoeMeasurementEvents.user_capl_function_names:
             CanoeMeasurementEvents.user_capl_function_obj_dict[fun] = app_com_obj_loc.CAPL.GetFunction(fun)
@@ -40,29 +39,26 @@ class CanoeMeasurementEvents:
 
     @staticmethod
     def OnStart():
-        """Occurs when the measurement is started."""
         Measurement.STARTED = True
         Measurement.STOPPED = False
 
 
     @staticmethod
     def OnStop():
-        """Occurs when the measurement is stopped."""
         Measurement.STARTED = False
         Measurement.STOPPED = True
 
     @staticmethod
     def OnExit():
-        """Occurs when the measurement is exited."""
         Measurement.STARTED = False
         Measurement.STOPPED = False
+
 
 class Measurement:
     """The Measurement object represents measurement functions of CANoe."""
     STARTED = False
     STOPPED = False
     def __init__(self, app_com_obj, user_capl_function_names=tuple(), enable_meas_events=True):
-        """The Measurement object represents measurement functions of CANoe."""
         try:
             self.__log = logging.getLogger('CANOE_LOG')
             CanoeMeasurementEvents.app_com_obj = app_com_obj
@@ -78,35 +74,22 @@ class Measurement:
 
     @property
     def animation_delay(self) -> int:
-        """Returns the animation delay during the measurement in offline mode."""
         return self.com_obj.AnimationDelay
 
     @animation_delay.setter
     def animation_delay(self, delay: int):
-        """Sets the animation delay during the measurement in offline mode.
-
-        Args:
-            delay (int): The animation delay.
-        """
         self.com_obj.AnimationDelay = delay
 
     @property
     def measurement_index(self) -> int:
-        """Returns the measurement index for the next measurement."""
         return self.com_obj.MeasurementIndex
 
     @measurement_index.setter
     def measurement_index(self, index: int):
-        """Sets the measurement index for the next measurement.
-
-        Args:
-            index (int): The index of the measurement.
-        """
         self.com_obj.MeasurementIndex = index
 
     @property
     def running(self) -> bool:
-        """Returns the running state of the measurement."""
         return self.com_obj.Running
 
     @property
@@ -114,31 +97,22 @@ class Measurement:
         return CanoeMeasurementEvents.user_capl_function_obj_dict
 
     def animate(self):
-        """Starts the measurement in animation mode."""
         self.com_obj.Animate()
 
     def break_offline_mode(self):
-        """Interrupts the playback in offline mode."""
         self.com_obj.Break()
 
     def reset_offline_mode(self):
-        """Resets the measurement in offline mode."""
         self.com_obj.Reset()
 
     def start(self):
-        """Starts the measurement."""
         self.com_obj.Start()
 
     def step(self):
-        """Processes a measurement event in single step."""
         self.com_obj.Step()
 
     def stop(self):
         self.stop_ex()
 
     def stop_ex(self):
-        """StopEx repairs differences in the behavior of the deprecatedStop method (for the Measurement object) on deferred stops concerning simulated and real mode in CANoe.
-        Calling the StopEx method correlates to clicking the Stop button (Home ribbon tab).
-        The function must not be called if measurement has already ended.
-        """
         self.com_obj.StopEx()
