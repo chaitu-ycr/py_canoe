@@ -4,7 +4,7 @@ title "deploying document to GitHub Pages using mkdocs"
 
 set origin_dir=%CD%
 set file_dir=%~dp0
-cd %file_dir%
+pushd %file_dir%
 cd ..
 set root_folder=%CD%
 set cmd_venv_activate=%root_folder%\.venv\Scripts\activate.bat
@@ -31,3 +31,5 @@ title "Failed to run mkdocs due to error %ERRORLEVEL%"
 cd %origin_dir%
 pause
 GOTO :eof
+
+popd

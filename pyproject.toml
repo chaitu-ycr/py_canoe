@@ -15,20 +15,16 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Topic :: Software Development :: Embedded Systems"
 ]
-packages = [
-    { include = "py_canoe.py", from = "src" },
-    { include = "py_canoe_app/*.py", from = "src"},
-    { include = "py_canoe_app/app_utils/*.py", from = "src"},
-]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 pywin32 = "^306"
-pytest-html = "^4.1.1"
 
 [tool.poetry.group.dev.dependencies]
-mkdocstrings-python = "^1.7.5"
-pytest = "^7.4.3"
+mkdocstrings-python = "^1.11.1"
+mkdocs-include-markdown-plugin = "^6.2.2"
+pytest = "^8.3.3"
+pytest-html = "^4.1.1"
 
 [build-system]
 requires = ["poetry-core"]

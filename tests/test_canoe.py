@@ -19,14 +19,24 @@ class TestPyCanoe:
         cls.canoe_cfg_demo = fr'{cls.file_path}\demo_cfg\demo.cfg'
 
     def test_open_new_quit_methods(self):
+        self.canoe_inst.new(auto_save=False, prompt_user=False)
+        self.canoe_inst.quit()
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=True, prompt_user=True)
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=False, auto_save=True, prompt_user=True)
+        self.canoe_inst.quit()
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=True, prompt_user=False)
         self.canoe_inst.new(auto_save=True, prompt_user=False)
+        self.canoe_inst.quit()
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=True, prompt_user=True)
         self.canoe_inst.new(auto_save=True, prompt_user=True)
         self.canoe_inst.quit()
-        wait(5)
-
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=False, auto_save=True, prompt_user=True)
+        self.canoe_inst.quit()
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=False, auto_save=False, prompt_user=True)
+        self.canoe_inst.quit()
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=False, auto_save=False, prompt_user=False)
+        self.canoe_inst.new(auto_save=False, prompt_user=True)
+        self.canoe_inst.quit()
+    
     def test_meas_start_stop_restart_methods(self):
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
         assert self.canoe_inst.start_measurement()
@@ -36,20 +46,16 @@ class TestPyCanoe:
         assert self.canoe_inst.get_measurement_running_status()
         assert self.canoe_inst.stop_ex_measurement()
         assert not self.canoe_inst.get_measurement_running_status()
-
+        self.canoe_inst.quit()
+    
     def test_meas_offline_start_stop_restart_methods(self):
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_offline, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
         self.canoe_inst.add_offline_source_log_file(fr'{self.file_path}\demo_cfg\Logs\demo_log.blf')
         self.canoe_inst.start_measurement_in_animation_mode(animation_delay=200)
-        wait(1)
         self.canoe_inst.break_measurement_in_offline_mode()
-        wait(1)
         self.canoe_inst.step_measurement_event_in_single_step()
-        wait(1)
         self.canoe_inst.reset_measurement_in_offline_mode()
-        wait(1)
         assert self.canoe_inst.stop_measurement()
-        wait(1)
 
     def test_meas_index_methods(self):
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
@@ -66,7 +72,6 @@ class TestPyCanoe:
     def test_meas_save_saveas_methods(self):
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
         assert self.canoe_inst.save_configuration()
-        self.canoe_inst.new(auto_save=True)
         assert self.canoe_inst.save_configuration_as(path=fr'{self.file_path}\demo_cfg\demo_v10.cfg',
                                                 major=10, minor=0, create_dir=True)
         wait(1)
@@ -159,7 +164,7 @@ class TestPyCanoe:
         assert self.canoe_inst.stop_measurement()
 
     def test_replay_block_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=True, prompt_user=False, auto_stop=True)
         assert self.canoe_inst.start_measurement()
         wait(1)
         self.canoe_inst.set_replay_block_file(block_name='DemoReplayBlock', recording_file_path=fr'{self.file_path}\demo_cfg\Logs\demo_log.blf')
