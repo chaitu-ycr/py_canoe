@@ -176,13 +176,13 @@ class CANoe:
         try:
             self.application_com_obj.Visible = visible
             if self.measurement_com_obj.Running and not auto_stop:
-                self.__log.error('😡 Measurement is running. Stop the measurement or set argument auto_stop=True.')
+                self.__log.error('😡 Measurement is running. Stop the measurement or set argument auto_stop=True')
                 sys.exit(1)
             elif self.measurement_com_obj.Running and auto_stop:
-                self.__log.warning('😇 Active Measurement is running. Stopping measurement before opening your configuration.')
+                self.__log.warning('😇 Active Measurement is running. Stopping measurement before opening your configuration')
                 self.stop_ex_measurement()
             if os.path.isfile(canoe_cfg):
-                self.__log.debug('⏳ wait for application to open...')
+                self.__log.debug('⏳ wait for application to open')
                 self.application_com_obj.Open(canoe_cfg, auto_save, prompt_user)
                 self.wait_for_canoe_app_to_open()
                 self.__init_canoe_application_bus()
@@ -194,7 +194,7 @@ class CANoe:
                 self.__init_canoe_application_ui()
                 self.__log.debug(f'📢 CANoe configuration successfully opened 🎉')
             else:
-                self.__log.error(f'😡 CANoe configuration "{canoe_cfg}" not found.')
+                self.__log.error(f'😡 CANoe configuration "{canoe_cfg}" not found')
                 sys.exit(1)
         except Exception as e:
             self.__log.error(f'😡 Error opening CANoe configuration: {str(e)}')
@@ -204,13 +204,13 @@ class CANoe:
         """Quits CANoe without saving changes in the configuration."""
         try:
             wait(0.5)
-            self.__log.debug('⏳ wait for application to quit...')
+            self.__log.debug('⏳ wait for application to quit')
             self.application_com_obj.Quit()
             self.wait_for_canoe_app_to_close()
             wait(0.5)
             pythoncom.CoUninitialize()
             self.application_com_obj = None
-            self.__log.debug('📢 CANoe Application Closed.')
+            self.__log.debug('📢 CANoe Application Closed')
         except Exception as e:
             self.__log.error(f'😡 Error quitting CANoe application: {str(e)}')
             sys.exit(1)
@@ -232,9 +232,9 @@ class CANoe:
             else:
                 self.measurement_com_obj.Start()
                 if not self.measurement_com_obj.Running:
-                    self.__log.debug(f'⏳ waiting for measurement to start...')
+                    self.__log.debug(f'⏳ waiting for measurement to start')
                     self.wait_for_canoe_meas_to_start()
-                    self.__log.debug(f'👉 CANoe Measurement {meas_run_sts[self.measurement_com_obj.Running]}.')
+                    self.__log.debug(f'👉 CANoe Measurement {meas_run_sts[self.measurement_com_obj.Running]}')
             return self.measurement_com_obj.Running
         except Exception as e:
             self.__log.error(f'😡 Error starting measurement: {str(e)}')
@@ -266,9 +266,9 @@ class CANoe:
             if self.measurement_com_obj.Running:
                 self.measurement_com_obj.Stop()
                 if self.measurement_com_obj.Running:
-                    self.__log.debug(f'⏳ waiting for measurement to stop 🧍‍♂️ ...')
+                    self.__log.debug(f'⏳ waiting for measurement to stop 🧍‍♂️')
                     self.wait_for_canoe_meas_to_stop()
-                    self.__log.debug(f'👉 CANoe Measurement {meas_run_sts[self.measurement_com_obj.Running]}.')
+                    self.__log.debug(f'👉 CANoe Measurement {meas_run_sts[self.measurement_com_obj.Running]}')
             else:
                 self.__log.warning(f'⚠️ CANoe Measurement already stopped 🧍‍♂️')
             return not self.measurement_com_obj.Running
@@ -314,13 +314,13 @@ class CANoe:
                 offline_sources_paths = self.configuration_offline_setup_source_sources_paths()
                 file_already_added = any([file == absolute_log_file_path for file in offline_sources_paths])
                 if file_already_added:
-                    self.__log.warning(f'⚠️ File "{absolute_log_file_path}" already added as offline source.')
+                    self.__log.warning(f'⚠️ File "{absolute_log_file_path}" already added as offline source')
                 else:
                     self.configuration_offline_setup_source_sources.Add(absolute_log_file_path)
-                    self.__log.debug(f'📢 File "{absolute_log_file_path}" added as offline source.')
+                    self.__log.debug(f'📢 File "{absolute_log_file_path}" added as offline source')
                 return True
             else:
-                self.__log.error(f'😡 invalid logging file ({absolute_log_file_path}).')
+                self.__log.error(f'😡 invalid logging file ({absolute_log_file_path})')
                 return False
         except Exception as e:
             self.__log.error(f'😡 Error adding offline source log file: {str(e)}')
@@ -335,9 +335,9 @@ class CANoe:
         try:
             self.measurement_com_obj.AnimationDelay = animation_delay
             self.measurement_com_obj.Animate()
-            self.__log.debug(f'⏳ waiting for measurement to start 🏃‍♂️‍➡️ ...')
+            self.__log.debug(f'⏳ waiting for measurement to start 🏃‍♂️‍➡️')
             self.wait_for_canoe_meas_to_start()
-            self.__log.debug(f"👉 started 🏃‍♂️‍➡️ measurement in Animation mode with animation delay ⏲️ {animation_delay}.")
+            self.__log.debug(f"👉 started 🏃‍♂️‍➡️ measurement in Animation mode with animation delay ⏲️ {animation_delay}")
         except Exception as e:
             self.__log.error(f'😡 Error starting measurement in animation mode: {str(e)}')
 
@@ -346,9 +346,9 @@ class CANoe:
         try:
             if self.measurement_com_obj.Running:
                 self.measurement_com_obj.Break()
-                self.__log.debug('👉 measurement interrupted 🫷 in Offline mode.')
+                self.__log.debug('👉 measurement interrupted 🫷 in Offline mode')
             else:
-                self.__log.warning('⚠️ Measurement is not running.')
+                self.__log.warning('⚠️ Measurement is not running')
         except Exception as e:
             self.__log.error(f'😡 Error interrupting measurement in Offline mode: {str(e)}')
 
@@ -356,7 +356,7 @@ class CANoe:
         """Resets the measurement in Offline mode."""
         try:
             self.measurement_com_obj.Reset()
-            self.__log.debug('👉 measurement resetted 🔁 in Offline mode.')
+            self.__log.debug('👉 measurement resetted 🔁 in Offline mode')
         except Exception as e:
             self.__log.error(f'😡 Error resetting measurement in Offline mode: {str(e)}')
 
@@ -408,9 +408,9 @@ class CANoe:
         try:
             if not self.configuration_com_obj.Saved:
                 self.configuration_com_obj.Save()
-                self.__log.debug('💾 configuration saved successfully.')
+                self.__log.debug('💾 configuration saved successfully')
             else:
-                self.__log.debug('😇 configuration already saved.')
+                self.__log.debug('😇 configuration already saved')
             return self.configuration_com_obj.Saved
         except Exception as e:
             self.__log.error(f'😡 Error saving configuration: {str(e)}')
@@ -435,13 +435,13 @@ class CANoe:
             if os.path.exists(config_path):
                 self.configuration_com_obj.SaveAs(path, major, minor, prompt_user)
                 if self.configuration_com_obj.Saved:
-                    self.__log.debug(f'💾 configuration saved as {path} successfully.')
+                    self.__log.debug(f'💾 configuration saved as {path} successfully')
                     return True
                 else:
-                    self.__log.error(f'😡 Error saving configuration as {path}.')
+                    self.__log.error(f'😡 Error saving configuration as {path}')
                     return False
             else:
-                self.__log.error(f'😡 file path {config_path} not found.')
+                self.__log.error(f'😡 file path {config_path} not found')
                 return False
         except Exception as e:
             self.__log.error(f'😡 Error saving configuration as: {str(e)}')
@@ -478,7 +478,7 @@ class CANoe:
                 'standard_remote_total': can_bus_statistic_obj.StandardRemoteTotal,
                 'tx_error_count': can_bus_statistic_obj.TxErrorCount,
             }
-            self.__log.debug(f'👉 CAN Bus Statistics ℹ️nfo 🟰 {statistics_info}.')
+            self.__log.debug(f'👉 CAN Bus Statistics ℹ️nfo 🟰 {statistics_info}')
             return statistics_info
         except Exception as e:
             self.__log.error(f'😡 Error getting CAN Bus Statistics: {str(e)}')
@@ -530,7 +530,7 @@ class CANoe:
                     'channel': database_obj.Channel,
                     'full_name': database_obj.FullName
                     }
-            self.__log.debug(f'👉 {bus} bus databases ℹ️nfo 🟰 {dbcs_info}.')
+            self.__log.debug(f'👉 {bus} bus databases ℹ️nfo 🟰 {dbcs_info}')
             return dbcs_info
         except Exception as e:
             self.__log.error(f'😡 Error getting {bus} bus databases info: {str(e)}')
@@ -555,7 +555,7 @@ class CANoe:
                     'full_name': node_obj.FullName,
                     'active': node_obj.Active
                     }
-            self.__log.debug(f'👉 {bus} bus nodes ℹ️nfo 🟰 {nodes_info}.')
+            self.__log.debug(f'👉 {bus} bus nodes ℹ️nfo 🟰 {nodes_info}')
             return nodes_info
         except Exception as e:
             self.__log.error(f'😡 Error getting {bus} bus nodes info: {str(e)}')
@@ -577,7 +577,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             signal_value = signal_obj.RawValue if raw_value else signal_obj.Value
-            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) 🟰 {signal_value}.')
+            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) 🟰 {signal_value}')
             return signal_value
         except Exception as e:
             self.__log.error(f'😡 Error getting signal value: {str(e)}')
@@ -600,7 +600,7 @@ class CANoe:
                 signal_obj.RawValue = value
             else:
                 signal_obj.Value = value
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) value set to {value}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) value set to {value}')
         except Exception as e:
             self.__log.error(f'😡 Error setting signal value: {str(e)}')
 
@@ -619,7 +619,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             signal_fullname = signal_obj.FullName
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name 🟰 {signal_fullname}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name 🟰 {signal_fullname}')
             return signal_fullname
         except Exception as e:
             self.__log.error(f'😡 Error getting signal full name: {str(e)}')
@@ -640,7 +640,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             sig_online_status = signal_obj.IsOnline
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status 🟰 {sig_online_status}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status 🟰 {sig_online_status}')
             return sig_online_status
         except Exception as e:
             self.__log.error(f'😡 Error checking signal online status: {str(e)}')
@@ -665,7 +665,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             sig_state = signal_obj.State
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state 🟰 {sig_state}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state 🟰 {sig_state}')
             return sig_state
         except Exception as e:
             self.__log.error(f'😡 Error checking signal state: {str(e)}')
@@ -688,7 +688,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             signal_value = signal_obj.RawValue if raw_value else signal_obj.Value
-            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) 🟰 {signal_value}.')
+            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) 🟰 {signal_value}')
             return signal_value
         except Exception as e:
             self.__log.error(f'😡 Error getting signal value: {str(e)}')
@@ -715,7 +715,7 @@ class CANoe:
                 signal_obj.RawValue = value
             else:
                 signal_obj.Value = value
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) value set to {value}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) value set to {value}')
         except Exception as e:
             self.__log.error(f'😡 Error setting signal value: {str(e)}')
 
@@ -736,7 +736,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             signal_fullname = signal_obj.FullName
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name 🟰 {signal_fullname}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name 🟰 {signal_fullname}')
             return signal_fullname
         except Exception as e:
             self.__log.error(f'😡 Error getting signal full name: {str(e)}')
@@ -752,14 +752,14 @@ class CANoe:
             signal (str): The name of the signal.
             source_addr (int): The source address of the ECU that sends the message.
             dest_addr (int): The destination address of the ECU that receives the message.
-
+        
         Returns:
             bool: TRUE: if the measurement is running and the signal has been received. FALSE: if not.
         """
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             sig_online_status = signal_obj.IsOnline
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status 🟰 {sig_online_status}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status 🟰 {sig_online_status}')
             return sig_online_status
         except Exception as e:
             self.__log.error(f'😡 Error checking signal online status: {str(e)}')
@@ -778,7 +778,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             sig_state = signal_obj.State
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state 🟰 {sig_state}.')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state 🟰 {sig_state}')
             return sig_state
         except Exception as e:
             self.__log.error(f'😡 Error checking signal state: {str(e)}')
@@ -791,7 +791,7 @@ class CANoe:
         """
         try:
             self.ui_com_obj.ActivateDesktop(name)
-            self.__log.debug(f'👉 Activated the desktop({name}).')
+            self.__log.debug(f'👉 Activated the desktop({name})')
         except Exception as e:
             self.__log.error(f'😡 Error activating the desktop: {str(e)}')
 
@@ -799,7 +799,7 @@ class CANoe:
         """opens the dialog for configuring the bus parameters. Make sure Measurement stopped when using this method."""
         try:
             self.ui_com_obj.OpenBaudrateDialog()
-            self.__log.debug('👉 baudrate dialog opened. Configure the bus parameters.')
+            self.__log.debug('👉 baudrate dialog opened. Configure the bus parameters')
         except Exception as e:
             self.__log.error(f'😡 Error opening baudrate dialog: {str(e)}')
 
@@ -810,7 +810,7 @@ class CANoe:
         """
         try:
             self.ui_write_window_com_obj.Output(text)
-            self.__log.debug(f'✍️ text "{text}" written in the Write Window.')
+            self.__log.debug(f'✍️ text "{text}" written in the Write Window')
         except Exception as e:
             self.__log.error(f'😡 Error writing text in the Write Window: {str(e)}')
 
@@ -832,7 +832,7 @@ class CANoe:
         """Clears the contents of the Write Window."""
         try:
             self.ui_write_window_com_obj.Clear()
-            self.__log.debug('🧹 Write Window content cleared.')
+            self.__log.debug('🧹 Write Window content cleared')
         except Exception as e:
             self.__log.error(f'😡 Error clearing Write Window content: {str(e)}')
 
@@ -840,7 +840,7 @@ class CANoe:
         """Copies the contents of the Write Window to the clipboard."""
         try:
             self.ui_write_window_com_obj.Copy()
-            self.__log.debug('©️ Write Window content copied to clipboard.')
+            self.__log.debug('©️ Write Window content copied to clipboard')
         except Exception as e:
             self.__log.error(f'😡 Error copying Write Window content: {str(e)}')
 
@@ -854,10 +854,10 @@ class CANoe:
         try:
             if tab_index:
                 self.ui_write_window_com_obj.EnableOutputFile(output_file, tab_index)
-                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file🟰{output_file} and tab_index🟰{tab_index}.')
+                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file🟰{output_file} and tab_index🟰{tab_index}')
             else:
                 self.ui_write_window_com_obj.EnableOutputFile(output_file)
-                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file🟰{output_file}.')
+                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file🟰{output_file}')
         except Exception as e:
             self.__log.error(f'😡 Error enabling Write Window output file: {str(e)}')
 
@@ -873,7 +873,7 @@ class CANoe:
                 self.__log.debug(f'⏹️ Disabled logging of outputs of the Write Window. tab_index🟰{tab_index}')
             else:
                 self.ui_write_window_com_obj.DisableOutputFile()
-                self.__log.debug(f'⏹️ Disabled logging of outputs of the Write Window.')
+                self.__log.debug(f'⏹️ Disabled logging of outputs of the Write Window')
         except Exception as e:
             self.__log.error(f'😡 Error disabling Write Window output file: {str(e)}')
 
@@ -882,7 +882,7 @@ class CANoe:
         Args:
             sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
             value (Union[int, float, str]): variable value.
-
+        
         Returns:
             object: The new Variable object.
         """
@@ -892,16 +892,17 @@ class CANoe:
             variable_name = sys_var_name.split('::')[-1]
             system_obj = self.system_obj()
             system_obj.add_system_variable(namespace_name, variable_name, value)
-            self.__log.debug(f'👉 system variable({sys_var_name}) created and value set to {value}.')
+            self.__log.debug(f'👉 system variable({sys_var_name}) created and value set to {value}')
         except Exception as e:
             self.__log.error(f'😡 failed to create system variable({sys_var_name}). {e}')
         return new_var_com_obj
 
-    def get_system_variable_value(self, sys_var_name: str) -> Union[int, float, str, tuple, None]:
+    def get_system_variable_value(self, sys_var_name: str, return_symbolic_name=False) -> Union[int, float, str, tuple, dict, None]:
         """get_system_variable_value Returns a system variable value.
 
         Args:
             sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
+            return_symbolic_name (bool): True if user want to return symbolic name. Default is False.
 
         Returns:
             System Variable value.
@@ -911,9 +912,14 @@ class CANoe:
             namespace = '::'.join(sys_var_name.split('::')[:-1])
             variable_name = sys_var_name.split('::')[-1]
             namespace_com_object = self.system_com_obj.Namespaces(namespace)
-            variable_com_object = namespace_com_object.Variables(variable_name)
-            return_value = variable_com_object.Value
-            self.__log.debug(f'👉 system variable({sys_var_name}) value 🟰 {return_value}.')
+            variable_com_object = win32com.client.Dispatch(namespace_com_object.Variables(variable_name))
+            var_value = variable_com_object.Value
+            if return_symbolic_name and (variable_com_object.Type == 0):
+                var_value_name = variable_com_object.GetSymbolicValueName(var_value)
+                return_value = var_value_name
+            else:
+                return_value = var_value
+            self.__log.debug(f'👉 system variable({sys_var_name}) value 🟰 {return_value}')
         except Exception as e:
             self.__log.debug(f'😡 failed to get system variable({sys_var_name}) value. {e}')
         return return_value
@@ -936,7 +942,7 @@ class CANoe:
                 variable_com_object.Value = float(value)
             else:
                 variable_com_object.Value = value
-            self.__log.debug(f'👉 system variable({sys_var_name}) value set to {value}.')
+            self.__log.debug(f'👉 system variable({sys_var_name}) value set to {value}')
         except Exception as e:
             self.__log.debug(f'😡 failed to set system variable({sys_var_name}) value. {e}')
 
@@ -947,7 +953,7 @@ class CANoe:
             sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
             value (tuple): variable values. supported integer array or double array. please always give only one type.
             index (int): value of index where values will start updating. Defaults to 0.
-        """
+        """        
         try:
             namespace = '::'.join(sys_var_name.split('::')[:-1])
             variable_name = sys_var_name.split('::')[-1]
@@ -962,9 +968,9 @@ class CANoe:
                     final_value[index: index + len(value)] = value
                 variable_com_object.Value = tuple(final_value)
                 wait(0.1)
-                self.__log.debug(f'👉 system variable({sys_var_name}) value set to {variable_com_object.Value}.')
+                self.__log.debug(f'👉 system variable({sys_var_name}) value set to {variable_com_object.Value}')
             else:
-                self.__log.warning(f'⚠️ failed to set system variable({sys_var_name}) value. check variable length and index value.')
+                self.__log.warning(f'⚠️ failed to set system variable({sys_var_name}) value. check variable length and index value')
         except Exception as e:
             self.__log.error(f'😡 failed to set system variable({sys_var_name}) value. {e}')
 
@@ -1004,7 +1010,7 @@ class CANoe:
                         else:
                             self.__log.debug(f"🔴 {diag_res.Sender}: ➖ Diagnostic Response 👉 {diag_response_data}")
             else:
-                self.__log.warning(f'⚠️ Diagnostic ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config.')
+                self.__log.warning(f'⚠️ Diagnostic ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config')
         except Exception as e:
             self.__log.error(f'😡 failed to send diagnostic request({request}). {e}')
         return diag_response_including_sender_name if return_sender_name else diag_response_data
@@ -1030,7 +1036,7 @@ class CANoe:
                 else:
                     self.__log.warning(f'⚠️ {diag_ecu_qualifier_name}: tester present already set to {value}')
             else:
-                self.__log.error(f'😇 diag ECU qualifier "{diag_ecu_qualifier_name}" not available in configuration.')
+                self.__log.error(f'😇 diag ECU qualifier "{diag_ecu_qualifier_name}" not available in configuration')
         except Exception as e:
             self.__log.error(f'😡 failed to control tester present. {e}')
 
@@ -1046,9 +1052,9 @@ class CANoe:
             if block_name in replay_blocks.keys():
                 replay_block = replay_blocks[block_name]
                 replay_block.path = recording_file_path
-                self.__log.debug(f'👉 Replay block "{block_name}" updated with "{recording_file_path}" path.')
+                self.__log.debug(f'👉 Replay block "{block_name}" updated with "{recording_file_path}" path')
             else:
-                self.__log.warning(f'⚠️ Replay block "{block_name}" not available.')
+                self.__log.warning(f'⚠️ Replay block "{block_name}" not available')
         except Exception as e:
             self.__log.error(f'😡 failed to set replay block file. {e}')
 
@@ -1067,9 +1073,9 @@ class CANoe:
                     replay_block.start()
                 else:
                     replay_block.stop()
-                self.__log.debug(f'👉 Replay block "{block_name}" {"Started" if start_stop else "Stopped"}.')
+                self.__log.debug(f'👉 Replay block "{block_name}" {"Started" if start_stop else "Stopped"}')
             else:
-                self.__log.warning(f'⚠️ Replay block "{block_name}" not available.')
+                self.__log.warning(f'⚠️ Replay block "{block_name}" not available')
         except Exception as e:
             self.__log.error(f'😡 failed to control replay block. {e}')
 
@@ -1101,7 +1107,7 @@ class CANoe:
         try:
             capl_obj = self.capl_obj()
             exec_sts = capl_obj.call_capl_function(CanoeMeasurementEvents.user_capl_function_obj_dict[name], *arguments)
-            self.__log.debug(f'🛫 triggered capl function({name}). execution status 🟰 {exec_sts}.')
+            self.__log.debug(f'🛫 triggered capl function({name}). execution status 🟰 {exec_sts}')
             return exec_sts
         except Exception as e:
             self.__log.error(f'😡 failed to call capl function({name}). {e}')
@@ -1117,7 +1123,7 @@ class CANoe:
 
     def get_test_modules(self, env_name: str) -> dict:
         """returns dictionary of test environment test module names and its class object.
-
+        
         Args:
             env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
         """
@@ -1127,10 +1133,10 @@ class CANoe:
                 if env_name in test_environments.keys():
                     return test_environments[env_name].get_all_test_modules()
                 else:
-                    self.__log.warning(f'⚠️ "{env_name}" not found in configuration.')
+                    self.__log.warning(f'⚠️ "{env_name}" not found in configuration')
                     return {}
             else:
-                self.__log.warning(f'⚠️ Zero test environments found in configuration. Not possible to fetch test modules.')
+                self.__log.warning(f'⚠️ Zero test environments found in configuration. Not possible to fetch test modules')
                 return {}
         except Exception as e:
             self.__log.error(f'😡 failed to get test modules. {e}')
@@ -1168,11 +1174,11 @@ class CANoe:
                 else:
                     continue
             if test_module_found and (execution_result == 1):
-                self.__log.debug(f'✔️ test module "{test_env_name}.{test_module_name}" executed and verdict 🟰 {test_verdict[execution_result]}.')
+                self.__log.debug(f'✔️ test module "{test_env_name}.{test_module_name}" executed and verdict 🟰 {test_verdict[execution_result]}')
             elif test_module_found and (execution_result != 1):
-                self.__log.debug(f'😵‍💫 test module "{test_env_name}.{test_module_name}" executed and verdict 🟰 {test_verdict[execution_result]}.')
+                self.__log.debug(f'😵‍💫 test module "{test_env_name}.{test_module_name}" executed and verdict 🟰 {test_verdict[execution_result]}')
             else:
-                self.__log.warning(f'⚠️ test module "{test_module_name}" not found. not possible to execute.')
+                self.__log.warning(f'⚠️ test module "{test_module_name}" not found. not possible to execute')
             return execution_result
         except Exception as e:
             self.__log.error(f'😡 failed to execute test module. {e}')
@@ -1180,7 +1186,7 @@ class CANoe:
 
     def stop_test_module(self, test_module_name: str):
         """stops execution of test module.
-
+        
         Args:
             test_module_name (str): test module name. avoid duplicate test module names in CANoe configuration.
         """
@@ -1191,13 +1197,13 @@ class CANoe:
                     test_env_name = tm['environment']
                     self.__log.debug(f'👉 test module "{test_module_name}" in test environment "{test_env_name}" stopped 🧍‍♂️')
             else:
-                self.__log.warning(f'⚠️ test module "{test_module_name}" not found. not possible to execute.')
+                self.__log.warning(f'⚠️ test module "{test_module_name}" not found. not possible to execute')
         except Exception as e:
             self.__log.error(f'😡 failed to stop test module. {e}')
-
+    
     def execute_all_test_modules_in_test_env(self, env_name: str):
         """executes all test modules available in test environment.
-
+        
         Args:
             env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
         """
@@ -1207,13 +1213,13 @@ class CANoe:
                 for tm_name in test_modules.keys():
                     self.execute_test_module(tm_name)
             else:
-                self.__log.warning(f'⚠️ test modules not available in "{env_name}" test environment.')
+                self.__log.warning(f'⚠️ test modules not available in "{env_name}" test environment')
         except Exception as e:
             self.__log.error(f'😡 failed to execute all test modules in "{env_name}" test environment. {e}')
 
     def stop_all_test_modules_in_test_env(self, env_name: str):
         """stops execution of all test modules available in test environment.
-
+        
         Args:
             env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
         """
@@ -1223,7 +1229,7 @@ class CANoe:
                 for tm_name in test_modules.keys():
                     self.stop_test_module(env_name, tm_name)
             else:
-                self.__log.warning(f'⚠️ test modules not available in "{env_name}" test environment.')
+                self.__log.warning(f'⚠️ test modules not available in "{env_name}" test environment')
         except Exception as e:
             self.__log.error(f'😡 failed to stop all test modules in "{env_name}" test environment. {e}')
 
@@ -1233,11 +1239,11 @@ class CANoe:
             test_environments = self.get_test_environments()
             if len(test_environments) > 0:
                 for test_env_name in test_environments.keys():
-                    self.__log.debug(f'🏃‍♂️‍➡️ started executing test environment "{test_env_name}"...')
+                    self.__log.debug(f'🏃‍♂️‍➡️ started executing test environment "{test_env_name}"')
                     self.execute_all_test_modules_in_test_env(test_env_name)
                     self.__log.debug(f'✔️ completed executing test environment "{test_env_name}"')
             else:
-                self.__log.warning(f'⚠️ Zero test environments found in configuration.')
+                self.__log.warning(f'⚠️ Zero test environments found in configuration')
         except Exception as e:
             self.__log.error(f'😡 failed to execute all test environments. {e}')
 
@@ -1251,7 +1257,7 @@ class CANoe:
                     self.stop_all_test_modules_in_test_env(test_env_name)
                     self.__log.debug(f'✔️ completed stopping test environment "{test_env_name}"')
             else:
-                self.__log.warning(f'⚠️ Zero test environments found in configuration.')
+                self.__log.warning(f'⚠️ Zero test environments found in configuration')
         except Exception as e:
             self.__log.error(f'😡 failed to stop all test environments. {e}')
 
@@ -1285,7 +1291,7 @@ class CANoe:
             if variable.type == 0:
                 converted_value = int(value)
             elif variable.type == 1:
-                converted_value = float(value)
+                converted_value = float(value)            
             elif variable.type == 2:
                 converted_value = str(value)
             else:
@@ -1308,7 +1314,7 @@ def DoApplicationEventsUntil(cond, timeout) -> None:
         difference = now - base_time
         seconds = difference.seconds
         if seconds > timeout():
-            logging.getLogger('CANOE_LOG').debug(f'⌛ application event timeout({timeout()} s).')
+            logging.getLogger('CANOE_LOG').debug(f'⌛ application event timeout({timeout()} s)')
             break
 
 def DoMeasurementEvents() -> None:
@@ -1323,7 +1329,7 @@ def DoMeasurementEventsUntil(cond, timeout) -> None:
         difference = now - base_time
         seconds = difference.seconds
         if seconds > timeout():
-            logging.getLogger('CANOE_LOG').debug(f'⌛ measurement event timeout({timeout()} s).')
+            logging.getLogger('CANOE_LOG').debug(f'⌛ measurement event timeout({timeout()} s)')
             break
 
 def DoTestModuleEvents():
@@ -1391,7 +1397,7 @@ class CanoeCapl:
                 capl_function_obj.Call()
             return_value = True
         else:
-            self.__log.warning(fr'😇 function arguments not matching with CAPL user function args.')
+            self.__log.warning(fr'😇 function arguments not matching with CAPL user function args')
         return return_value
 
     def compile_result(self) -> dict:
@@ -1408,11 +1414,11 @@ class CanoeConfigurationEvents:
     """Handler for CANoe Configuration events"""
     @staticmethod
     def OnClose():
-        logging.getLogger('CANOE_LOG').debug('👉 configuration OnClose event triggered.')
+        logging.getLogger('CANOE_LOG').debug('👉 configuration OnClose event triggered')
 
     @staticmethod
     def OnSystemVariablesDefinitionChanged():
-        logging.getLogger('CANOE_LOG').debug('👉 configuration OnSystemVariablesDefinitionChanged event triggered.')
+        logging.getLogger('CANOE_LOG').debug('👉 configuration OnSystemVariablesDefinitionChanged event triggered')
 
 
 class CanoeConfigurationSimulationSetup:
@@ -1648,11 +1654,11 @@ class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModulesTestM
         self.tm_html_report_path = ''
         self.tm_report_generated = False
         self.tm_running = True
-        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnStart event.')
+        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnStart event')
 
     @staticmethod
     def OnPause():
-        logging.getLogger('CANOE_LOG').debug(f'👉test module OnPause event.')
+        logging.getLogger('CANOE_LOG').debug(f'👉test module OnPause event')
 
     def OnStop(self, reason):
         self.tm_running = False
@@ -1665,7 +1671,7 @@ class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModulesTestM
         logging.getLogger('CANOE_LOG').debug(f'👉test module OnReportGenerated event. {success} # {source_full_name} # {generated_full_name}')
 
     def OnVerdictFail(self):
-        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnVerdictFail event.')
+        # logging.getLogger('CANOE_LOG').debug(f'👉test module OnVerdictFail event')
         pass
 
 
@@ -1701,7 +1707,7 @@ class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModulesTestM
     def start(self):
         self.com_obj.Start()
         self.wait_for_tm_to_start()
-        logging.getLogger('CANOE_LOG').debug(f'👉 started executing test module. waiting for completion...')
+        logging.getLogger('CANOE_LOG').debug(f'👉 started executing test module. waiting for completion')
 
     def wait_for_completion(self):
         self.wait_for_tm_to_stop()
@@ -1716,9 +1722,9 @@ class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModulesTestM
 
     def stop(self) -> None:
         self.com_obj.Stop()
-        logging.getLogger('CANOE_LOG').debug(f'👉stopping test module. waiting for completion...')
+        logging.getLogger('CANOE_LOG').debug(f'👉stopping test module. waiting for completion')
         self.wait_for_tm_to_stop()
-        logging.getLogger('CANOE_LOG').debug(f'👉completed stopping test module.')
+        logging.getLogger('CANOE_LOG').debug(f'👉completed stopping test module')
 
     def reload(self) -> None:
         self.com_obj.Reload()
@@ -2104,10 +2110,10 @@ class CanoeSystem:
         if name not in self.namespaces_dict.keys():
             namespace_com_obj = self.namespaces_com_obj.Add(name)
             self.namespaces_dict[name] = namespace_com_obj
-            self.__log.debug(f'Added the new namespace ({name}).')
+            self.__log.debug(f'➕ Added the new namespace ({name})')
             return namespace_com_obj
         else:
-            self.__log.warning(f'The given namespace ({name}) already exists.')
+            self.__log.warning(f'⚠️ The given namespace ({name}) already exists')
             return None
 
     def remove_namespace(self, name: str) -> None:
@@ -2115,9 +2121,9 @@ class CanoeSystem:
         if name in self.namespaces_list:
             self.namespaces_com_obj.Remove(name)
             self.fetch_namespaces()
-            self.__log.debug(f'Removed the namespace ({name}) from the collection.')
+            self.__log.debug(f'➖ Removed the namespace ({name}) from the collection')
         else:
-            self.__log.warning(f'The given namespace ({name}) does not exist.')
+            self.__log.warning(f'⚠️ The given namespace ({name}) does not exist')
 
     @property
     def varaibles_files_count(self) -> int:
@@ -2137,18 +2143,18 @@ class CanoeSystem:
         if os.path.isfile(variables_file):
             self.variables_files_com_obj.Add(variables_file)
             self.fetch_variables_files()
-            self.__log.debug(f'Added the Variables file ({variables_file}) to the collection.')
+            self.__log.debug(f'➕ Added the Variables file ({variables_file}) to the collection')
         else:
-            self.__log.warning(f'The given file ({variables_file}) does not exist.')
+            self.__log.warning(f'⚠️ The given file ({variables_file}) does not exist')
 
     def remove_variables_file(self, variables_file_name: str):
         self.fetch_variables_files()
         if variables_file_name in self.variables_files_dict:
             self.variables_files_com_obj.Remove(variables_file_name)
             self.fetch_variables_files()
-            self.__log.debug(f'Removed the Variables file ({variables_file_name}) from the collection.')
+            self.__log.debug(f'➖ Removed the Variables file ({variables_file_name}) from the collection')
         else:
-            self.__log.warning(f'The given file ({variables_file_name}) does not exist.')
+            self.__log.warning(f'⚠️ The given file ({variables_file_name}) does not exist')
 
     def fetch_namespace_namespaces(self, parent_namespace_com_obj, parent_namespace_name):
         namespaces_count = parent_namespace_com_obj.Namespaces.Count
@@ -2172,7 +2178,7 @@ class CanoeSystem:
     def add_system_variable(self, namespace, variable, value):
         self.fetch_namespaces()
         if f'{namespace}::{variable}' in self.variables_dict.keys():
-            self.__log.warning(f'The given variable ({variable}) already exists in the namespace ({namespace}).')
+            self.__log.warning(f'⚠️ The given variable ({variable}) already exists in the namespace ({namespace})')
             return None
         else:
             self.add_namespace(namespace)
@@ -2181,7 +2187,7 @@ class CanoeSystem:
     def remove_system_variable(self, namespace, variable):
         self.fetch_namespaces()
         if f'{namespace}::{variable}' not in self.variables_dict.keys():
-            self.__log.warning(f'The given variable ({variable}) already removed in the namespace ({namespace}).')
+            self.__log.warning(f'⚠️ The given variable ({variable}) already removed in the namespace ({namespace})')
             return None
         else:
             self.namespaces_dict[namespace].Variables.Remove(variable)

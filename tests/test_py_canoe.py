@@ -142,6 +142,8 @@ class TestPyCanoe:
         wait(1)
         sys_var_val = self.canoe_inst.get_system_variable_value('sys_demo::demo')
         assert sys_var_val == 1
+        sys_var_val_name = self.canoe_inst.get_system_variable_value('demo::var_on_off', True)
+        assert sys_var_val_name == 'On'
         assert self.canoe_inst.stop_measurement()
         wait(1)
 
