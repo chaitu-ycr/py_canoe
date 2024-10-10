@@ -84,6 +84,7 @@ class CANoe:
             self.configuration_online_setup = win32com.client.Dispatch(self.configuration_com_obj.OnlineSetup)
             self.configuration_online_setup_bus_statistics = win32com.client.Dispatch(self.configuration_online_setup.BusStatistics)
             self.configuration_online_setup_bus_statistics_bus_statistic = lambda bustype, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics.BusStatistic(bustype, channel))
+            self.configuration_general_setup = CanoeConfigurationGeneralSetup(self.configuration_com_obj)
             self.configuration_simulation_setup = lambda: CanoeConfigurationSimulationSetup(self.configuration_com_obj)
             self.__replay_blocks = self.configuration_simulation_setup().replay_collection.fetch_replay_blocks()
             self.configuration_test_setup = lambda: CanoeConfigurationTestSetup(self.configuration_com_obj)
@@ -1301,6 +1302,52 @@ class CANoe:
         except Exception as e:
             self.__log.error(f'😡 failed to set system variable({env_var_name}) value. {e}')
 
+    def add_database(self, database_file: str, database_network: str, database_channel: int) -> bool:
+        try:
+            if self.get_measurement_running_status():
+                self.__log.warning('⚠️ measurement is running. not possible to add database')
+                return False
+            else:
+                databases = self.configuration_general_setup.database_setup.databases.fetch_databases()
+                if database_file in [database.full_name for database in databases.values()]:
+                    self.__log.warning(f'⚠️ database "{database_file}" already added')
+                    return False
+                else:
+                    self.configuration_general_setup.database_setup.databases.add_network(database_file, database_network)
+                    wait(1)
+                    databases = self.configuration_general_setup.database_setup.databases.fetch_databases()
+                    for database in databases.values():
+                        if database.full_name == database_file:
+                            database.channel = database_channel
+                            wait(1)
+                    self.__log.debug(f'👉 database "{database_file}" added to network "{database_network}" and channel {database_channel}')
+                    return True
+        except Exception as e:
+            self.__log.error(f'😡 failed to add database "{database_file}". {e}')
+            return False
+    
+    def remove_database(self, database_file: str, database_channel: int) -> bool:
+        try:
+            if self.get_measurement_running_status():
+                self.__log.warning('⚠️ measurement is running. not possible to remove database')
+                return False
+            else:
+                databases = self.configuration_general_setup.database_setup.databases
+                if database_file not in [database.full_name for database in databases.fetch_databases().values()]:
+                    self.__log.warning(f'⚠️ database "{database_file}" not available to remove')
+                    return False
+                else:
+                    for i in range(1, databases.count + 1):
+                        database_com_obj = databases.com_obj.Item(i)
+                        if database_com_obj.FullName == database_file and database_com_obj.Channel == database_channel:
+                            self.configuration_general_setup.database_setup.databases.remove(i)
+                            wait(1)
+                            self.__log.debug(f'👉 database "{database_file}" removed from channel {database_channel}')
+                            return True
+        except Exception as e:
+            self.__log.error(f'😡 failed to remove database "{database_file}". {e}')
+            return False
+
 
 def DoApplicationEvents() -> None:
     pythoncom.PumpWaitingMessages()
@@ -1419,6 +1466,105 @@ class CanoeConfigurationEvents:
     @staticmethod
     def OnSystemVariablesDefinitionChanged():
         logging.getLogger('CANOE_LOG').debug('👉 configuration OnSystemVariablesDefinitionChanged event triggered')
+
+
+class CanoeConfigurationGeneralSetup:
+    """The GeneralSetup object represents the general settings of a CANoe configuration."""
+    def __init__(self, configuration_com_obj) -> None:
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(configuration_com_obj.GeneralSetup)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe general setup: {str(e)}')
+    
+    @property
+    def database_setup(self):
+        return CanoeConfigurationGeneralSetupDatabaseSetup(self.com_obj)
+
+
+class CanoeConfigurationGeneralSetupDatabaseSetupEvents:
+    @staticmethod
+    def OnChange():
+        logging.getLogger('CANOE_LOG').debug('👉 database setup OnChange event triggered')
+
+
+class CanoeConfigurationGeneralSetupDatabaseSetup:
+    """The DatabaseSetup object represents the assigned databases of the current configuration."""
+    def __init__(self, general_setup_com_obj):
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(general_setup_com_obj.DatabaseSetup)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe database setup: {str(e)}')
+    
+    @property
+    def databases(self):
+        return CanoeConfigurationGeneralSetupDatabaseSetupDatabases(self.com_obj)
+
+
+class CanoeConfigurationGeneralSetupDatabaseSetupDatabases:
+    """The Databases object represents the assigned databases of CANoe."""
+    def __init__(self, database_setup_com_obj):
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(database_setup_com_obj.Databases)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe databases: {str(e)}')
+    
+    @property
+    def count(self) -> int:
+        return self.com_obj.Count
+    
+    def fetch_databases(self) -> dict:
+        databases = dict()
+        for index in range(1, self.count + 1):
+            db_com_obj = self.com_obj.Item(index)
+            db_inst = CanoeConfigurationGeneralSetupDatabaseSetupDatabasesDatabase(db_com_obj)
+            databases[db_inst.name] = db_inst
+        return databases
+    
+    def add(self, full_name: str) -> object:
+        return self.com_obj.Add(full_name)
+    
+    def add_network(self, database_name: str, network_name: str) -> object:
+        return self.com_obj.AddNetwork(database_name, network_name)
+    
+    def remove(self, index: int) -> None:
+        self.com_obj.Remove(index)
+    
+
+class CanoeConfigurationGeneralSetupDatabaseSetupDatabasesDatabase:
+    """The Database object represents the assigned database of the CANoe application."""
+    def __init__(self, database_com_obj):
+        try:
+            self.__log = logging.getLogger('CANOE_LOG')
+            self.com_obj = win32com.client.Dispatch(database_com_obj)
+        except Exception as e:
+            self.__log.error(f'😡 Error initializing CANoe database: {str(e)}')
+    
+    @property
+    def channel(self) -> int:
+        return self.com_obj.Channel
+    
+    @channel.setter
+    def channel(self, channel: int) -> None:
+        self.com_obj.Channel = channel
+    
+    @property
+    def full_name(self) -> str:
+        return self.com_obj.FullName
+    
+    @full_name.setter
+    def full_name(self, full_name: str) -> None:
+        self.com_obj.FullName = full_name
+    
+    @property
+    def name(self) -> str:
+        return self.com_obj.Name
+    
+    @property
+    def path(self) -> str:
+        return self.com_obj.Path
 
 
 class CanoeConfigurationSimulationSetup:

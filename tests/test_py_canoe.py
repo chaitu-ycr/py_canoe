@@ -214,3 +214,14 @@ class TestPyCanoe:
         self.canoe_inst.get_environment_variable_value('data_var')
         wait(1)
         assert self.canoe_inst.stop_measurement()
+
+    def test_conf_gen_setup(self):
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_gen_db_setup, visible=True, auto_save=True, prompt_user=False, auto_stop=True)
+        assert self.canoe_inst.start_measurement()
+        wait(1)
+        self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
+        self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
+        assert self.canoe_inst.stop_measurement()
+        assert self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
+        assert self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
+        assert self.canoe_inst.save_configuration()
