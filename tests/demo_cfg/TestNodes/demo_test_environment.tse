@@ -1,9 +1,9 @@
-;CANoe Version |4|11|0|36581 demo_test_environment 
-Version: 11.0.96 Build 96
+;CANoe Version |4|11|0|41316 demo_test_environment 
+Version: 18.2.65 Build 65
 32 PRO
 5
 APPDIR Vector.CANoe.SignalGenerators.DLL
-Vector.CANoe.SignalGenerators, Version=11.0.96.0, Culture=neutral, PublicKeyToken=null
+Vector.CANoe.SignalGenerators, Version=18.2.65.0, Culture=neutral, PublicKeyToken=null
 Vector.CANoe.SignalGenerators.ComponentWrapper
 1
 1.0.1
@@ -19,7 +19,7 @@ VTSWrapper<class_VProgrammedNode> 3 Begin_Of_Object
 2
 VTSItem 4 Begin_Of_Object
 1
-3 2191885987 0
+3 140614457 0
 1
 END_OF_ITEM_DATA
 End_Of_Object VTSItem 4
@@ -27,15 +27,15 @@ End_Of_Object VTSItem 4
 VCaplTestNode 4 Begin_Of_Object
 2
 VTestNode 5 Begin_Of_Object
-8
+9
 VProgrammedNode 6 Begin_Of_Object
-6
+7
 VConfigurationRoot 7 Begin_Of_Object
 1
 End_Of_Object VConfigurationRoot 7
 <VFileName V7 QL> 1 "demo_test_node_002.can" 
 1
-d:\git_repos\py_canoe_dev\tests\demo_cfg\TestNodes\demo_test_node_002.cbf
+D:\git_repos\py_canoe_dev\tests\demo_cfg\TestNodes\demo_test_node_002.cbf
 
 
 5
@@ -64,7 +64,7 @@ MDI_DOCK_INFO_END
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+3
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -88,7 +88,7 @@ END_OF_DESKTOP_DATA
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+3
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -210,7 +210,7 @@ END_OF_DESKTOP_DATA
 END_OF_DESKTOP_DATA_COLLECTION
 0
 END_OF_DESKTOP_MEMBER
-{24445380-4837-4DB5-A343-18FFC398920C}
+{6A0CFCAC-5B9E-409C-8503-E19FCFBD9100}
 0
 End_Of_Object VBoxRoot 9
 1 -1 0 0 0 0 0 0 0 0 0 0
@@ -224,61 +224,18 @@ End_Of_Object VConfigurationBox 7
 0
 
 EOF_MBSSDATA
-3
+2
 0 1
 1 1
-2 1
 0
 EOF_NLDATA
 0
 EOF_ASSEMBLYDATA
 <VFileName V7 QL> 1 "demo_test_node_002.cbf" 
 VIPBStackSetting 7 Begin_Of_Object
-6
-2
-1
-VIPBAdapterSetting 8 Begin_Of_Object
 7
-1
-8
-02:84:CF:3B:BE:00
-End_Of_Serialized_Data 8
-8
-192.168.0.1
-End_Of_Serialized_Data 8
-8
-255.255.255.0
-End_Of_Serialized_Data 8
-8
-0.0.0.0
-End_Of_Serialized_Data 8
-1
-VPersistentIFv4Address 9 Begin_Of_Object
-1
-VPersistentIFAddress 10 Begin_Of_Object
-1
-VPersistentAddress 11 Begin_Of_Object
-1
-End_Of_Object VPersistentAddress 11
-End_Of_Object VPersistentIFAddress 10
-9
-192.168.0.1
-End_Of_Serialized_Data 9
-9
-255.255.255.0
-End_Of_Serialized_Data 9
-End_Of_Object VPersistentIFv4Address 9
+2
 0
-1
-11
-Network
-1
-0
-0
-0
-1500
-0
-End_Of_Object VIPBAdapterSetting 8
 0
 1
 0
@@ -290,6 +247,7 @@ End_Of_Serialized_Data 7
 ::
 End_Of_Serialized_Data 7
 2
+1
 End_Of_Object VIPBStackSetting 7
 6
 NULL
@@ -297,6 +255,7 @@ End_Of_Serialized_Data 6
 0
 <VFileName V7 QL> 0 "" 
 1
+0
 0
 End_Of_Object VProgrammedNode 6
 0
@@ -325,11 +284,12 @@ NULL
 <VFileName V7 BQL> 1 base=cfg "..\" 
 3
 VSimulinkModelViewerConfiguration 6 Begin_Of_Object
-2
+3
 <VFileName V7 QL> 0 "" 
 <VFileName V7 QL> 0 "" 
 <VFileName V7 QL> 0 "" 
 150
+0
 0
 End_Of_Object VSimulinkModelViewerConfiguration 6
 1
@@ -355,7 +315,7 @@ MDI_DOCK_INFO_END
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+3
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -379,7 +339,7 @@ END_OF_DESKTOP_DATA
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+3
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -501,7 +461,7 @@ END_OF_DESKTOP_DATA
 END_OF_DESKTOP_DATA_COLLECTION
 0
 END_OF_DESKTOP_MEMBER
-{24445380-4837-4DB5-A343-18FFC398920C}
+{6A0CFCAC-5B9E-409C-8503-E19FCFBD9100}
 0
 End_Of_Object VBoxRoot 8
 1 -1 0 0 0 0 0 0 0 0 0 0
@@ -511,6 +471,7 @@ End_Of_Object VConfigurationBox 6
 NULL
 0
 0
+<VFileName V7 QL> 1 "" 
 End_Of_Object VTestNode 5
 VTestModuleControllerCapl 5 Begin_Of_Object
 1
@@ -545,7 +506,7 @@ VTSWrapper<class_VProgrammedNode> 3 Begin_Of_Object
 2
 VTSItem 4 Begin_Of_Object
 1
-3 2191887315 0
+3 140617177 0
 1
 END_OF_ITEM_DATA
 End_Of_Object VTSItem 4
@@ -553,15 +514,15 @@ End_Of_Object VTSItem 4
 VCaplTestNode 4 Begin_Of_Object
 2
 VTestNode 5 Begin_Of_Object
-8
+9
 VProgrammedNode 6 Begin_Of_Object
-6
+7
 VConfigurationRoot 7 Begin_Of_Object
 1
 End_Of_Object VConfigurationRoot 7
 <VFileName V7 QL> 1 "demo_test_node_001.can" 
 1
-d:\git_repos\py_canoe_dev\tests\demo_cfg\TestNodes\demo_test_node_001.cbf
+D:\git_repos\py_canoe_dev\tests\demo_cfg\TestNodes\demo_test_node_001.cbf
 
 
 5
@@ -590,7 +551,7 @@ MDI_DOCK_INFO_END
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+4
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -614,7 +575,7 @@ END_OF_DESKTOP_DATA
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+4
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -736,7 +697,7 @@ END_OF_DESKTOP_DATA
 END_OF_DESKTOP_DATA_COLLECTION
 0
 END_OF_DESKTOP_MEMBER
-{B5D0E595-9FD4-49F3-B0A1-FAB6FB100B61}
+{2C9AD82E-3DDB-43B6-BBA3-1BAD5CEAC154}
 0
 End_Of_Object VBoxRoot 9
 1 -1 0 0 0 0 0 0 0 0 0 0
@@ -750,61 +711,18 @@ End_Of_Object VConfigurationBox 7
 0
 
 EOF_MBSSDATA
-3
+2
 0 1
 1 1
-2 1
 0
 EOF_NLDATA
 0
 EOF_ASSEMBLYDATA
 <VFileName V7 QL> 1 "demo_test_node_001.cbf" 
 VIPBStackSetting 7 Begin_Of_Object
-6
-2
-1
-VIPBAdapterSetting 8 Begin_Of_Object
 7
-1
-8
-02:84:CF:3B:BE:01
-End_Of_Serialized_Data 8
-8
-192.168.0.2
-End_Of_Serialized_Data 8
-8
-255.255.255.0
-End_Of_Serialized_Data 8
-8
-0.0.0.0
-End_Of_Serialized_Data 8
-1
-VPersistentIFv4Address 9 Begin_Of_Object
-1
-VPersistentIFAddress 10 Begin_Of_Object
-1
-VPersistentAddress 11 Begin_Of_Object
-1
-End_Of_Object VPersistentAddress 11
-End_Of_Object VPersistentIFAddress 10
-9
-192.168.0.2
-End_Of_Serialized_Data 9
-9
-255.255.255.0
-End_Of_Serialized_Data 9
-End_Of_Object VPersistentIFv4Address 9
+2
 0
-1
-11
-Network
-1
-0
-0
-0
-1500
-0
-End_Of_Object VIPBAdapterSetting 8
 0
 1
 0
@@ -815,7 +733,8 @@ End_Of_Serialized_Data 7
 7
 ::
 End_Of_Serialized_Data 7
-2
+9
+1
 End_Of_Object VIPBStackSetting 7
 6
 NULL
@@ -823,6 +742,7 @@ End_Of_Serialized_Data 6
 0
 <VFileName V7 QL> 0 "" 
 1
+0
 0
 End_Of_Object VProgrammedNode 6
 0
@@ -851,11 +771,12 @@ NULL
 <VFileName V7 BQL> 1 base=cfg "..\" 
 3
 VSimulinkModelViewerConfiguration 6 Begin_Of_Object
-2
+3
 <VFileName V7 QL> 0 "" 
 <VFileName V7 QL> 0 "" 
 <VFileName V7 QL> 0 "" 
 150
+0
 0
 End_Of_Object VSimulinkModelViewerConfiguration 6
 1
@@ -881,7 +802,7 @@ MDI_DOCK_INFO_END
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+4
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -905,7 +826,7 @@ END_OF_DESKTOP_DATA
 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
 END_OF_DOCK_INFO
 0
--1
+4
 1
 0 1 -1 -1 -1 -1 466 262 1399 788
 0
@@ -1027,7 +948,7 @@ END_OF_DESKTOP_DATA
 END_OF_DESKTOP_DATA_COLLECTION
 0
 END_OF_DESKTOP_MEMBER
-{B5D0E595-9FD4-49F3-B0A1-FAB6FB100B61}
+{2C9AD82E-3DDB-43B6-BBA3-1BAD5CEAC154}
 0
 End_Of_Object VBoxRoot 8
 1 -1 0 0 0 0 0 0 0 0 0 0
@@ -1037,6 +958,7 @@ End_Of_Object VConfigurationBox 6
 NULL
 0
 0
+<VFileName V7 QL> 1 "" 
 End_Of_Object VTestNode 5
 VTestModuleControllerCapl 5 Begin_Of_Object
 1
@@ -1069,15 +991,15 @@ VTSFolder 2 Begin_Of_Object
 1
 VTSItem 3 Begin_Of_Object
 1
-3 3783800435 0
+3 1966101417 0
 1
 END_OF_ITEM_DATA
 End_Of_Object VTSItem 3
 4
 demo_test_environment
 2
-2191887315
-2191885987
+140617177
+140614457
 <VFileName V7 QL> 1 "..\report.xml" 
 END_OF_FILE_NAME
 <VFileName V7 QL> 1 "" 
@@ -1087,17 +1009,17 @@ END_OF_FILE_NAME
 END_OF_FOLDER_DATA
 End_Of_Object VTSFolder 2
 1
-3783800435
+1966101417
 3
 1
-2191885987
+140614457
 0
 1
-2191887315
+140617177
 0
 1
-3783800435
+1966101417
 2
-2191887315
-2191885987
+140617177
+140614457
 End_Of_Object VTSPersistentRoot 1
