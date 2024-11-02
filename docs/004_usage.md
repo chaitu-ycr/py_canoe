@@ -1,6 +1,6 @@
 # Usage
 
-## Import CANoe module.
+## Import CANoe module
 
 ```python
 # Import CANoe module. Always do this in your root script.
