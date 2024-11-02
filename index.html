@@ -32,21 +32,13 @@
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
           <a href="." class="icon icon-home"> py_canoe
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
+        </a>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href=".">about</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">about</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#github-releases-link">GitHub Releases 👉 link</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pypi-package-link">PyPi Package 👉 link</a>
-    </li>
     </ul>
                 </li>
               </ul>
@@ -91,12 +83,47 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="py_canoe"><a href="https://github.com/chaitu-ycr/py_canoe">py_canoe</a></h1>
+<h1 id="about-py_canoe">About <a href="https://github.com/chaitu-ycr/py_canoe">py_canoe</a></h1>
 <p>Python 🐍 Package for controlling Vector CANoe 🛶 Tool</p>
 <p>fork <a href="https://github.com/chaitu-ycr/py_canoe/fork">this repo</a> and create pull request to contribute back to this project.</p>
 <p>for ideas/discussions please create new discussion <a href="https://github.com/chaitu-ycr/py_canoe/discussions">here</a></p>
 <p>create issue or request feature <a href="https://github.com/chaitu-ycr/py_canoe/issues/new/choose">here</a></p>
 <h2 id="github-releases-link">GitHub Releases 👉 <a href="https://github.com/chaitu-ycr/py_canoe/releases">link</a></h2>
 <h2 id="pypi-package-link">PyPi Package 👉 <a href="https://pypi.org/project/py_canoe/">link</a></h2>
+<h2 id="prerequisites-link">Prerequisites <a href="https://chaitu-ycr.github.io/py_canoe/002_prerequisites/">link</a></h2>
+<h2 id="python-environment-setup-instructions-link">Python environment setup instructions <a href="https://chaitu-ycr.github.io/py_canoe/003_environment_setup/">link</a></h2>
+<h2 id="install-py_canoe-package">Install <a href="https://pypi.org/project/py_canoe/">py_canoe</a> package</h2>
+<pre><code class="language-bat">pip install py_canoe --upgrade
+</code></pre>
+<h2 id="documentation-links">Documentation Links</h2>
+<h3 id="example-use-cases-link">example use cases 👉 <a href="https://chaitu-ycr.github.io/py_canoe/004_usage/">link</a></h3>
+<h3 id="package-reference-doc-link">package reference doc 👉 <a href="https://chaitu-ycr.github.io/py_canoe/999_reference/">link</a></h3>
+<h2 id="sample-example">Sample Example</h2>
+<pre><code class="language-python"># Import CANoe module
+from py_canoe import CANoe
+
+# create CANoe object
+canoe_inst = CANoe()
+
+# open CANoe configuration. Replace canoe_cfg with yours.
+canoe_inst.open(canoe_cfg=r'tests\demo_cfg\demo.cfg')
+
+# print installed CANoe application version
+canoe_inst.get_canoe_version_info()
+
+# Start CANoe measurement
+canoe_inst.start_measurement()
+
+# get signal value. Replace arguments with your message and signal data.
+sig_val = canoe_inst.get_signal_value('CAN', 1, 'LightState', 'FlashLight')
+print(sig_val)
+
+# Stop CANoe Measurement
+canoe_inst.stop_measurement()
+
+# Quit / Close CANoe configuration
+canoe_inst.quit()
+</code></pre>
               
             </div>
           </div><footer>
@@ -123,6 +150,10 @@
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/chaitu-ycr/py_canoe" class="fa fa-code-fork" style="color: #fcfcfc"> chaitu-ycr/py_canoe</a>
+        </span>
+    
     
     
       <span><a href="002_prerequisites/" style="color: #fcfcfc">Next &raquo;</a></span>
@@ -133,7 +164,7 @@
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
-      <script src="search/main.js"></script>
+      <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
     <script>
         jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
@@ -144,6 +175,6 @@
 </html>
 
 <!--
-MkDocs version : 1.5.3
-Build Date UTC : 2024-01-30 16:32:05.801063+00:00
+MkDocs version : 1.6.1
+Build Date UTC : 2024-11-02 06:28:23.500371+00:00
 -->
