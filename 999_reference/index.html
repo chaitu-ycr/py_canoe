@@ -57,6 +57,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe">CANoe</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.add_database">add_database</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.add_offline_source_log_file">add_offline_source_log_file</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.break_measurement_in_offline_mode">break_measurement_in_offline_mode</a>
@@ -126,6 +128,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.quit">quit</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.read_text_from_write_window">read_text_from_write_window</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.remove_database">remove_database</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.CANoe.reset_measurement">reset_measurement</a>
     </li>
@@ -233,6 +237,63 @@ Args:
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.CANoe.add_database" class="doc doc-heading">
+            <code class="highlight language-python">add_database(database_file, database_network, database_channel)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>adds database file to a network channel</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>database_file</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>database file to attach. give full file path.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>database_network</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>network name on which you want to add this database.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>database_channel</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>channel name on which you want to add this database.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
@@ -2208,6 +2269,55 @@ Args:
               –
               <div class="doc-md-description">
                 <p>The text content.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.CANoe.remove_database" class="doc doc-heading">
+            <code class="highlight language-python">remove_database(database_file, database_channel)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>remove database file from a channel</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>database_file</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>database file to remove. give full file path.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>database_channel</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>channel name on which you want to remove database.</p>
               </div>
             </li>
         </ul>
