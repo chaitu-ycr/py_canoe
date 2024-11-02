@@ -753,7 +753,7 @@ class CANoe:
             signal (str): The name of the signal.
             source_addr (int): The source address of the ECU that sends the message.
             dest_addr (int): The destination address of the ECU that receives the message.
-        
+
         Returns:
             bool: TRUE: if the measurement is running and the signal has been received. FALSE: if not.
         """
@@ -883,7 +883,7 @@ class CANoe:
         Args:
             sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
             value (Union[int, float, str]): variable value.
-        
+
         Returns:
             object: The new Variable object.
         """
@@ -954,7 +954,7 @@ class CANoe:
             sys_var_name (str): The name of the system variable. Ex- "sys_var_demo::speed"
             value (tuple): variable values. supported integer array or double array. please always give only one type.
             index (int): value of index where values will start updating. Defaults to 0.
-        """        
+        """
         try:
             namespace = '::'.join(sys_var_name.split('::')[:-1])
             variable_name = sys_var_name.split('::')[-1]
@@ -1124,7 +1124,7 @@ class CANoe:
 
     def get_test_modules(self, env_name: str) -> dict:
         """returns dictionary of test environment test module names and its class object.
-        
+
         Args:
             env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
         """
@@ -1187,7 +1187,7 @@ class CANoe:
 
     def stop_test_module(self, test_module_name: str):
         """stops execution of test module.
-        
+
         Args:
             test_module_name (str): test module name. avoid duplicate test module names in CANoe configuration.
         """
@@ -1201,10 +1201,10 @@ class CANoe:
                 self.__log.warning(f'⚠️ test module "{test_module_name}" not found. not possible to execute')
         except Exception as e:
             self.__log.error(f'😡 failed to stop test module. {e}')
-    
+
     def execute_all_test_modules_in_test_env(self, env_name: str):
         """executes all test modules available in test environment.
-        
+
         Args:
             env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
         """
@@ -1220,7 +1220,7 @@ class CANoe:
 
     def stop_all_test_modules_in_test_env(self, env_name: str):
         """stops execution of all test modules available in test environment.
-        
+
         Args:
             env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
         """
@@ -1292,7 +1292,7 @@ class CANoe:
             if variable.type == 0:
                 converted_value = int(value)
             elif variable.type == 1:
-                converted_value = float(value)            
+                converted_value = float(value)
             elif variable.type == 2:
                 converted_value = str(value)
             else:
@@ -1325,7 +1325,7 @@ class CANoe:
         except Exception as e:
             self.__log.error(f'😡 failed to add database "{database_file}". {e}')
             return False
-    
+
     def remove_database(self, database_file: str, database_channel: int) -> bool:
         try:
             if self.get_measurement_running_status():
@@ -1476,7 +1476,7 @@ class CanoeConfigurationGeneralSetup:
             self.com_obj = win32com.client.Dispatch(configuration_com_obj.GeneralSetup)
         except Exception as e:
             self.__log.error(f'😡 Error initializing CANoe general setup: {str(e)}')
-    
+
     @property
     def database_setup(self):
         return CanoeConfigurationGeneralSetupDatabaseSetup(self.com_obj)
@@ -1496,7 +1496,7 @@ class CanoeConfigurationGeneralSetupDatabaseSetup:
             self.com_obj = win32com.client.Dispatch(general_setup_com_obj.DatabaseSetup)
         except Exception as e:
             self.__log.error(f'😡 Error initializing CANoe database setup: {str(e)}')
-    
+
     @property
     def databases(self):
         return CanoeConfigurationGeneralSetupDatabaseSetupDatabases(self.com_obj)
@@ -1510,11 +1510,11 @@ class CanoeConfigurationGeneralSetupDatabaseSetupDatabases:
             self.com_obj = win32com.client.Dispatch(database_setup_com_obj.Databases)
         except Exception as e:
             self.__log.error(f'😡 Error initializing CANoe databases: {str(e)}')
-    
+
     @property
     def count(self) -> int:
         return self.com_obj.Count
-    
+
     def fetch_databases(self) -> dict:
         databases = dict()
         for index in range(1, self.count + 1):
@@ -1522,16 +1522,16 @@ class CanoeConfigurationGeneralSetupDatabaseSetupDatabases:
             db_inst = CanoeConfigurationGeneralSetupDatabaseSetupDatabasesDatabase(db_com_obj)
             databases[db_inst.name] = db_inst
         return databases
-    
+
     def add(self, full_name: str) -> object:
         return self.com_obj.Add(full_name)
-    
+
     def add_network(self, database_name: str, network_name: str) -> object:
         return self.com_obj.AddNetwork(database_name, network_name)
-    
+
     def remove(self, index: int) -> None:
         self.com_obj.Remove(index)
-    
+
 
 class CanoeConfigurationGeneralSetupDatabaseSetupDatabasesDatabase:
     """The Database object represents the assigned database of the CANoe application."""
@@ -1541,27 +1541,27 @@ class CanoeConfigurationGeneralSetupDatabaseSetupDatabasesDatabase:
             self.com_obj = win32com.client.Dispatch(database_com_obj)
         except Exception as e:
             self.__log.error(f'😡 Error initializing CANoe database: {str(e)}')
-    
+
     @property
     def channel(self) -> int:
         return self.com_obj.Channel
-    
+
     @channel.setter
     def channel(self, channel: int) -> None:
         self.com_obj.Channel = channel
-    
+
     @property
     def full_name(self) -> str:
         return self.com_obj.FullName
-    
+
     @full_name.setter
     def full_name(self, full_name: str) -> None:
         self.com_obj.FullName = full_name
-    
+
     @property
     def name(self) -> str:
         return self.com_obj.Name
-    
+
     @property
     def path(self) -> str:
         return self.com_obj.Path
