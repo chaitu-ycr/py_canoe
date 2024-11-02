@@ -1303,6 +1303,13 @@ class CANoe:
             self.__log.error(f'😡 failed to set system variable({env_var_name}) value. {e}')
 
     def add_database(self, database_file: str, database_network: str, database_channel: int) -> bool:
+        """adds database file to a network channel
+
+        Args:
+            database_file (str): database file to attach. give full file path.
+            database_network (str): network name on which you want to add this database.
+            database_channel (int): channel name on which you want to add this database.
+        """
         try:
             if self.get_measurement_running_status():
                 self.__log.warning('⚠️ measurement is running. not possible to add database')
@@ -1327,6 +1334,12 @@ class CANoe:
             return False
 
     def remove_database(self, database_file: str, database_channel: int) -> bool:
+        """remove database file from a channel
+
+        Args:
+            database_file (str): database file to remove. give full file path.
+            database_channel (int): channel name on which you want to remove database.
+        """
         try:
             if self.get_measurement_running_status():
                 self.__log.warning('⚠️ measurement is running. not possible to remove database')
