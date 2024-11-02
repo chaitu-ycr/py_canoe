@@ -83,7 +83,7 @@ class CANoe:
             self.configuration_offline_setup_source_sources_paths = lambda: [sources.Item(index) for index in range(1, sources_count)]
             self.configuration_online_setup = win32com.client.Dispatch(self.configuration_com_obj.OnlineSetup)
             self.configuration_online_setup_bus_statistics = win32com.client.Dispatch(self.configuration_online_setup.BusStatistics)
-            self.configuration_online_setup_bus_statistics_bus_statistic = lambda bustype, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics.BusStatistic(bustype, channel))
+            self.configuration_online_setup_bus_statistics_bus_statistic = lambda bus_type, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics.BusStatistic(bus_type, channel))
             self.configuration_general_setup = CanoeConfigurationGeneralSetup(self.configuration_com_obj)
             self.configuration_simulation_setup = lambda: CanoeConfigurationSimulationSetup(self.configuration_com_obj)
             self.__replay_blocks = self.configuration_simulation_setup().replay_collection.fetch_replay_blocks()
@@ -2272,12 +2272,12 @@ class CanoeSystem:
             self.__log.warning(f'⚠️ The given namespace ({name}) does not exist')
 
     @property
-    def varaibles_files_count(self) -> int:
+    def variables_files_count(self) -> int:
         return self.variables_files_com_obj.Count
 
     def fetch_variables_files(self):
-        if self.varaibles_files_count > 0:
-            for index in range(1, self.varaibles_files_count + 1):
+        if self.variables_files_count > 0:
+            for index in range(1, self.variables_files_count + 1):
                 variable_file_com_obj = self.variables_files_com_obj.Item(index)
                 self.variables_files_dict[variable_file_com_obj.Name] = {'full_name': variable_file_com_obj.FullName,
                                                                          'path': variable_file_com_obj.Path,
