@@ -2146,7 +2146,7 @@ Args:
 
 
 <h2 id="py_canoe.CANoe.open" class="doc doc-heading">
-            <code class="highlight language-python">open(canoe_cfg, visible=True, auto_save=False, prompt_user=False, auto_stop=False)</code>
+            <code class="highlight language-python">open(canoe_cfg, visible=True, auto_save=True, prompt_user=False, auto_stop=True)</code>
 
 </h2>
 
@@ -2187,11 +2187,11 @@ Args:
             <li>
               <b><code>auto_save</code></b>
                   (<code>bool</code>, default:
-                      <code>False</code>
+                      <code>True</code>
 )
               –
               <div class="doc-md-description">
-                <p>A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to False.</p>
+                <p>A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to True.</p>
               </div>
             </li>
             <li>
@@ -2207,11 +2207,11 @@ Args:
             <li>
               <b><code>auto_stop</code></b>
                   (<code>bool</code>, default:
-                      <code>False</code>
+                      <code>True</code>
 )
               –
               <div class="doc-md-description">
-                <p>A boolean value that indicates whether to stop the measurement before opening the configuration. Defaults to False.</p>
+                <p>A boolean value that indicates whether to stop the measurement before opening the configuration. Defaults to True.</p>
               </div>
             </li>
         </ul>
