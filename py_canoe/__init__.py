@@ -160,15 +160,15 @@ class CANoe:
             self.__log.error(f'😡 Error creating new CANoe configuration: {str(e)}')
             sys.exit(1)
 
-    def open(self, canoe_cfg: str, visible=True, auto_save=False, prompt_user=False, auto_stop=False) -> None:
+    def open(self, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, auto_stop=True) -> None:
         """Loads CANoe configuration.
 
         Args:
             canoe_cfg (str): The complete path for the CANoe configuration.
             visible (bool): True if you want to see CANoe UI. Defaults to True.
-            auto_save (bool, optional): A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to False.
+            auto_save (bool, optional): A boolean value that indicates whether the active configuration should be saved if it has been changed. Defaults to True.
             prompt_user (bool, optional): A boolean value that indicates whether the user should intervene in error situations. Defaults to False.
-            auto_stop (bool, optional): A boolean value that indicates whether to stop the measurement before opening the configuration. Defaults to False.
+            auto_stop (bool, optional): A boolean value that indicates whether to stop the measurement before opening the configuration. Defaults to True.
         """
         self.__init_canoe_application()
         self.__init_canoe_application_measurement()
@@ -226,10 +226,10 @@ class CANoe:
             True if measurement started. else False.
         """
         try:
-            meas_run_sts = {True: "Started 🏃‍♂️‍➡️", False: "Not Started 🧍‍♂️"}
+            meas_run_sts = {True: "Started 🏃‍♂️", False: "Not Started 🧍‍♂️"}
             self.measurement_start_stop_timeout = timeout
             if self.measurement_com_obj.Running:
-                self.__log.warning(f'⚠️ CANoe Measurement already running 🏃‍♂️‍➡️')
+                self.__log.warning(f'⚠️ CANoe Measurement already running 🏃‍♂️')
             else:
                 self.measurement_com_obj.Start()
                 if not self.measurement_com_obj.Running:
@@ -262,7 +262,7 @@ class CANoe:
             True if measurement stopped. else False.
         """
         try:
-            meas_run_sts = {True: "Not Stopped 🏃‍♂️‍➡️ ", False: "Stopped 🧍‍♂️"}
+            meas_run_sts = {True: "Not Stopped 🏃‍♂️ ", False: "Stopped 🧍‍♂️"}
             self.measurement_start_stop_timeout = timeout
             if self.measurement_com_obj.Running:
                 self.measurement_com_obj.Stop()
@@ -336,9 +336,9 @@ class CANoe:
         try:
             self.measurement_com_obj.AnimationDelay = animation_delay
             self.measurement_com_obj.Animate()
-            self.__log.debug(f'⏳ waiting for measurement to start 🏃‍♂️‍➡️')
+            self.__log.debug(f'⏳ waiting for measurement to start 🏃‍♂️')
             self.wait_for_canoe_meas_to_start()
-            self.__log.debug(f"👉 started 🏃‍♂️‍➡️ measurement in Animation mode with animation delay ⏲️ {animation_delay}")
+            self.__log.debug(f"👉 started 🏃‍♂️ measurement in Animation mode with animation delay ⏲️ {animation_delay}")
         except Exception as e:
             self.__log.error(f'😡 Error starting measurement in animation mode: {str(e)}')
 
@@ -1029,7 +1029,7 @@ class CANoe:
                 if diag_device.tester_present_status != value:
                     if value:
                         diag_device.start_tester_present()
-                        self.__log.debug(f'⏱️🏃‍♂️‍➡️‍ {diag_ecu_qualifier_name}: started tester present')
+                        self.__log.debug(f'⏱️🏃‍♂️‍ {diag_ecu_qualifier_name}: started tester present')
                     else:
                         diag_device.stop_tester_present()
                         self.__log.debug(f'⏱️🧍‍♂️ {diag_ecu_qualifier_name}: stopped tester present')
@@ -1240,7 +1240,7 @@ class CANoe:
             test_environments = self.get_test_environments()
             if len(test_environments) > 0:
                 for test_env_name in test_environments.keys():
-                    self.__log.debug(f'🏃‍♂️‍➡️ started executing test environment "{test_env_name}"')
+                    self.__log.debug(f'🏃‍♂️ started executing test environment "{test_env_name}"')
                     self.execute_all_test_modules_in_test_env(test_env_name)
                     self.__log.debug(f'✔️ completed executing test environment "{test_env_name}"')
             else:
