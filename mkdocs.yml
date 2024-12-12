@@ -13,11 +13,8 @@ theme:
     - toc.integrate
 
 nav:
-  - about: index.md
-  - prerequisites: 002_prerequisites.md
-  - setup: 003_environment_setup.md
-  - usage: 004_usage.md
-  - reference: 999_reference.md
+  - py_canoe: index.md
+  - reference_manual: 999_reference.md
 
 plugins:
   - mkdocstrings:
