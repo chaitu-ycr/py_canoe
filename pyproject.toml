@@ -5,8 +5,8 @@ description = "Python CANoe Package"
 authors = ["chaitu-ycr <chaitu.ycr@gmail.com>"]
 license = "LICENSE"
 readme = "README.md"
-homepage = "https://github.com/chaitu-ycr/py_canoe.git"
-repository = "https://github.com/chaitu-ycr/py_canoe.git"
+homepage = "https://github.com/chaitu-ycr/py_canoe"
+repository = "https://github.com/chaitu-ycr/py_canoe"
 documentation = "https://chaitu-ycr.github.io/py_canoe/"
 keywords = ["Vector", "CANoe", "py_canoe"]
 classifiers = [
@@ -18,7 +18,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pywin32 = "^306"
+pywin32 = ">=306,<=308"
 
 [tool.poetry.group.dev.dependencies]
 mkdocstrings-python = "^1.11.1"
