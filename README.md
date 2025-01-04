@@ -53,8 +53,7 @@ pip install py_canoe --upgrade
 ### import CANoe module and create CANoe object instance
 
 ```python
-from py_canoe import CANoe
-from time import sleep as wait
+from py_canoe import CANoe, wait
 
 canoe_inst = CANoe()
 ```
