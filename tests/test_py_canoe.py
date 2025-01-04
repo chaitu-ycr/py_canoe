@@ -190,7 +190,7 @@ class TestStandalonePyCanoe:
         assert self.canoe_inst.stop_measurement()
 
     def test_test_setup_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_test_setup)
         self.canoe_inst.ui_activate_desktop('TestSetup')
         assert self.canoe_inst.start_measurement()
         wait(1)

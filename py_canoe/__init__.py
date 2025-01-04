@@ -1714,6 +1714,7 @@ class CanoeConfigurationTestSetup:
 
 
 class CanoeConfigurationTestSetupTestEnvironments:
+    """The TestEnvironments object represents the test environments within CANoe's test setup."""
     def __init__(self, test_setup_com_obj):
         try:
             self.__log = logging.getLogger('CANOE_LOG')
@@ -1745,6 +1746,9 @@ class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironment:
     def __init__(self, test_environment_com_obj):
         self.com_obj = test_environment_com_obj
         self.__test_modules = CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModules(self.com_obj)
+        self.__test_setup_folders = CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestSetupFolders(self.com_obj)
+        self.__all_test_modules = {}
+        self.__all_test_setup_folders = {}
 
     @property
     def enabled(self) -> bool:
@@ -1778,8 +1782,79 @@ class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironment:
     def stop_sequence(self) -> None:
         self.com_obj.StopSequence()
 
+    def update_all_test_setup_folders(self, tsfs_instance=None):
+        if tsfs_instance is None:
+            tsfs_instance = self.__test_setup_folders
+        if tsfs_instance.count > 0:
+            test_setup_folders = tsfs_instance.fetch_test_setup_folders()
+            for tsf_name, tsf_inst in test_setup_folders.items():
+                self.__all_test_setup_folders[tsf_name] = tsf_inst
+                if tsf_inst.test_modules.count > 0:
+                    self.__all_test_modules.update(tsf_inst.test_modules.fetch_test_modules())
+                if tsf_inst.folders.count > 0:
+                    tsfs_instance = tsf_inst.folders
+                    self.update_all_test_setup_folders(tsfs_instance)
+
     def get_all_test_modules(self):
-        return self.__test_modules.fetch_test_modules()
+        self.update_all_test_setup_folders()
+        self.__all_test_modules.update(self.__test_modules.fetch_test_modules())
+        return self.__all_test_modules
+
+
+class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestSetupFolders:
+    """The TestSetupFolders object represents the folders in a test environment or in a test setup folder."""
+    def __init__(self, test_env_com_obj) -> None:
+        self.com_obj = test_env_com_obj.Folders
+
+    @property
+    def count(self) -> int:
+        return self.com_obj.Count
+
+    def add(self, full_name: str) -> object:
+        return self.com_obj.Add(full_name)
+
+    def remove(self, index: int, prompt_user=False) -> None:
+        self.com_obj.Remove(index, prompt_user)
+
+    def fetch_test_setup_folders(self) -> dict:
+        test_setup_folders = dict()
+        for index in range(1, self.count + 1):
+            tsf_com_obj = win32com.client.Dispatch(self.com_obj.Item(index))
+            tsf_inst = CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestSetupFoldersTestSetupFolderExt(tsf_com_obj)
+            test_setup_folders[tsf_inst.name] = tsf_inst
+        return test_setup_folders
+
+
+class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestSetupFoldersTestSetupFolderExt:
+    """The TestSetupFolderExt object represents a directory in CANoe's test setup."""
+    def __init__(self, test_setup_folder_ext_com_obj) -> None:
+        self.com_obj = test_setup_folder_ext_com_obj
+
+    @property
+    def enabled(self) -> bool:
+        return self.com_obj.Enabled
+
+    @enabled.setter
+    def enabled(self, enabled: bool) -> None:
+        self.com_obj.Enabled = enabled
+
+    @property
+    def name(self):
+        return self.com_obj.Name
+
+    @property
+    def folders(self):
+        return CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestSetupFolders(self.com_obj)
+
+    @property
+    def test_modules(self):
+        return CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModules(self.com_obj)
+
+    def execute_all(self):
+        self.com_obj.ExecuteAll()
+
+    def stop_sequence(self):
+        self.com_obj.StopSequence()
 
 
 class CanoeConfigurationTestSetupTestEnvironmentsTestEnvironmentTestModules:
