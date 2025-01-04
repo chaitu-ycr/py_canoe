@@ -1,0 +1,553 @@
+;CANoe Version |4|11|0|36597 demo_test_environment_002 
+Version: 11.0.96 Build 96
+32 PRO
+5
+APPDIR Vector.CANoe.SignalGenerators.DLL
+Vector.CANoe.SignalGenerators, Version=11.0.96.0, Culture=neutral, PublicKeyToken=null
+Vector.CANoe.SignalGenerators.ComponentWrapper
+1
+1.0.1
+VTSPersistentRoot 1 Begin_Of_Object
+1
+1
+TS_PERSISTENT_ROOT_ID_STRING_0x792341fe
+1
+3
+VTSProgrammedNode 2 Begin_Of_Object
+1
+VTSWrapper<class_VProgrammedNode> 3 Begin_Of_Object
+2
+VTSItem 4 Begin_Of_Object
+1
+3 919125060 0
+1
+END_OF_ITEM_DATA
+End_Of_Object VTSItem 4
+2
+VCaplTestNode 4 Begin_Of_Object
+2
+VTestNode 5 Begin_Of_Object
+8
+VProgrammedNode 6 Begin_Of_Object
+6
+VConfigurationRoot 7 Begin_Of_Object
+1
+End_Of_Object VConfigurationRoot 7
+<VFileName V7 QL> 1 "demo_test_node_002.can" 
+1
+D:\git_repos\chaitu-ycr\py_canoe\tests\demo_cfg\TestNodes\demo_test_node_002.cbf
+
+
+5
+demo_test_node_002
+Test 2
+EOF_TITLE_INFO
+
+1
+1
+VConfigurationBox 7 Begin_Of_Object
+1
+VUniqueBox 8 Begin_Of_Object
+1
+VBoxRoot 9 Begin_Of_Object
+1
+3
+1 1 0 1 -1 -1 -1 -1 2 243 352 493
+
+1
+
+MDI_DOCK_INFO_END
+5
+1
+6
+0 1 -1 -1 -1 -1 2 243 352 493
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+1
+1343 546
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 -1 -1 -1 -1 2 243 352 493
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+1
+1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+1
+1343 639
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+1
+1
+0 1 -1 -1 -1 -1 341 184 1025 554
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+END_OF_DESKTOP_DATA_COLLECTION
+0
+0 1
+1
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 341 184 1025 554
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 341 184 1025 554
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+END_OF_DESKTOP_DATA_COLLECTION
+0
+END_OF_DESKTOP_MEMBER
+{0CCBDA98-FBB4-4790-BED6-DE6B07A2595C}
+0
+End_Of_Object VBoxRoot 9
+1 -1 0 0 0 0 0 0 0 0 0 0
+End_Of_Object VUniqueBox 8
+1
+End_Of_Object VConfigurationBox 7
+1
+1
+0
+1
+0
+
+EOF_MBSSDATA
+2
+0 1
+1 1
+0
+EOF_NLDATA
+0
+EOF_ASSEMBLYDATA
+<VFileName V7 QL> 1 "demo_test_node_002.cbf" 
+VIPBStackSetting 7 Begin_Of_Object
+6
+2
+0
+0
+1
+0
+1
+7
+0.0.0.0
+End_Of_Serialized_Data 7
+7
+::
+End_Of_Serialized_Data 7
+2
+End_Of_Object VIPBStackSetting 7
+6
+NULL
+End_Of_Serialized_Data 6
+0
+<VFileName V7 QL> 0 "" 
+1
+0
+End_Of_Object VProgrammedNode 6
+0
+2
+IDS_REPORTFILTER_ITEM_DESCRIPTION=1
+IDS_REPORTFILTER_ITEM_COMMENTS=1
+IDS_REPORTFILTER_ITEM_VARIABLE=1
+IDS_REPORTFILTER_ITEM_RESUME_SIMPLETIMEOUT=1
+IDS_REPORTFILTER_ITEM_RESUME=1
+IDS_REPORTFILTER_ITEM_FIRSTVIOLATION=1
+IDS_REPORTFILTER_ITEM_STATISTICS=1
+IDS_REPORTFILTER_ITEM_HARDWARE=1
+IDS_REPORTFILTER_ITEM_CHECKEVENTS=0
+IDS_REPORTFITLER_ITEM_GENINFO=1
+IDS_REPORTFITLER_ITEM_SUTINFO=1
+IDS_REPORTFITLER_ITEM_ENGINFO=1
+IDS_REPORTFITLER_ITEM_ELMINFO=1
+End_Of_ReportFilter_Items
+0 
+NULL
+NULL
+0
+<VFileName V7 QL> 1 "demo_test_node_002_report.vtestreport" 
+1 0 1
+1
+<VFileName V7 BQL> 1 base=cfg "..\" 
+3
+VSimulinkModelViewerConfiguration 6 Begin_Of_Object
+2
+<VFileName V7 QL> 0 "" 
+<VFileName V7 QL> 0 "" 
+<VFileName V7 QL> 0 "" 
+150
+0
+End_Of_Object VSimulinkModelViewerConfiguration 6
+1
+0
+1
+1
+VConfigurationBox 6 Begin_Of_Object
+1
+VUniqueBox 7 Begin_Of_Object
+1
+VBoxRoot 8 Begin_Of_Object
+1
+3
+1 1 0 1 -1 -1 -1 -1 2 243 352 493
+
+1
+
+MDI_DOCK_INFO_END
+5
+1
+6
+0 1 -1 -1 -1 -1 2 243 352 493
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+1
+1343 546
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 -1 -1 -1 -1 2 243 352 493
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+1
+1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+1
+1343 639
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+1
+1
+0 1 -1 -1 -1 -1 341 184 1025 554
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+END_OF_DESKTOP_DATA_COLLECTION
+0
+0 1
+1
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 466 262 1399 788
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 341 184 1025 554
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+6
+0 1 0 0 -1 -1 240 280 590 530
+6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 32767 0 0 0 0 0 0 0 0 0 0 -1 -1 0 0 0 0 0 0 
+END_OF_DOCK_INFO
+0
+-1
+1
+0 1 -1 -1 -1 -1 341 184 1025 554
+0
+0
+0 0
+END_OF_DESKTOP_DATA
+END_OF_DESKTOP_DATA_COLLECTION
+0
+END_OF_DESKTOP_MEMBER
+{0CCBDA98-FBB4-4790-BED6-DE6B07A2595C}
+0
+End_Of_Object VBoxRoot 8
+1 -1 0 0 0 0 0 0 0 0 0 0
+End_Of_Object VUniqueBox 7
+1
+End_Of_Object VConfigurationBox 6
+NULL
+0
+0
+End_Of_Object VTestNode 5
+VTestModuleControllerCapl 5 Begin_Of_Object
+1
+VTestModuleController 6 Begin_Of_Object
+3
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+End_Of_Object VTestModuleController 6
+End_Of_Object VTestModuleControllerCapl 5
+End_Of_Object VCaplTestNode 4
+TS_WRP_DATA_END
+End_Of_Object VTSWrapper<class_VProgrammedNode> 3
+4
+0
+1
+TS_BUS_INFO_COLLECTION_END
+TS_CAPL_BLOCK_END
+End_Of_Object VTSProgrammedNode 2
+VTSFolder 2 Begin_Of_Object
+1
+VTSItem 3 Begin_Of_Object
+1
+3 1545733044 0
+1
+END_OF_ITEM_DATA
+End_Of_Object VTSItem 3
+4
+sub_folder
+1
+919125060
+<VFileName V7 QL> 1 "..\report.xml" 
+END_OF_FILE_NAME
+<VFileName V7 QL> 1 "" 
+END_OF_FILE_NAME
+1
+1
+END_OF_FOLDER_DATA
+End_Of_Object VTSFolder 2
+VTSFolder 2 Begin_Of_Object
+1
+VTSItem 3 Begin_Of_Object
+1
+3 1545765396 0
+1
+END_OF_ITEM_DATA
+End_Of_Object VTSItem 3
+4
+demo_test_environment_002
+1
+1545733044
+<VFileName V7 QL> 1 "..\report.xml" 
+END_OF_FILE_NAME
+<VFileName V7 QL> 1 "" 
+END_OF_FILE_NAME
+1
+1
+END_OF_FOLDER_DATA
+End_Of_Object VTSFolder 2
+1
+1545765396
+3
+1
+919125060
+0
+1
+1545733044
+1
+919125060
+1
+1545765396
+1
+1545733044
+End_Of_Object VTSPersistentRoot 1

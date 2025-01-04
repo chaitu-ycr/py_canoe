@@ -173,4 +173,4 @@ tests/report/
 *.stcfg
 *.cbf
 *.sttse
-demo_test_environment_*.tse
+demo_test_environment_*ver*.tse
