@@ -478,7 +478,7 @@ class CANoe:
                 'standard_remote_total': can_bus_statistic_obj.StandardRemoteTotal,
                 'tx_error_count': can_bus_statistic_obj.TxErrorCount,
             }
-            self.__log.debug(f'👉 CAN Bus Statistics ℹ️nfo = {statistics_info}')
+            self.__log.debug(f'👉 CAN Bus Statistics info = {statistics_info}')
             return statistics_info
         except Exception as e:
             self.__log.error(f'😡 Error getting CAN Bus Statistics: {str(e)}')
@@ -502,7 +502,7 @@ class CANoe:
                             'major': self.version_com_obj.major,
                             'minor': self.version_com_obj.minor,
                             'patch': self.version_com_obj.Patch}
-            self.__log.debug('> CANoe Application.Version ℹ️nfo<'.center(50, '➖'))
+            self.__log.debug('> CANoe Application.Version info<'.center(50, '➖'))
             for k, v in version_info.items():
                 self.__log.debug(f'{k:<10}: {v}')
             self.__log.debug(''.center(50, '➖'))
@@ -530,7 +530,7 @@ class CANoe:
                     'channel': database_obj.Channel,
                     'full_name': database_obj.FullName
                     }
-            self.__log.debug(f'👉 {bus} bus databases ℹ️nfo = {dbcs_info}')
+            self.__log.debug(f'👉 {bus} bus databases info = {dbcs_info}')
             return dbcs_info
         except Exception as e:
             self.__log.error(f'😡 Error getting {bus} bus databases info: {str(e)}')
@@ -555,7 +555,7 @@ class CANoe:
                     'full_name': node_obj.FullName,
                     'active': node_obj.Active
                     }
-            self.__log.debug(f'👉 {bus} bus nodes ℹ️nfo = {nodes_info}')
+            self.__log.debug(f'👉 {bus} bus nodes info = {nodes_info}')
             return nodes_info
         except Exception as e:
             self.__log.error(f'😡 Error getting {bus} bus nodes info: {str(e)}')

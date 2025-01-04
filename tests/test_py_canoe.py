@@ -1,21 +1,22 @@
 import os
 from py_canoe import CANoe, wait
 
-class TestPyCanoe:
+class TestStandalonePyCanoe:
     @classmethod
     def setup_class(cls):
-        cls.file_path = os.path.dirname(os.path.abspath(__file__)).replace('/', '\\')
+        cls.file_path = os.path.dirname(os.path.abspath(__file__))
         cls.root_path = cls.file_path
-        cls.canoe_inst = CANoe(py_canoe_log_dir=fr'{cls.root_path}\.py_canoe_log', user_capl_functions=('addition_function', 'hello_world'))
-        cls.canoe_cfg_one_ch = fr'{cls.file_path}\demo_cfg\demo_can_one_ch.cfg'
-        cls.canoe_cfg_two_ch = fr'{cls.file_path}\demo_cfg\demo_can_two_ch.cfg'
-        cls.canoe_cfg_gen_db_setup = fr'{cls.file_path}\demo_cfg\demo_conf_gen_db_setup.cfg'
-        cls.canoe_cfg_dev = fr'{cls.file_path}\demo_cfg\demo_dev.cfg'
-        cls.canoe_cfg_diag = fr'{cls.file_path}\demo_cfg\demo_diag.cfg'
-        cls.canoe_cfg_eth_one_ch = fr'{cls.file_path}\demo_cfg\demo_eth_one_ch.cfg'
-        cls.canoe_cfg_offline = fr'{cls.file_path}\demo_cfg\demo_offline.cfg'
-        cls.canoe_cfg_test_setup = fr'{cls.file_path}\demo_cfg\demo_test_setup.cfg'
-        cls.canoe_cfg_demo = fr'{cls.file_path}\demo_cfg\demo.cfg'
+        cls.canoe_inst = CANoe(py_canoe_log_dir=os.path.join(cls.root_path, ".py_canoe_log"), user_capl_functions=('addition_function', 'hello_world'))
+        demo_cfg_dir = os.path.join(cls.file_path, "demo_cfg")
+        cls.canoe_cfg_one_ch = os.path.join(demo_cfg_dir, "demo_can_one_ch.cfg")
+        cls.canoe_cfg_two_ch = os.path.join(demo_cfg_dir, "demo_can_two_ch.cfg")
+        cls.canoe_cfg_gen_db_setup = os.path.join(demo_cfg_dir, "demo_conf_gen_db_setup.cfg")
+        cls.canoe_cfg_dev = os.path.join(demo_cfg_dir, "demo_dev.cfg")
+        cls.canoe_cfg_diag = os.path.join(demo_cfg_dir, "demo_diag.cfg")
+        cls.canoe_cfg_eth_one_ch = os.path.join(demo_cfg_dir, "demo_eth_one_ch.cfg")
+        cls.canoe_cfg_offline = os.path.join(demo_cfg_dir, "demo_offline.cfg")
+        cls.canoe_cfg_test_setup = os.path.join(demo_cfg_dir, "demo_test_setup.cfg")
+        cls.canoe_cfg_demo = os.path.join(demo_cfg_dir, "demo.cfg")
 
     def test_open_new_quit_methods(self):
         self.canoe_inst.new(auto_save=False, prompt_user=False)
@@ -48,7 +49,7 @@ class TestPyCanoe:
         self.canoe_inst.quit()
 
     def test_meas_offline_start_stop_restart_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_offline, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_offline)
         self.canoe_inst.add_offline_source_log_file(fr'{self.file_path}\demo_cfg\Logs\demo_log.blf')
         self.canoe_inst.start_measurement_in_animation_mode(animation_delay=200)
         self.canoe_inst.break_measurement_in_offline_mode()
@@ -69,7 +70,7 @@ class TestPyCanoe:
         assert self.canoe_inst.stop_measurement()
 
     def test_meas_save_saveas_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
         assert self.canoe_inst.save_configuration()
         assert self.canoe_inst.save_configuration_as(path=fr'{self.file_path}\demo_cfg\demo_v10.cfg',
                                                 major=10, minor=0, create_dir=True)
@@ -101,7 +102,7 @@ class TestPyCanoe:
         assert sig_val == 1
 
     def test_ui_class_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
         self.canoe_inst.ui_activate_desktop('Configuration')
         self.canoe_inst.enable_write_window_output_file(fr'{self.file_path}\demo_cfg\Logs\write_win.txt')
         wait(1)
@@ -117,7 +118,7 @@ class TestPyCanoe:
         wait(1)
 
     def test_system_variable_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
         assert self.canoe_inst.start_measurement()
         wait(1)
         self.canoe_inst.set_system_variable_value('demo::level_two_1::sys_var2', 20)
@@ -147,7 +148,7 @@ class TestPyCanoe:
         wait(1)
 
     def test_diag_request_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_diag, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_diag)
         assert self.canoe_inst.start_measurement()
         wait(1)
         resp = self.canoe_inst.send_diag_request('Door', 'DefaultSession_Start', False)
@@ -162,6 +163,9 @@ class TestPyCanoe:
         wait(2)
         resp = self.canoe_inst.send_diag_request('Door', '10 03', return_sender_name=True)
         assert resp['Door'] == '50 03 00 00 00 00'
+        wait(2)
+        resp = self.canoe_inst.send_diag_request('Door', '22 F1 AA', return_sender_name=True)
+        assert '62 F1 AA' in resp['Door']
         assert self.canoe_inst.stop_measurement()
 
     def test_replay_block_methods(self):
@@ -186,7 +190,7 @@ class TestPyCanoe:
         assert self.canoe_inst.stop_measurement()
 
     def test_test_setup_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
         self.canoe_inst.ui_activate_desktop('TestSetup')
         assert self.canoe_inst.start_measurement()
         wait(1)
@@ -200,7 +204,7 @@ class TestPyCanoe:
         assert self.canoe_inst.stop_measurement()
 
     def test_env_var_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False, auto_stop=True)
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
         assert self.canoe_inst.start_measurement()
         wait(1)
         self.canoe_inst.set_environment_variable_value('int_var', 123.12)
@@ -224,3 +228,32 @@ class TestPyCanoe:
         assert self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
         assert self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
         assert self.canoe_inst.save_configuration()
+
+
+class TestPyCanoeFlask:
+    @classmethod
+    def setup_class(cls):
+        cls.file_path = os.path.dirname(os.path.abspath(__file__))
+        cls.root_path = cls.file_path
+        cls.canoe_inst = CANoe(py_canoe_log_dir=os.path.join(cls.root_path, ".py_canoe_log"), user_capl_functions=('addition_function', 'hello_world'))
+        demo_cfg_dir = os.path.join(cls.file_path, "demo_cfg")
+        cls.canoe_cfg_one_ch = os.path.join(demo_cfg_dir, "demo_can_one_ch.cfg")
+        cls.canoe_cfg_two_ch = os.path.join(demo_cfg_dir, "demo_can_two_ch.cfg")
+        cls.canoe_cfg_gen_db_setup = os.path.join(demo_cfg_dir, "demo_conf_gen_db_setup.cfg")
+        cls.canoe_cfg_dev = os.path.join(demo_cfg_dir, "demo_dev.cfg")
+        cls.canoe_cfg_diag = os.path.join(demo_cfg_dir, "demo_diag.cfg")
+        cls.canoe_cfg_eth_one_ch = os.path.join(demo_cfg_dir, "demo_eth_one_ch.cfg")
+        cls.canoe_cfg_offline = os.path.join(demo_cfg_dir, "demo_offline.cfg")
+        cls.canoe_cfg_test_setup = os.path.join(demo_cfg_dir, "demo_test_setup.cfg")
+        cls.canoe_cfg_demo = os.path.join(demo_cfg_dir, "demo.cfg")
+
+    def test_meas_start_stop_restart_methods(self):
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
+        assert self.canoe_inst.start_measurement()
+        assert self.canoe_inst.stop_measurement()
+        assert self.canoe_inst.start_measurement()
+        assert self.canoe_inst.reset_measurement()
+        assert self.canoe_inst.get_measurement_running_status()
+        assert self.canoe_inst.stop_ex_measurement()
+        assert not self.canoe_inst.get_measurement_running_status()
+        self.canoe_inst.quit()
