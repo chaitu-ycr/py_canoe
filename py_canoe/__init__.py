@@ -1,12 +1,12 @@
 # import external modules here
 import os
 import sys
+import time
 import logging
 import pythoncom
 import win32com.client
 from typing import Union
 from datetime import datetime
-from time import sleep as wait
 
 # import internal modules here
 from .py_canoe_logger import PyCanoeLogger
@@ -41,7 +41,6 @@ class CANoe:
     def __init_canoe_application(self):
         try:
             self.__log.debug('➖'*50)
-            wait(0.5)
             pythoncom.CoInitialize()
             wait(0.5)
             self.application_com_obj = win32com.client.Dispatch('CANoe.Application')
@@ -377,7 +376,7 @@ class CANoe:
         """
         try:
             meas_index = self.measurement_com_obj.MeasurementIndex
-            self.__log.debug(f'👉 measurement_index value 🟰 {meas_index}')
+            self.__log.debug(f'👉 measurement_index value = {meas_index}')
             return meas_index
         except Exception as e:
             self.__log.error(f'😡 Error getting measurement index: {str(e)}')
@@ -394,7 +393,7 @@ class CANoe:
         """
         try:
             self.measurement_com_obj.MeasurementIndex = index
-            self.__log.debug(f'👉 measurement_index value set to ➡️ {index}')
+            self.__log.debug(f'👉 measurement_index value set to = {index}')
             return index
         except Exception as e:
             self.__log.error(f'😡 Error setting measurement index: {str(e)}')
@@ -479,7 +478,7 @@ class CANoe:
                 'standard_remote_total': can_bus_statistic_obj.StandardRemoteTotal,
                 'tx_error_count': can_bus_statistic_obj.TxErrorCount,
             }
-            self.__log.debug(f'👉 CAN Bus Statistics ℹ️nfo 🟰 {statistics_info}')
+            self.__log.debug(f'👉 CAN Bus Statistics ℹ️nfo = {statistics_info}')
             return statistics_info
         except Exception as e:
             self.__log.error(f'😡 Error getting CAN Bus Statistics: {str(e)}')
@@ -531,7 +530,7 @@ class CANoe:
                     'channel': database_obj.Channel,
                     'full_name': database_obj.FullName
                     }
-            self.__log.debug(f'👉 {bus} bus databases ℹ️nfo 🟰 {dbcs_info}')
+            self.__log.debug(f'👉 {bus} bus databases ℹ️nfo = {dbcs_info}')
             return dbcs_info
         except Exception as e:
             self.__log.error(f'😡 Error getting {bus} bus databases info: {str(e)}')
@@ -556,7 +555,7 @@ class CANoe:
                     'full_name': node_obj.FullName,
                     'active': node_obj.Active
                     }
-            self.__log.debug(f'👉 {bus} bus nodes ℹ️nfo 🟰 {nodes_info}')
+            self.__log.debug(f'👉 {bus} bus nodes ℹ️nfo = {nodes_info}')
             return nodes_info
         except Exception as e:
             self.__log.error(f'😡 Error getting {bus} bus nodes info: {str(e)}')
@@ -578,7 +577,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             signal_value = signal_obj.RawValue if raw_value else signal_obj.Value
-            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) 🟰 {signal_value}')
+            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) = {signal_value}')
             return signal_value
         except Exception as e:
             self.__log.error(f'😡 Error getting signal value: {str(e)}')
@@ -620,7 +619,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             signal_fullname = signal_obj.FullName
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name 🟰 {signal_fullname}')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name = {signal_fullname}')
             return signal_fullname
         except Exception as e:
             self.__log.error(f'😡 Error getting signal full name: {str(e)}')
@@ -641,7 +640,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             sig_online_status = signal_obj.IsOnline
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status 🟰 {sig_online_status}')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status = {sig_online_status}')
             return sig_online_status
         except Exception as e:
             self.__log.error(f'😡 Error checking signal online status: {str(e)}')
@@ -666,7 +665,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetSignal(channel, message, signal)
             sig_state = signal_obj.State
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state 🟰 {sig_state}')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state = {sig_state}')
             return sig_state
         except Exception as e:
             self.__log.error(f'😡 Error checking signal state: {str(e)}')
@@ -689,7 +688,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             signal_value = signal_obj.RawValue if raw_value else signal_obj.Value
-            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) 🟰 {signal_value}')
+            self.__log.debug(f'👉 value of signal({bus}{channel}.{message}.{signal}) = {signal_value}')
             return signal_value
         except Exception as e:
             self.__log.error(f'😡 Error getting signal value: {str(e)}')
@@ -737,7 +736,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             signal_fullname = signal_obj.FullName
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name 🟰 {signal_fullname}')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) full name = {signal_fullname}')
             return signal_fullname
         except Exception as e:
             self.__log.error(f'😡 Error getting signal full name: {str(e)}')
@@ -760,7 +759,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             sig_online_status = signal_obj.IsOnline
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status 🟰 {sig_online_status}')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) online status = {sig_online_status}')
             return sig_online_status
         except Exception as e:
             self.__log.error(f'😡 Error checking signal online status: {str(e)}')
@@ -779,7 +778,7 @@ class CANoe:
         try:
             signal_obj = self.application_com_obj.GetBus(bus).GetJ1939Signal(channel, message, signal, source_addr, dest_addr)
             sig_state = signal_obj.State
-            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state 🟰 {sig_state}')
+            self.__log.debug(f'👉 signal({bus}{channel}.{message}.{signal}) state = {sig_state}')
             return sig_state
         except Exception as e:
             self.__log.error(f'😡 Error checking signal state: {str(e)}')
@@ -855,10 +854,10 @@ class CANoe:
         try:
             if tab_index:
                 self.ui_write_window_com_obj.EnableOutputFile(output_file, tab_index)
-                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file🟰{output_file} and tab_index🟰{tab_index}')
+                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file={output_file} and tab_index={tab_index}')
             else:
                 self.ui_write_window_com_obj.EnableOutputFile(output_file)
-                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file🟰{output_file}')
+                self.__log.debug(f'✔️ Enabled logging of outputs of the Write Window. output_file={output_file}')
         except Exception as e:
             self.__log.error(f'😡 Error enabling Write Window output file: {str(e)}')
 
@@ -871,7 +870,7 @@ class CANoe:
         try:
             if tab_index:
                 self.ui_write_window_com_obj.DisableOutputFile(tab_index)
-                self.__log.debug(f'⏹️ Disabled logging of outputs of the Write Window. tab_index🟰{tab_index}')
+                self.__log.debug(f'⏹️ Disabled logging of outputs of the Write Window. tab_index={tab_index}')
             else:
                 self.ui_write_window_com_obj.DisableOutputFile()
                 self.__log.debug(f'⏹️ Disabled logging of outputs of the Write Window')
@@ -920,7 +919,7 @@ class CANoe:
                 return_value = var_value_name
             else:
                 return_value = var_value
-            self.__log.debug(f'👉 system variable({sys_var_name}) value 🟰 {return_value}')
+            self.__log.debug(f'👉 system variable({sys_var_name}) value = {return_value}')
         except Exception as e:
             self.__log.debug(f'😡 failed to get system variable({sys_var_name}) value. {e}')
         return return_value
@@ -991,7 +990,7 @@ class CANoe:
         diag_response_including_sender_name = {}
         try:
             if diag_ecu_qualifier_name in self.__diag_devices.keys():
-                self.__log.debug(f'💉 {diag_ecu_qualifier_name}: Diagnostic Request 🟰 {request}')
+                self.__log.debug(f'💉 {diag_ecu_qualifier_name}: Diagnostic Request = {request}')
                 if request_in_bytes:
                     diag_req = self.__diag_devices[diag_ecu_qualifier_name].create_request_from_stream(request)
                 else:
@@ -1033,7 +1032,7 @@ class CANoe:
                     else:
                         diag_device.stop_tester_present()
                         self.__log.debug(f'⏱️🧍‍♂️ {diag_ecu_qualifier_name}: stopped tester present')
-                    wait(.1)
+                    wait(0.1)
                 else:
                     self.__log.warning(f'⚠️ {diag_ecu_qualifier_name}: tester present already set to {value}')
             else:
@@ -1108,7 +1107,7 @@ class CANoe:
         try:
             capl_obj = self.capl_obj()
             exec_sts = capl_obj.call_capl_function(CanoeMeasurementEvents.user_capl_function_obj_dict[name], *arguments)
-            self.__log.debug(f'🛫 triggered capl function({name}). execution status 🟰 {exec_sts}')
+            self.__log.debug(f'🛫 triggered capl function({name}). execution status = {exec_sts}')
             return exec_sts
         except Exception as e:
             self.__log.error(f'😡 failed to call capl function({name}). {e}')
@@ -1175,9 +1174,9 @@ class CANoe:
                 else:
                     continue
             if test_module_found and (execution_result == 1):
-                self.__log.debug(f'✔️ test module "{test_env_name}.{test_module_name}" executed and verdict 🟰 {test_verdict[execution_result]}')
+                self.__log.debug(f'✔️ test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}')
             elif test_module_found and (execution_result != 1):
-                self.__log.debug(f'😵‍💫 test module "{test_env_name}.{test_module_name}" executed and verdict 🟰 {test_verdict[execution_result]}')
+                self.__log.debug(f'😵‍💫 test module "{test_env_name}.{test_module_name}" executed and verdict = {test_verdict[execution_result]}')
             else:
                 self.__log.warning(f'⚠️ test module "{test_module_name}" not found. not possible to execute')
             return execution_result
@@ -1275,7 +1274,7 @@ class CANoe:
         try:
             variable = self.environment_obj_inst.get_variable(env_var_name)
             var_value = variable.value if variable.type != 3 else tuple(variable.value)
-            self.__log.debug(f'👉 environment variable({env_var_name}) value 🟰 {var_value}')
+            self.__log.debug(f'👉 environment variable({env_var_name}) value = {var_value}')
         except Exception as e:
             self.__log.error(f'😡 failed to get environment variable({env_var_name}) value. {e}')
         return var_value
@@ -1298,7 +1297,7 @@ class CANoe:
             else:
                 converted_value = tuple(value)
             variable.value = converted_value
-            self.__log.debug(f'👉 environment variable({env_var_name}) value 🟰 {converted_value}')
+            self.__log.debug(f'👉 environment variable({env_var_name}) value = {converted_value}')
         except Exception as e:
             self.__log.error(f'😡 failed to set system variable({env_var_name}) value. {e}')
 
@@ -1362,9 +1361,20 @@ class CANoe:
             return False
 
 
-def DoApplicationEvents() -> None:
+def wait(timeout_seconds=0.1):
+    """Waits for a specified timeout, pumping Windows messages.
+
+    Args:
+        timeout_seconds: The time to wait in seconds.
+
+    Returns:
+        None
+    """
     pythoncom.PumpWaitingMessages()
-    wait(.1)
+    time.sleep(timeout_seconds)
+
+def DoApplicationEvents() -> None:
+    wait(0.1)
 
 def DoApplicationEventsUntil(cond, timeout) -> None:
     base_time = datetime.now()
@@ -1378,8 +1388,7 @@ def DoApplicationEventsUntil(cond, timeout) -> None:
             break
 
 def DoMeasurementEvents() -> None:
-    pythoncom.PumpWaitingMessages()
-    wait(.1)
+    wait(0.1)
 
 def DoMeasurementEventsUntil(cond, timeout) -> None:
     base_time = datetime.now()
@@ -1393,16 +1402,14 @@ def DoMeasurementEventsUntil(cond, timeout) -> None:
             break
 
 def DoTestModuleEvents():
-    pythoncom.PumpWaitingMessages()
-    wait(.1)
+    wait(0.1)
 
 def DoTestModuleEventsUntil(condition):
     while not condition():
         DoTestModuleEvents()
 
 def DoEnvVarEvents():
-    pythoncom.PumpWaitingMessages()
-    wait(.1)
+    wait(0.1)
 
 def DoEnvVarEventsUntil(condition):
     while not condition():
@@ -1997,7 +2004,7 @@ class CanoeEnvironmentVariable:
     @value.setter
     def value(self, value):
         self.com_obj.Value = value
-        wait(.1)
+        wait(0.1)
 
 
 class CanoeEnvironmentInfo:

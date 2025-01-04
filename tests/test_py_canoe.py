@@ -1,6 +1,5 @@
 import os
-from time import sleep as wait
-from py_canoe import CANoe
+from py_canoe import CANoe, wait
 
 class TestPyCanoe:
     @classmethod
