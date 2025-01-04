@@ -1,6 +1,5 @@
 # import external modules here
 import os
-import sys
 import time
 import logging
 import pythoncom
@@ -11,6 +10,13 @@ from datetime import datetime
 # import internal modules here
 from .py_canoe_logger import PyCanoeLogger
 
+
+class PyCanoeException(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
 
 class CANoe:
     """
@@ -25,130 +31,87 @@ class CANoe:
     CANOE_MEASUREMENT_STOPPED = False
 
     def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
-        try:
-            self.__log = PyCanoeLogger(py_canoe_log_dir).log
-            self.application_events_enabled = True
-            self.application_open_close_timeout = 60
-            self.simulation_events_enabled = False
-            self.measurement_events_enabled = True
-            self.measurement_start_stop_timeout = 60   # default value set to 60 seconds (1 minute)
-            self.configuration_events_enabled = False
-            self.__user_capl_functions = user_capl_functions
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe object: {str(e)}')
-            sys.exit(1)
+        self.__log = PyCanoeLogger(py_canoe_log_dir).log
+        self.application_events_enabled = True
+        self.application_open_close_timeout = 60
+        self.simulation_events_enabled = False
+        self.measurement_events_enabled = True
+        self.measurement_start_stop_timeout = 60   # default value set to 60 seconds (1 minute)
+        self.configuration_events_enabled = False
+        self.__user_capl_functions = user_capl_functions
 
     def __init_canoe_application(self):
-        try:
-            self.__log.debug('➖'*50)
-            pythoncom.CoInitialize()
-            wait(0.5)
-            self.application_com_obj = win32com.client.Dispatch('CANoe.Application')
-            self.wait_for_canoe_app_to_open = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_APPLICATION_OPENED, lambda: self.application_open_close_timeout)
-            self.wait_for_canoe_app_to_close = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_APPLICATION_CLOSED, lambda: self.application_open_close_timeout)
-            if self.application_events_enabled:
-                win32com.client.WithEvents(self.application_com_obj, CanoeApplicationEvents)
-            wait(0.5)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe application: {str(e)}')
-            sys.exit(1)
+        self.__log.debug('➖'*50)
+        pythoncom.CoInitialize()
+        wait(0.5)
+        self.application_com_obj = win32com.client.Dispatch('CANoe.Application')
+        self.wait_for_canoe_app_to_open = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_APPLICATION_OPENED, lambda: self.application_open_close_timeout)
+        self.wait_for_canoe_app_to_close = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_APPLICATION_CLOSED, lambda: self.application_open_close_timeout)
+        if self.application_events_enabled:
+            win32com.client.WithEvents(self.application_com_obj, CanoeApplicationEvents)
+        wait(0.5)
 
     def __init_canoe_application_bus(self):
-        try:
-            self.bus_com_obj = win32com.client.Dispatch(self.application_com_obj.Bus)
-            self.bus_databases = win32com.client.Dispatch(self.bus_com_obj.Databases)
-            self.bus_nodes = win32com.client.Dispatch(self.bus_com_obj.Nodes)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe bus: {str(e)}')
-            sys.exit(1)
+        self.bus_com_obj = win32com.client.Dispatch(self.application_com_obj.Bus)
+        self.bus_databases = win32com.client.Dispatch(self.bus_com_obj.Databases)
+        self.bus_nodes = win32com.client.Dispatch(self.bus_com_obj.Nodes)
 
     def __init_canoe_application_capl(self):
-        try:
-            self.capl_obj = lambda: CanoeCapl(self.application_com_obj)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe CAPL: {str(e)}')
-            sys.exit(1)
+        self.capl_obj = lambda: CanoeCapl(self.application_com_obj)
 
     def __init_canoe_application_configuration(self):
-        try:
-            self.configuration_com_obj = win32com.client.Dispatch(self.application_com_obj.Configuration)
-            if self.configuration_events_enabled:
-                win32com.client.WithEvents(self.configuration_com_obj, CanoeConfigurationEvents)
-            self.configuration_offline_setup = win32com.client.Dispatch(self.configuration_com_obj.OfflineSetup)
-            self.configuration_offline_setup_source = win32com.client.Dispatch(self.configuration_offline_setup.Source)
-            self.configuration_offline_setup_source_sources = win32com.client.Dispatch(self.configuration_offline_setup_source.Sources)
-            sources = self.configuration_offline_setup_source_sources
-            sources_count = sources.Count + 1
-            self.configuration_offline_setup_source_sources_paths = lambda: [sources.Item(index) for index in range(1, sources_count)]
-            self.configuration_online_setup = win32com.client.Dispatch(self.configuration_com_obj.OnlineSetup)
-            self.configuration_online_setup_bus_statistics = win32com.client.Dispatch(self.configuration_online_setup.BusStatistics)
-            self.configuration_online_setup_bus_statistics_bus_statistic = lambda bus_type, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics.BusStatistic(bus_type, channel))
-            self.configuration_general_setup = CanoeConfigurationGeneralSetup(self.configuration_com_obj)
-            self.configuration_simulation_setup = lambda: CanoeConfigurationSimulationSetup(self.configuration_com_obj)
-            self.__replay_blocks = self.configuration_simulation_setup().replay_collection.fetch_replay_blocks()
-            self.configuration_test_setup = lambda: CanoeConfigurationTestSetup(self.configuration_com_obj)
-            self.__test_setup_environments = self.configuration_test_setup().test_environments.fetch_all_test_environments()
-            self.__test_modules = list()
-            for te_name, te_inst in self.__test_setup_environments.items():
-                for tm_name, tm_inst in te_inst.get_all_test_modules().items():
-                    self.__test_modules.append({'name': tm_name, 'object': tm_inst, 'environment': te_name})
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe configuration: {str(e)}')
+        self.configuration_com_obj = win32com.client.Dispatch(self.application_com_obj.Configuration)
+        if self.configuration_events_enabled:
+            win32com.client.WithEvents(self.configuration_com_obj, CanoeConfigurationEvents)
+        self.configuration_offline_setup = win32com.client.Dispatch(self.configuration_com_obj.OfflineSetup)
+        self.configuration_offline_setup_source = win32com.client.Dispatch(self.configuration_offline_setup.Source)
+        self.configuration_offline_setup_source_sources = win32com.client.Dispatch(self.configuration_offline_setup_source.Sources)
+        sources = self.configuration_offline_setup_source_sources
+        sources_count = sources.Count + 1
+        self.configuration_offline_setup_source_sources_paths = lambda: [sources.Item(index) for index in range(1, sources_count)]
+        self.configuration_online_setup = win32com.client.Dispatch(self.configuration_com_obj.OnlineSetup)
+        self.configuration_online_setup_bus_statistics = win32com.client.Dispatch(self.configuration_online_setup.BusStatistics)
+        self.configuration_online_setup_bus_statistics_bus_statistic = lambda bus_type, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics.BusStatistic(bus_type, channel))
+        self.configuration_general_setup = CanoeConfigurationGeneralSetup(self.configuration_com_obj)
+        self.configuration_simulation_setup = lambda: CanoeConfigurationSimulationSetup(self.configuration_com_obj)
+        self.__replay_blocks = self.configuration_simulation_setup().replay_collection.fetch_replay_blocks()
+        self.configuration_test_setup = lambda: CanoeConfigurationTestSetup(self.configuration_com_obj)
+        self.__test_setup_environments = self.configuration_test_setup().test_environments.fetch_all_test_environments()
+        self.__test_modules = list()
+        for te_name, te_inst in self.__test_setup_environments.items():
+            for tm_name, tm_inst in te_inst.get_all_test_modules().items():
+                self.__test_modules.append({'name': tm_name, 'object': tm_inst, 'environment': te_name})
 
     def __init_canoe_application_environment(self):
-        try:
-            self.environment_obj_inst = CanoeEnvironment(self.application_com_obj)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe environment: {str(e)}')
-            sys.exit(1)
+        self.environment_obj_inst = CanoeEnvironment(self.application_com_obj)
 
     def __init_canoe_application_measurement(self):
-        try:
-            CanoeMeasurementEvents.application_com_obj = self.application_com_obj
-            CanoeMeasurementEvents.user_capl_function_names = self.__user_capl_functions
-            self.measurement_com_obj = win32com.client.Dispatch(self.application_com_obj.Measurement)
-            self.wait_for_canoe_meas_to_start = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_MEASUREMENT_STARTED, lambda: self.measurement_start_stop_timeout)
-            self.wait_for_canoe_meas_to_stop = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_MEASUREMENT_STOPPED, lambda: self.measurement_start_stop_timeout)
-            if self.measurement_events_enabled:
-                win32com.client.WithEvents(self.measurement_com_obj, CanoeMeasurementEvents)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe measurement: {str(e)}')
-            sys.exit(1)
+        CanoeMeasurementEvents.application_com_obj = self.application_com_obj
+        CanoeMeasurementEvents.user_capl_function_names = self.__user_capl_functions
+        self.measurement_com_obj = win32com.client.Dispatch(self.application_com_obj.Measurement)
+        self.wait_for_canoe_meas_to_start = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_MEASUREMENT_STARTED, lambda: self.measurement_start_stop_timeout)
+        self.wait_for_canoe_meas_to_stop = lambda: DoMeasurementEventsUntil(lambda: CANoe.CANOE_MEASUREMENT_STOPPED, lambda: self.measurement_start_stop_timeout)
+        if self.measurement_events_enabled:
+            win32com.client.WithEvents(self.measurement_com_obj, CanoeMeasurementEvents)
 
     def __init_canoe_application_networks(self):
-        try:
-            self.networks_com_obj = win32com.client.Dispatch(self.application_com_obj.Networks)
-            self.networks_obj = lambda: CanoeNetworks(self.networks_com_obj)
-            self.__diag_devices = self.networks_obj().fetch_all_diag_devices()
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe networks: {str(e)}')
-            sys.exit(1)
+        self.networks_com_obj = win32com.client.Dispatch(self.application_com_obj.Networks)
+        self.networks_obj = lambda: CanoeNetworks(self.networks_com_obj)
+        self.__diag_devices = self.networks_obj().fetch_all_diag_devices()
 
     def __init_canoe_application_simulation(self):
         pass
 
     def __init_canoe_application_system(self):
-        try:
-            self.system_com_obj = win32com.client.Dispatch(self.application_com_obj.System)
-            self.system_obj = lambda: CanoeSystem(self.system_com_obj)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe system: {str(e)}')
-            sys.exit(1)
+        self.system_com_obj = win32com.client.Dispatch(self.application_com_obj.System)
+        self.system_obj = lambda: CanoeSystem(self.system_com_obj)
 
     def __init_canoe_application_ui(self):
-        try:
-            self.ui_com_obj = win32com.client.Dispatch(self.application_com_obj.UI)
-            self.ui_write_window_com_obj = win32com.client.Dispatch(self.ui_com_obj.Write)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe UI: {str(e)}')
-            sys.exit(1)
+        self.ui_com_obj = win32com.client.Dispatch(self.application_com_obj.UI)
+        self.ui_write_window_com_obj = win32com.client.Dispatch(self.ui_com_obj.Write)
 
     def __init_canoe_application_version(self):
-        try:
-            self.version_com_obj = win32com.client.Dispatch(self.application_com_obj.Version)
-        except Exception as e:
-            self.__log.error(f'😡 Error initializing CANoe version: {str(e)}')
-            sys.exit(1)
+        self.version_com_obj = win32com.client.Dispatch(self.application_com_obj.Version)
 
     def new(self, auto_save=False, prompt_user=False) -> None:
         try:
@@ -156,8 +119,9 @@ class CANoe:
             self.application_com_obj.New(auto_save, prompt_user)
             self.__log.debug(f'📢 New CANoe configuration successfully created 🎉')
         except Exception as e:
-            self.__log.error(f'😡 Error creating new CANoe configuration: {str(e)}')
-            sys.exit(1)
+            error_message = f'😡 Error creating new CANoe configuration: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def open(self, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, auto_stop=True) -> None:
         """Loads CANoe configuration.
@@ -169,20 +133,19 @@ class CANoe:
             prompt_user (bool, optional): A boolean value that indicates whether the user should intervene in error situations. Defaults to False.
             auto_stop (bool, optional): A boolean value that indicates whether to stop the measurement before opening the configuration. Defaults to True.
         """
-        self.__init_canoe_application()
-        self.__init_canoe_application_measurement()
-        self.__init_canoe_application_simulation()
-        self.__init_canoe_application_version()
         try:
+            self.__init_canoe_application()
+            self.__init_canoe_application_measurement()
+            self.__init_canoe_application_simulation()
+            self.__init_canoe_application_version()
             self.application_com_obj.Visible = visible
             if self.measurement_com_obj.Running and not auto_stop:
-                self.__log.error('😡 Measurement is running. Stop the measurement or set argument auto_stop=True')
-                sys.exit(1)
+                raise PyCanoeException('Measurement is running. Stop the measurement or set argument auto_stop=True')
             elif self.measurement_com_obj.Running and auto_stop:
                 self.__log.warning('😇 Active Measurement is running. Stopping measurement before opening your configuration')
                 self.stop_ex_measurement()
             if os.path.isfile(canoe_cfg):
-                self.__log.debug('⏳ wait for application to open')
+                self.__log.debug('⏳ waiting for application to open')
                 self.application_com_obj.Open(canoe_cfg, auto_save, prompt_user)
                 self.wait_for_canoe_app_to_open()
                 self.__init_canoe_application_bus()
@@ -194,17 +157,17 @@ class CANoe:
                 self.__init_canoe_application_ui()
                 self.__log.debug(f'📢 CANoe configuration successfully opened 🎉')
             else:
-                self.__log.error(f'😡 CANoe configuration "{canoe_cfg}" not found')
-                sys.exit(1)
+                raise PyCanoeException(f'CANoe configuration "{canoe_cfg}" not found')
         except Exception as e:
-            self.__log.error(f'😡 Error opening CANoe configuration: {str(e)}')
-            sys.exit(1)
+            error_message = f'😡 Error opening CANoe configuration: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def quit(self):
         """Quits CANoe without saving changes in the configuration."""
         try:
             wait(0.5)
-            self.__log.debug('⏳ wait for application to quit')
+            self.__log.debug('⏳ waiting for application to quit')
             self.application_com_obj.Quit()
             self.wait_for_canoe_app_to_close()
             wait(0.5)
@@ -212,8 +175,9 @@ class CANoe:
             self.application_com_obj = None
             self.__log.debug('📢 CANoe Application Closed')
         except Exception as e:
-            self.__log.error(f'😡 Error quitting CANoe application: {str(e)}')
-            sys.exit(1)
+            error_message = f'😡 Error quitting CANoe application: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def start_measurement(self, timeout=60) -> bool:
         """Starts the measurement.
@@ -237,8 +201,9 @@ class CANoe:
                     self.__log.debug(f'👉 CANoe Measurement {meas_run_sts[self.measurement_com_obj.Running]}')
             return self.measurement_com_obj.Running
         except Exception as e:
-            self.__log.error(f'😡 Error starting measurement: {str(e)}')
-            sys.exit(1)
+            error_message = f'😡 Error starting measurement: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def stop_measurement(self, timeout=60) -> bool:
         """Stops the measurement.
@@ -273,8 +238,9 @@ class CANoe:
                 self.__log.warning(f'⚠️ CANoe Measurement already stopped 🧍‍♂️')
             return not self.measurement_com_obj.Running
         except Exception as e:
-            self.__log.error(f'😡 Error stopping measurement: {str(e)}')
-            sys.exit(1)
+            error_message = f'😡 Error stopping measurement: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def reset_measurement(self) -> bool:
         """reset(stop and start) the measurement.
@@ -288,8 +254,9 @@ class CANoe:
             self.__log.debug(f'👉 active measurement resetted 🔁')
             return self.measurement_com_obj.Running
         except Exception as e:
-            self.__log.error(f'😡 Error resetting measurement: {str(e)}')
-            sys.exit(1)
+            error_message = f'😡 Error resetting measurement: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def get_measurement_running_status(self) -> bool:
         """Returns the running state of the measurement.
@@ -393,7 +360,7 @@ class CANoe:
         """
         try:
             self.measurement_com_obj.MeasurementIndex = index
-            self.__log.debug(f'👉 measurement_index value set to = {index}')
+            self.__log.debug(f'👉 measurement_index value set to {index}')
             return index
         except Exception as e:
             self.__log.error(f'😡 Error setting measurement index: {str(e)}')
@@ -1006,9 +973,9 @@ class CANoe:
                         diag_response_data = diag_res.stream
                         diag_response_including_sender_name[diag_res.sender] = diag_response_data
                         if diag_res.positive:
-                            self.__log.debug(f"🟢 {diag_res.sender}: ➕ Diagnostic Response 👉 {diag_response_data}")
+                            self.__log.debug(f"🟢 {diag_res.sender}: ➕ Diagnostic Response = {diag_response_data}")
                         else:
-                            self.__log.debug(f"🔴 {diag_res.Sender}: ➖ Diagnostic Response 👉 {diag_response_data}")
+                            self.__log.debug(f"🔴 {diag_res.Sender}: ➖ Diagnostic Response = {diag_response_data}")
             else:
                 self.__log.warning(f'⚠️ Diagnostic ECU qualifier({diag_ecu_qualifier_name}) not available in loaded CANoe config')
         except Exception as e:
