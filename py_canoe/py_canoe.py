@@ -53,8 +53,8 @@ class CANoe:
 
     def __init_canoe_application_bus(self):
         self.bus_com_obj = win32com.client.Dispatch(self.application_com_obj.Bus)
-        self.bus_databases = win32com.client.Dispatch(self.bus_com_obj.Databases)
-        self.bus_nodes = win32com.client.Dispatch(self.bus_com_obj.Nodes)
+        self.bus_databases_com_obj = win32com.client.Dispatch(self.bus_com_obj.Databases)
+        self.bus_nodes_com_obj = win32com.client.Dispatch(self.bus_com_obj.Nodes)
 
     def __init_canoe_application_capl(self):
         self.capl_obj = lambda: CanoeCapl(self.application_com_obj)
@@ -63,16 +63,18 @@ class CANoe:
         self.configuration_com_obj = win32com.client.Dispatch(self.application_com_obj.Configuration)
         if self.configuration_events_enabled:
             win32com.client.WithEvents(self.configuration_com_obj, CanoeConfigurationEvents)
-        self.configuration_offline_setup = win32com.client.Dispatch(self.configuration_com_obj.OfflineSetup)
-        self.configuration_offline_setup_source = win32com.client.Dispatch(self.configuration_offline_setup.Source)
-        self.configuration_offline_setup_source_sources = win32com.client.Dispatch(self.configuration_offline_setup_source.Sources)
-        sources = self.configuration_offline_setup_source_sources
+        self.configuration_offline_setup_com_obj = win32com.client.Dispatch(self.configuration_com_obj.OfflineSetup)
+        self.configuration_offline_setup_source_com_obj = win32com.client.Dispatch(self.configuration_offline_setup_com_obj.Source)
+        self.configuration_offline_setup_logging_collection = lambda: win32com.client.Dispatch(self.configuration_offline_setup_com_obj.LoggingCollection)
+        self.configuration_offline_setup_source_sources_com_obj = win32com.client.Dispatch(self.configuration_offline_setup_source_com_obj.Sources)
+        sources = self.configuration_offline_setup_source_sources_com_obj
         sources_count = sources.Count + 1
         self.configuration_offline_setup_source_sources_paths = lambda: [sources.Item(index) for index in range(1, sources_count)]
-        self.configuration_online_setup = win32com.client.Dispatch(self.configuration_com_obj.OnlineSetup)
-        self.configuration_online_setup_bus_statistics = win32com.client.Dispatch(self.configuration_online_setup.BusStatistics)
-        self.configuration_online_setup_bus_statistics_bus_statistic = lambda bus_type, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics.BusStatistic(bus_type, channel))
-        self.configuration_general_setup = CanoeConfigurationGeneralSetup(self.configuration_com_obj)
+        self.configuration_online_setup_com_obj = win32com.client.Dispatch(self.configuration_com_obj.OnlineSetup)
+        self.configuration_online_setup_bus_statistics_com_obj = win32com.client.Dispatch(self.configuration_online_setup_com_obj.BusStatistics)
+        self.configuration_online_setup_bus_statistics_bus_statistic = lambda bus_type, channel: win32com.client.Dispatch(self.configuration_online_setup_bus_statistics_com_obj.BusStatistic(bus_type, channel))
+        self.configuration_online_setup_logging_collection = lambda: win32com.client.Dispatch(self.configuration_online_setup_com_obj.LoggingCollection)
+        self.configuration_general_setup_obj = CanoeConfigurationGeneralSetup(self.configuration_com_obj)
         self.configuration_simulation_setup = lambda: CanoeConfigurationSimulationSetup(self.configuration_com_obj)
         self.__replay_blocks = self.configuration_simulation_setup().replay_collection.fetch_replay_blocks()
         self.configuration_test_setup = lambda: CanoeConfigurationTestSetup(self.configuration_com_obj)
@@ -283,7 +285,7 @@ class CANoe:
                 if file_already_added:
                     self.__log.warning(f'⚠️ File "{absolute_log_file_path}" already added as offline source')
                 else:
-                    self.configuration_offline_setup_source_sources.Add(absolute_log_file_path)
+                    self.configuration_offline_setup_source_sources_com_obj.Add(absolute_log_file_path)
                     self.__log.debug(f'📢 File "{absolute_log_file_path}" added as offline source')
                 return True
             else:
@@ -1281,14 +1283,14 @@ class CANoe:
                 self.__log.warning('⚠️ measurement is running. not possible to add database')
                 return False
             else:
-                databases = self.configuration_general_setup.database_setup.databases.fetch_databases()
+                databases = self.configuration_general_setup_obj.database_setup.databases.fetch_databases()
                 if database_file in [database.full_name for database in databases.values()]:
                     self.__log.warning(f'⚠️ database "{database_file}" already added')
                     return False
                 else:
-                    self.configuration_general_setup.database_setup.databases.add_network(database_file, database_network)
+                    self.configuration_general_setup_obj.database_setup.databases.add_network(database_file, database_network)
                     wait(1)
-                    databases = self.configuration_general_setup.database_setup.databases.fetch_databases()
+                    databases = self.configuration_general_setup_obj.database_setup.databases.fetch_databases()
                     for database in databases.values():
                         if database.full_name == database_file:
                             database.channel = database_channel
@@ -1311,7 +1313,7 @@ class CANoe:
                 self.__log.warning('⚠️ measurement is running. not possible to remove database')
                 return False
             else:
-                databases = self.configuration_general_setup.database_setup.databases
+                databases = self.configuration_general_setup_obj.database_setup.databases
                 if database_file not in [database.full_name for database in databases.fetch_databases().values()]:
                     self.__log.warning(f'⚠️ database "{database_file}" not available to remove')
                     return False
@@ -1319,13 +1321,70 @@ class CANoe:
                     for i in range(1, databases.count + 1):
                         database_com_obj = databases.com_obj.Item(i)
                         if database_com_obj.FullName == database_file and database_com_obj.Channel == database_channel:
-                            self.configuration_general_setup.database_setup.databases.remove(i)
+                            self.configuration_general_setup_obj.database_setup.databases.remove(i)
                             wait(1)
                             self.__log.debug(f'👉 database "{database_file}" removed from channel {database_channel}')
                             return True
         except Exception as e:
             self.__log.error(f'😡 failed to remove database "{database_file}". {e}')
             return False
+
+    def get_online_measurement_setup_logging_collection(self):
+        logging_collection_dict = {}
+        logging_collection_com_obj = self.configuration_online_setup_logging_collection()
+        count = logging_collection_com_obj.Count
+        if count > 0:
+            for i in range(1, count + 1):
+                logger_com_obj = win32com.client.Dispatch(logging_collection_com_obj.Item(i))
+                logging_collection_dict[logger_com_obj.FullName] = logger_com_obj
+        self.__log.debug(f"👉 online setup logging collection: {logging_collection_dict.keys()}")
+        return logging_collection_dict
+
+    def add_logging_block_to_online_measurement_setup(self, logger_full_name_including_path: str):
+        logging_collection_com_obj = self.configuration_online_setup_logging_collection()
+        if os.path.isfile(logger_full_name_including_path):
+            logging_collection_dict = self.get_online_measurement_setup_logging_collection()
+            if logger_full_name_including_path not in logging_collection_dict.keys():
+                logger_com_obj = logging_collection_com_obj.Add(logger_full_name_including_path)
+                self.__log.debug(f"😎 successfully added logger file ({logger_full_name_including_path}) to measurement setup.")
+                return {logger_full_name_including_path: logger_com_obj}
+            else:
+                self.__log.warning(f"⚠ logger file ({logger_full_name_including_path}) already added.")
+                return {}
+        else:
+            self.__log.error(f"😡 Invalid logger file ({logger_full_name_including_path})")
+            return {}
+
+    def get_online_measurement_setup_logging_block_active_state(self, logger_full_name_including_path: str):
+        logging_collection_dict = self.get_online_measurement_setup_logging_collection()
+        if logger_full_name_including_path in logging_collection_dict.keys():
+            logger_com_obj = logging_collection_dict.get(logger_full_name_including_path)
+            trigger_com_obj = win32com.client.Dispatch(logger_com_obj.Trigger)
+            self.__log.debug(f"😎 logger ({logger_full_name_including_path}) active state = {trigger_com_obj.Active}.")
+            return trigger_com_obj.Active
+        else:
+            self.__log.error(f"😡 logger ({logger_full_name_including_path}) not present in logging collection.")
+            return None
+
+    def start_stop_online_measurement_setup_logging_block(self, logger_full_name_including_path: str, start: bool):
+        start_stop_dict_map = {True: "Started", False: "stopped"}
+        logging_collection_dict = self.get_online_measurement_setup_logging_collection()
+        if logger_full_name_including_path in logging_collection_dict.keys():
+            logger_com_obj = logging_collection_dict.get(logger_full_name_including_path)
+            trigger_com_obj = win32com.client.Dispatch(logger_com_obj.Trigger)
+            if trigger_com_obj.Active == start:
+                self.__log.warning(f"⚠ logger ({logger_full_name_including_path}) already {start_stop_dict_map[start]}.")
+            else:
+                if start:
+                    trigger_com_obj.Start()
+                else:
+                    trigger_com_obj.Stop()
+                self.__log.debug(f"😎 successfully {start_stop_dict_map[start]} logger ({logger_full_name_including_path}).")
+            return True
+        else:
+            self.__log.error(f"😡 logger ({logger_full_name_including_path}) not present in logging collection.")
+            return False
+
 
 
 def wait(timeout_seconds=0.1):
