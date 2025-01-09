@@ -17,6 +17,7 @@ class TestStandalonePyCanoe:
         cls.canoe_cfg_offline = os.path.join(demo_cfg_dir, "demo_offline.cfg")
         cls.canoe_cfg_test_setup = os.path.join(demo_cfg_dir, "demo_test_setup.cfg")
         cls.canoe_cfg_demo = os.path.join(demo_cfg_dir, "demo.cfg")
+        cls.canoe_cfg_online_setup = os.path.join(demo_cfg_dir, "demo_online_setup.cfg")
 
     def test_open_new_quit_methods(self):
         self.canoe_inst.new(auto_save=False, prompt_user=False)
@@ -228,6 +229,26 @@ class TestStandalonePyCanoe:
         assert self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
         assert self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
         assert self.canoe_inst.save_configuration()
+
+    def test_online_setup_logging(self):
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_online_setup)
+        assert self.canoe_inst.start_measurement()
+        wait(1)
+        self.canoe_inst.start_stop_online_measurement_setup_logging_block(
+            'd:\\git_repos\\chaitu-ycr\\py_canoe\\tests\\demo_cfg\\Logs\\demo_online_setup_log.blf',
+            start=False,
+        )
+        wait(2)
+        self.canoe_inst.start_stop_online_measurement_setup_logging_block(
+            'd:\\git_repos\\chaitu-ycr\\py_canoe\\tests\\demo_cfg\\Logs\\demo_online_setup_log.blf',
+            start=True,
+        )
+        wait(2)
+        self.canoe_inst.start_stop_online_measurement_setup_logging_block(
+            'd:\\git_repos\\chaitu-ycr\\py_canoe\\tests\\demo_cfg\\Logs\\demo_online_setup_log.blf',
+            start=False,
+        )
+        assert self.canoe_inst.stop_measurement()
 
 
 class TestPyCanoeFlask:

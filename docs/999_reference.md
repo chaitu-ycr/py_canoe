@@ -1,3 +1,3 @@
 # package reference manual
 
-::: py_canoe.CANoe
+::: py_canoe.py_canoe.CANoe
