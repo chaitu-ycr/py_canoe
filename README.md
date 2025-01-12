@@ -267,8 +267,8 @@ canoe_inst.stop_measurement()
 
 ```python
 self.canoe_inst.open(canoe_cfg=self.canoe_cfg_gen_db_setup, visible=True, auto_save=True, prompt_user=False, auto_stop=True)
-        assert self.canoe_inst.start_measurement()
-        wait(1)
+self.canoe_inst.start_measurement()
+wait(1)
 # add database
 self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
 # remove database
@@ -279,12 +279,10 @@ self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_database
 
 ```python
 self.canoe_inst.open(canoe_cfg=self.canoe_cfg_online_setup)
-assert self.canoe_inst.start_measurement()
+self.canoe_inst.start_measurement()
 wait(1)
-
 # stop logging block
 self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=False)
-
 wait(2)
 # start logging block
 self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=True)
