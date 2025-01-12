@@ -7,17 +7,17 @@ class TestStandalonePyCanoe:
         cls.file_path = os.path.dirname(os.path.abspath(__file__))
         cls.root_path = cls.file_path
         cls.canoe_inst = CANoe(py_canoe_log_dir=os.path.join(cls.root_path, ".py_canoe_log"), user_capl_functions=('addition_function', 'hello_world'))
-        demo_cfg_dir = os.path.join(cls.file_path, "demo_cfg")
-        cls.canoe_cfg_one_ch = os.path.join(demo_cfg_dir, "demo_can_one_ch.cfg")
-        cls.canoe_cfg_two_ch = os.path.join(demo_cfg_dir, "demo_can_two_ch.cfg")
-        cls.canoe_cfg_gen_db_setup = os.path.join(demo_cfg_dir, "demo_conf_gen_db_setup.cfg")
-        cls.canoe_cfg_dev = os.path.join(demo_cfg_dir, "demo_dev.cfg")
-        cls.canoe_cfg_diag = os.path.join(demo_cfg_dir, "demo_diag.cfg")
-        cls.canoe_cfg_eth_one_ch = os.path.join(demo_cfg_dir, "demo_eth_one_ch.cfg")
-        cls.canoe_cfg_offline = os.path.join(demo_cfg_dir, "demo_offline.cfg")
-        cls.canoe_cfg_test_setup = os.path.join(demo_cfg_dir, "demo_test_setup.cfg")
-        cls.canoe_cfg_demo = os.path.join(demo_cfg_dir, "demo.cfg")
-        cls.canoe_cfg_online_setup = os.path.join(demo_cfg_dir, "demo_online_setup.cfg")
+        cls.demo_cfg_dir = os.path.join(cls.file_path, "demo_cfg")
+        cls.canoe_cfg_one_ch = os.path.join(cls.demo_cfg_dir, "demo_can_one_ch.cfg")
+        cls.canoe_cfg_two_ch = os.path.join(cls.demo_cfg_dir, "demo_can_two_ch.cfg")
+        cls.canoe_cfg_gen_db_setup = os.path.join(cls.demo_cfg_dir, "demo_conf_gen_db_setup.cfg")
+        cls.canoe_cfg_dev = os.path.join(cls.demo_cfg_dir, "demo_dev.cfg")
+        cls.canoe_cfg_diag = os.path.join(cls.demo_cfg_dir, "demo_diag.cfg")
+        cls.canoe_cfg_eth_one_ch = os.path.join(cls.demo_cfg_dir, "demo_eth_one_ch.cfg")
+        cls.canoe_cfg_offline = os.path.join(cls.demo_cfg_dir, "demo_offline.cfg")
+        cls.canoe_cfg_test_setup = os.path.join(cls.demo_cfg_dir, "demo_test_setup.cfg")
+        cls.canoe_cfg_demo = os.path.join(cls.demo_cfg_dir, "demo.cfg")
+        cls.canoe_cfg_online_setup = os.path.join(cls.demo_cfg_dir, "demo_online_setup.cfg")
 
     def test_open_new_quit_methods(self):
         self.canoe_inst.new(auto_save=False, prompt_user=False)
@@ -234,20 +234,11 @@ class TestStandalonePyCanoe:
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_online_setup)
         assert self.canoe_inst.start_measurement()
         wait(1)
-        self.canoe_inst.start_stop_online_measurement_setup_logging_block(
-            'd:\\git_repos\\chaitu-ycr\\py_canoe\\tests\\demo_cfg\\Logs\\demo_online_setup_log.blf',
-            start=False,
-        )
+        self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=False)
         wait(2)
-        self.canoe_inst.start_stop_online_measurement_setup_logging_block(
-            'd:\\git_repos\\chaitu-ycr\\py_canoe\\tests\\demo_cfg\\Logs\\demo_online_setup_log.blf',
-            start=True,
-        )
+        self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=True)
         wait(2)
-        self.canoe_inst.start_stop_online_measurement_setup_logging_block(
-            'd:\\git_repos\\chaitu-ycr\\py_canoe\\tests\\demo_cfg\\Logs\\demo_online_setup_log.blf',
-            start=False,
-        )
+        self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=False)
         assert self.canoe_inst.stop_measurement()
 
 
@@ -257,16 +248,16 @@ class TestPyCanoeFlask:
         cls.file_path = os.path.dirname(os.path.abspath(__file__))
         cls.root_path = cls.file_path
         cls.canoe_inst = CANoe(py_canoe_log_dir=os.path.join(cls.root_path, ".py_canoe_log"), user_capl_functions=('addition_function', 'hello_world'))
-        demo_cfg_dir = os.path.join(cls.file_path, "demo_cfg")
-        cls.canoe_cfg_one_ch = os.path.join(demo_cfg_dir, "demo_can_one_ch.cfg")
-        cls.canoe_cfg_two_ch = os.path.join(demo_cfg_dir, "demo_can_two_ch.cfg")
-        cls.canoe_cfg_gen_db_setup = os.path.join(demo_cfg_dir, "demo_conf_gen_db_setup.cfg")
-        cls.canoe_cfg_dev = os.path.join(demo_cfg_dir, "demo_dev.cfg")
-        cls.canoe_cfg_diag = os.path.join(demo_cfg_dir, "demo_diag.cfg")
-        cls.canoe_cfg_eth_one_ch = os.path.join(demo_cfg_dir, "demo_eth_one_ch.cfg")
-        cls.canoe_cfg_offline = os.path.join(demo_cfg_dir, "demo_offline.cfg")
-        cls.canoe_cfg_test_setup = os.path.join(demo_cfg_dir, "demo_test_setup.cfg")
-        cls.canoe_cfg_demo = os.path.join(demo_cfg_dir, "demo.cfg")
+        cls.demo_cfg_dir = os.path.join(cls.file_path, "demo_cfg")
+        cls.canoe_cfg_one_ch = os.path.join(cls.demo_cfg_dir, "demo_can_one_ch.cfg")
+        cls.canoe_cfg_two_ch = os.path.join(cls.demo_cfg_dir, "demo_can_two_ch.cfg")
+        cls.canoe_cfg_gen_db_setup = os.path.join(cls.demo_cfg_dir, "demo_conf_gen_db_setup.cfg")
+        cls.canoe_cfg_dev = os.path.join(cls.demo_cfg_dir, "demo_dev.cfg")
+        cls.canoe_cfg_diag = os.path.join(cls.demo_cfg_dir, "demo_diag.cfg")
+        cls.canoe_cfg_eth_one_ch = os.path.join(cls.demo_cfg_dir, "demo_eth_one_ch.cfg")
+        cls.canoe_cfg_offline = os.path.join(cls.demo_cfg_dir, "demo_offline.cfg")
+        cls.canoe_cfg_test_setup = os.path.join(cls.demo_cfg_dir, "demo_test_setup.cfg")
+        cls.canoe_cfg_demo = os.path.join(cls.demo_cfg_dir, "demo.cfg")
 
     def test_meas_start_stop_restart_methods(self):
         self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev, visible=True, auto_save=False, prompt_user=False)
