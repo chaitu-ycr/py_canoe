@@ -319,8 +319,8 @@ canoe_inst.stop_measurement()
 </code></pre>
 <h3 id="addremove-database">add/remove database</h3>
 <pre><code class="language-python">self.canoe_inst.open(canoe_cfg=self.canoe_cfg_gen_db_setup, visible=True, auto_save=True, prompt_user=False, auto_stop=True)
-        assert self.canoe_inst.start_measurement()
-        wait(1)
+self.canoe_inst.start_measurement()
+wait(1)
 # add database
 self.canoe_inst.add_database(fr&quot;{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc&quot;, 'CAN1', 1)
 # remove database
@@ -328,12 +328,10 @@ self.canoe_inst.remove_database(fr&quot;{self.file_path}\demo_cfg\DBs\sample_dat
 </code></pre>
 <h3 id="startstop-online-measurement-setup-logging-block">start/stop online measurement setup logging block</h3>
 <pre><code class="language-python">self.canoe_inst.open(canoe_cfg=self.canoe_cfg_online_setup)
-assert self.canoe_inst.start_measurement()
+self.canoe_inst.start_measurement()
 wait(1)
-
 # stop logging block
 self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=False)
-
 wait(2)
 # start logging block
 self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=True)
@@ -390,5 +388,5 @@ self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-01-12 14:36:56.493084+00:00
+Build Date UTC : 2025-01-12 14:39:20.291250+00:00
 -->
