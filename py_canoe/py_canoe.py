@@ -1386,7 +1386,6 @@ class CANoe:
             return False
 
 
-
 def wait(timeout_seconds=0.1):
     """Waits for a specified timeout, pumping Windows messages.
 
