@@ -48,6 +48,7 @@ class Logging:
     def __init__(self, logging_com):
         self._com = win32com.client.Dispatch(logging_com)
 
+    @property
     def exporter(self) -> "Exporter":
         """This property returns an Exporter object."""
         return Exporter(self._com.Exporter)
@@ -69,6 +70,7 @@ class Logging:
     def full_name(self, fullname: str):
         self._com.FullName = fullname
 
+    @property
     def trigger(self) -> "Trigger":
         """This property returns a Trigger object."""
         return Trigger(self._com.Trigger)
@@ -129,10 +131,12 @@ class Exporter:
         """
         raise NotImplementedError("Destinations access is not implemented yet.")
 
+    @property
     def filter(self) -> "Filter":
         """Returns a Filter object"""
         return Filter(self._com.Filter)
 
+    @property
     def messages(self) -> list["Message"]:
         """Returns all messages that have been detected during loading.
 
@@ -162,6 +166,7 @@ class Exporter:
         """
         raise NotImplementedError("FileNameOptions access is not implemented yet.")
 
+    @property
     def symbols(self) -> list["ExporterSymbol"]:
         """Returns all symbols that have been detected during loading the source files.
 
@@ -313,6 +318,7 @@ class Message:
     def __init__(self, message_com):
         self._com = win32com.client.Dispatch(message_com)
 
+    @property
     def full_name(self) -> str:
         """This property determines the fully qualified name of a message.
 
@@ -333,6 +339,7 @@ class ExporterSymbol:
     def __init__(self, message_com):
         self._com = win32com.client.Dispatch(message_com)
 
+    @property
     def full_name(self) -> str:
         """This property returns the fully qualified symbol name."""
         return self._com.FullName

@@ -1369,15 +1369,15 @@ class CANoe:
 
         :param logger_index: indicates logger and its log files
         """
-        self.logging_collection.item(logger_index).exporter().load()
+        self.logging_collection.item(logger_index).exporter.load()
 
     def get_symbols(self, logger_index: int) -> list[ExporterSymbol]:
         """Return all exporter symbols from given logger."""
-        return self.logging_collection.item(logger_index).exporter().symbols()
+        return self.logging_collection.item(logger_index).exporter.symbols
 
     def get_messages(self, logger_index: int) -> list[Message]:
         """Return all messages from given logger."""
-        return self.logging_collection.item(logger_index).exporter().messages()
+        return self.logging_collection.item(logger_index).exporter.messages
 
     def add_filters_to_exporter(self, logger_index: int, full_names: Iterable):
         """Add messages and symbols to exporter filter by their full names.
@@ -1386,7 +1386,7 @@ class CANoe:
         :param full_names: of messages and symbols
 
         """
-        expo_filter = self.logging_collection.item(logger_index).exporter().filter()
+        expo_filter = self.logging_collection.item(logger_index).exporter.filter
         for name in full_names:
             expo_filter.add(name)
 
@@ -1396,7 +1396,7 @@ class CANoe:
         :param logger_index: indicates logger
 
         """
-        self.logging_collection.item(logger_index).exporter().save()
+        self.logging_collection.item(logger_index).exporter.save()
 
 
 def wait(timeout_seconds=0.1):
