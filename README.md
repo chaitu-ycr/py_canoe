@@ -287,3 +287,22 @@ wait(2)
 # start logging block
 self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=True)
 ```
+
+### working with logging blocks
+
+```python
+# remove current logging blocks
+for i in range(self.canoe_inst.logging_collection.count):
+    self.canoe_inst.remove_logging_block(1)  # iteration start from 1 and shifts after each delete
+
+# add a new block
+# define dest path with file format as asc, blf or other
+# may include field functions like {IncMeasurement}
+full_path = "C:/sample_log_{IncMeasurement}.blf"
+self.canoe_inst.add_logging_block(full_path)
+canoe_inst.start_measurement()
+# ...
+canoe_inst.stop_measurement()
+# log should be fully generated at this point for you to analyze
+```
+

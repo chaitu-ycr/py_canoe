@@ -2,12 +2,14 @@
 import os
 import time
 import logging
+
 import pythoncom
 import win32com.client
-from typing import Union
+from typing import Union, Iterable
 from datetime import datetime
 
 # import internal modules here
+from .logging_collection import LoggingCollection, Logging, ExporterSymbol, Message
 from .py_canoe_logger import PyCanoeLogger
 
 
@@ -115,6 +117,9 @@ class CANoe:
     def __init_canoe_application_version(self):
         self.version_com_obj = win32com.client.Dispatch(self.application_com_obj.Version)
 
+    def __init_logging_collection(self):
+        self.logging_collection = LoggingCollection(self.configuration_com_obj.OnlineSetup.LoggingCollection)
+
     def new(self, auto_save=False, prompt_user=False) -> None:
         try:
             self.__init_canoe_application()
@@ -157,6 +162,7 @@ class CANoe:
                 self.__init_canoe_application_networks()
                 self.__init_canoe_application_system()
                 self.__init_canoe_application_ui()
+                self.__init_logging_collection()
                 self.__log.debug(f'📢 CANoe configuration successfully opened 🎉')
             else:
                 raise PyCanoeException(f'CANoe configuration "{canoe_cfg}" not found')
@@ -1329,61 +1335,68 @@ class CANoe:
             self.__log.error(f'😡 failed to remove database "{database_file}". {e}')
             return False
 
-    def get_online_measurement_setup_logging_collection(self):
-        logging_collection_dict = {}
-        logging_collection_com_obj = self.configuration_online_setup_logging_collection()
-        count = logging_collection_com_obj.Count
-        if count > 0:
-            for i in range(1, count + 1):
-                logger_com_obj = win32com.client.Dispatch(logging_collection_com_obj.Item(i))
-                logging_collection_dict[logger_com_obj.FullName] = logger_com_obj
-        self.__log.debug(f"👉 online setup logging collection: {logging_collection_dict.keys()}")
-        return logging_collection_dict
+    def get_logging_blocks(self) -> list[Logging]:
+        """Return all available logging blocks."""
+        blocks = []
+        for i in range(1, self.logging_collection.count + 1):
+            blocks.append(self.logging_collection.item(i))
+        return blocks
 
-    def add_logging_block_to_online_measurement_setup(self, logger_full_name_including_path: str):
-        logging_collection_com_obj = self.configuration_online_setup_logging_collection()
-        if os.path.isfile(logger_full_name_including_path):
-            logging_collection_dict = self.get_online_measurement_setup_logging_collection()
-            if logger_full_name_including_path not in logging_collection_dict.keys():
-                logger_com_obj = logging_collection_com_obj.Add(logger_full_name_including_path)
-                self.__log.debug(f"😎 successfully added logger file ({logger_full_name_including_path}) to measurement setup.")
-                return {logger_full_name_including_path: logger_com_obj}
-            else:
-                self.__log.warning(f"⚠ logger file ({logger_full_name_including_path}) already added.")
-                return {}
-        else:
-            self.__log.error(f"😡 Invalid logger file ({logger_full_name_including_path})")
-            return {}
+    def add_logging_block(self, full_name: str) -> Logging:
+        """Adds new logging block.
 
-    def get_online_measurement_setup_logging_block_active_state(self, logger_full_name_including_path: str):
-        logging_collection_dict = self.get_online_measurement_setup_logging_collection()
-        if logger_full_name_including_path in logging_collection_dict.keys():
-            logger_com_obj = logging_collection_dict.get(logger_full_name_including_path)
-            trigger_com_obj = win32com.client.Dispatch(logger_com_obj.Trigger)
-            self.__log.debug(f"😎 logger ({logger_full_name_including_path}) active state = {trigger_com_obj.Active}.")
-            return trigger_com_obj.Active
-        else:
-            self.__log.error(f"😡 logger ({logger_full_name_including_path}) not present in logging collection.")
-            return None
+        :param full_name: full path to log file as "C:/file.(asc|blf|mf4|...)", may have
+                          field functions like {IncMeasurement} in the file name
 
-    def start_stop_online_measurement_setup_logging_block(self, logger_full_name_including_path: str, start: bool):
-        start_stop_dict_map = {True: "Started", False: "stopped"}
-        logging_collection_dict = self.get_online_measurement_setup_logging_collection()
-        if logger_full_name_including_path in logging_collection_dict.keys():
-            logger_com_obj = logging_collection_dict.get(logger_full_name_including_path)
-            trigger_com_obj = win32com.client.Dispatch(logger_com_obj.Trigger)
-            if trigger_com_obj.Active == start:
-                self.__log.warning(f"⚠ logger ({logger_full_name_including_path}) already {start_stop_dict_map[start]}.")
-            else:
-                if start:
-                    trigger_com_obj.Start()
-                else:
-                    trigger_com_obj.Stop()
-                self.__log.debug(f"😎 successfully {start_stop_dict_map[start]} logger ({logger_full_name_including_path}).")
-            return True
-        else:
-            self.__log.error(f"😡 logger ({logger_full_name_including_path}) not present in logging collection.")
-            return False
+        """
+        return self.logging_collection.add(full_name)
+
+    def remove_logging_block(self, index: int) -> None:
+        """Remove logging block at given index.
+
+        Blocks` indexes starts from 1 instead of 0. After one block is removed
+        the rest shift up e.g. having 3 loggers [L1, L2, L3] if we remove index=2
+        the new order will be [L1, L3] with indexes 1 and 2.
+
+        """
+        if index==0:
+            raise ValueError("Logging blocks indexing starts from 1 and not 0.")
+
+        self.logging_collection.remove(index)
+
+    def load_logs_for_exporter(self, logger_index: int) -> None:
+        """Load all source files of exporter and determine symbols/messages.
+
+        :param logger_index: indicates logger and its log files
+        """
+        self.logging_collection.item(logger_index).exporter().load()
+
+    def get_symbols(self, logger_index: int) -> list[ExporterSymbol]:
+        """Return all exporter symbols from given logger."""
+        return self.logging_collection.item(logger_index).exporter().symbols()
+
+    def get_messages(self, logger_index: int) -> list[Message]:
+        """Return all messages from given logger."""
+        return self.logging_collection.item(logger_index).exporter().messages()
+
+    def add_filters_to_exporter(self, logger_index: int, full_names: Iterable):
+        """Add messages and symbols to exporter filter by their full names.
+
+        :param logger_index: indicates logger
+        :param full_names: of messages and symbols
+
+        """
+        expo_filter = self.logging_collection.item(logger_index).exporter().filter()
+        for name in full_names:
+            expo_filter.add(name)
+
+    def start_export(self, logger_index: int):
+        """Starts the export/conversion of exporter.
+
+        :param logger_index: indicates logger
+
+        """
+        self.logging_collection.item(logger_index).exporter().save()
 
 
 def wait(timeout_seconds=0.1):
