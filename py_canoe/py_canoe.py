@@ -1398,6 +1398,18 @@ class CANoe:
         """
         self.logging_collection.item(logger_index).exporter.save()
 
+    def set_configuration_modified(self, modified: bool) -> None:
+        """Change status of configuration.
+
+        Modified=False makes it possible to load other config or close
+        the application without the popup "Do you want to save changes?".
+        Without that the application will stop on that popup.
+
+        :param modified: change configuration flag
+
+        """
+        self.configuration_com_obj.Modified = modified
+
 
 def wait(timeout_seconds=0.1):
     """Waits for a specified timeout, pumping Windows messages.
