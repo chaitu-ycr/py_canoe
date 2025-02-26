@@ -47,6 +47,10 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.add_database">add_database</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.add_filters_to_exporter">add_filters_to_exporter</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.add_logging_block">add_logging_block</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.add_offline_source_log_file">add_offline_source_log_file</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.break_measurement_in_offline_mode">break_measurement_in_offline_mode</a>
@@ -97,19 +101,27 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_j1939_signal_value">get_j1939_signal_value</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_logging_blocks">get_logging_blocks</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_measurement_index">get_measurement_index</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_measurement_running_status">get_measurement_running_status</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_messages">get_messages</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_signal_full_name">get_signal_full_name</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_signal_value">get_signal_value</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_symbols">get_symbols</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_system_variable_value">get_system_variable_value</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_test_environments">get_test_environments</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.get_test_modules">get_test_modules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.load_logs_for_exporter">load_logs_for_exporter</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.open">open</a>
     </li>
@@ -118,6 +130,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.read_text_from_write_window">read_text_from_write_window</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.remove_database">remove_database</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.remove_logging_block">remove_logging_block</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.reset_measurement">reset_measurement</a>
     </li>
@@ -128,6 +142,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.save_configuration_as">save_configuration_as</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.send_diag_request">send_diag_request</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.set_configuration_modified">set_configuration_modified</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.set_environment_variable_value">set_environment_variable_value</a>
     </li>
@@ -142,6 +158,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.set_system_variable_array_values">set_system_variable_array_values</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.set_system_variable_value">set_system_variable_value</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.start_export">start_export</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#py_canoe.py_canoe.CANoe.start_measurement">start_measurement</a>
     </li>
@@ -279,6 +297,44 @@ Args:
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.add_filters_to_exporter" class="doc doc-heading">
+            <code class="highlight language-python">add_filters_to_exporter(logger_index, full_names)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add messages and symbols to exporter filter by their full names.</p>
+<p>:param logger_index: indicates logger
+:param full_names: of messages and symbols</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.add_logging_block" class="doc doc-heading">
+            <code class="highlight language-python">add_logging_block(full_name)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Adds new logging block.</p>
+<p>:param full_name: full path to log file as "C:/file.(asc|blf|mf4|...)", may have
+                  field functions like {IncMeasurement} in the file name</p>
+
     </div>
 
 </div>
@@ -1728,6 +1784,23 @@ Args:
 <div class="doc doc-object doc-function">
 
 
+<h2 id="py_canoe.py_canoe.CANoe.get_logging_blocks" class="doc doc-heading">
+            <code class="highlight language-python">get_logging_blocks()</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return all available logging blocks.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="py_canoe.py_canoe.CANoe.get_measurement_index" class="doc doc-heading">
             <code class="highlight language-python">get_measurement_index()</code>
 
@@ -1808,6 +1881,23 @@ Args:
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.get_messages" class="doc doc-heading">
+            <code class="highlight language-python">get_messages(logger_index)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return all messages from given logger.</p>
+
     </div>
 
 </div>
@@ -2001,6 +2091,23 @@ Args:
 <div class="doc doc-object doc-function">
 
 
+<h2 id="py_canoe.py_canoe.CANoe.get_symbols" class="doc doc-heading">
+            <code class="highlight language-python">get_symbols(logger_index)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return all exporter symbols from given logger.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="py_canoe.py_canoe.CANoe.get_system_variable_value" class="doc doc-heading">
             <code class="highlight language-python">get_system_variable_value(sys_var_name, return_symbolic_name=False)</code>
 
@@ -2126,6 +2233,24 @@ Args:
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.load_logs_for_exporter" class="doc doc-heading">
+            <code class="highlight language-python">load_logs_for_exporter(logger_index)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Load all source files of exporter and determine symbols/messages.</p>
+<p>:param logger_index: indicates logger and its log files</p>
+
     </div>
 
 </div>
@@ -2313,6 +2438,26 @@ Args:
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.remove_logging_block" class="doc doc-heading">
+            <code class="highlight language-python">remove_logging_block(index)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Remove logging block at given index.</p>
+<p>Blocks` indexes starts from 1 instead of 0. After one block is removed
+the rest shift up e.g. having 3 loggers [L1, L2, L3] if we remove index=2
+the new order will be [L1, L3] with indexes 1 and 2.</p>
+
     </div>
 
 </div>
@@ -2592,6 +2737,27 @@ Args:
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.set_configuration_modified" class="doc doc-heading">
+            <code class="highlight language-python">set_configuration_modified(modified)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Change status of configuration.</p>
+<p>Modified=False makes it possible to load other config or close
+the application without the popup "Do you want to save changes?".
+Without that the application will stop on that popup.</p>
+<p>:param modified: change configuration flag</p>
+
     </div>
 
 </div>
@@ -3067,6 +3233,24 @@ Args:
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="py_canoe.py_canoe.CANoe.start_export" class="doc doc-heading">
+            <code class="highlight language-python">start_export(logger_index)</code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Starts the export/conversion of exporter.</p>
+<p>:param logger_index: indicates logger</p>
+
     </div>
 
 </div>
