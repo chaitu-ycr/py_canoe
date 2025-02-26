@@ -32,7 +32,11 @@
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
           <a href=".." class="icon icon-home"> py_canoe
-        </a>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
@@ -248,7 +252,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.add_database" class="doc doc-heading">
-            <code class="highlight language-python">add_database(database_file, database_network, database_channel)</code>
+            <code class="highlight language-python"><span class="n">add_database</span><span class="p">(</span><span class="n">database_file</span><span class="p">,</span> <span class="n">database_network</span><span class="p">,</span> <span class="n">database_channel</span><span class="p">)</span></code>
 
 </h2>
 
@@ -270,7 +274,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>database_file</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>database file to attach. give full file path.</p>
@@ -278,7 +282,7 @@ Args:
             </li>
             <li>
               <b><code>database_network</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>network name on which you want to add this database.</p>
@@ -286,7 +290,7 @@ Args:
             </li>
             <li>
               <b><code>database_channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>channel name on which you want to add this database.</p>
@@ -305,7 +309,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.add_filters_to_exporter" class="doc doc-heading">
-            <code class="highlight language-python">add_filters_to_exporter(logger_index, full_names)</code>
+            <code class="highlight language-python"><span class="n">add_filters_to_exporter</span><span class="p">(</span><span class="n">logger_index</span><span class="p">,</span> <span class="n">full_names</span><span class="p">)</span></code>
 
 </h2>
 
@@ -324,7 +328,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.add_logging_block" class="doc doc-heading">
-            <code class="highlight language-python">add_logging_block(full_name)</code>
+            <code class="highlight language-python"><span class="n">add_logging_block</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -343,7 +347,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.add_offline_source_log_file" class="doc doc-heading">
-            <code class="highlight language-python">add_offline_source_log_file(absolute_log_file_path)</code>
+            <code class="highlight language-python"><span class="n">add_offline_source_log_file</span><span class="p">(</span><span class="n">absolute_log_file_path</span><span class="p">)</span></code>
 
 </h2>
 
@@ -365,7 +369,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>absolute_log_file_path</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>absolute path of offline source log file.</p>
@@ -388,7 +392,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>bool</code></b>(                  <code>bool</code>
+<b><code>bool</code></b>(                  <code><span title="bool">bool</span></code>
 )              –
               <div class="doc-md-description">
                 <p>returns True if log file added or already available. False if log file not available.</p>
@@ -407,7 +411,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.break_measurement_in_offline_mode" class="doc doc-heading">
-            <code class="highlight language-python">break_measurement_in_offline_mode()</code>
+            <code class="highlight language-python"><span class="n">break_measurement_in_offline_mode</span><span class="p">()</span></code>
 
 </h2>
 
@@ -424,7 +428,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.call_capl_function" class="doc doc-heading">
-            <code class="highlight language-python">call_capl_function(name, *arguments)</code>
+            <code class="highlight language-python"><span class="n">call_capl_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">)</span></code>
 
 </h2>
 
@@ -448,7 +452,7 @@ not possible to read return value of CAPL function at the moment. only execution
         <ul class="first simple">
             <li>
               <b><code>name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the CAPL function. Please make sure this name is already passed as argument during CANoe instance creation. see example for more info.</p>
@@ -456,7 +460,7 @@ not possible to read return value of CAPL function at the moment. only execution
             </li>
             <li>
               <b><code>arguments</code></b>
-                  (<code>tuple</code>, default:
+                  (<code><span title="tuple">tuple</span></code>, default:
                       <code>()</code>
 )
               –
@@ -481,7 +485,7 @@ not possible to read return value of CAPL function at the moment. only execution
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>bool</code></b>(                  <code>bool</code>
+<b><code>bool</code></b>(                  <code><span title="bool">bool</span></code>
 )              –
               <div class="doc-md-description">
                 <p>CAPL function execution status. True-success, False-failed.</p>
@@ -500,7 +504,7 @@ not possible to read return value of CAPL function at the moment. only execution
 
 
 <h2 id="py_canoe.py_canoe.CANoe.check_j1939_signal_online" class="doc doc-heading">
-            <code class="highlight language-python">check_j1939_signal_online(bus, channel, message, signal, source_addr, dest_addr)</code>
+            <code class="highlight language-python"><span class="n">check_j1939_signal_online</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">)</span></code>
 
 </h2>
 
@@ -522,7 +526,7 @@ not possible to read return value of CAPL function at the moment. only execution
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -530,7 +534,7 @@ not possible to read return value of CAPL function at the moment. only execution
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -538,7 +542,7 @@ not possible to read return value of CAPL function at the moment. only execution
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -546,7 +550,7 @@ not possible to read return value of CAPL function at the moment. only execution
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -554,7 +558,7 @@ not possible to read return value of CAPL function at the moment. only execution
             </li>
             <li>
               <b><code>source_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The source address of the ECU that sends the message.</p>
@@ -562,7 +566,7 @@ not possible to read return value of CAPL function at the moment. only execution
             </li>
             <li>
               <b><code>dest_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The destination address of the ECU that receives the message.</p>
@@ -585,7 +589,7 @@ not possible to read return value of CAPL function at the moment. only execution
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>bool</code></b>(                  <code>bool</code>
+<b><code>bool</code></b>(                  <code><span title="bool">bool</span></code>
 )              –
               <div class="doc-md-description">
                 <p>TRUE: if the measurement is running and the signal has been received. FALSE: if not.</p>
@@ -604,7 +608,7 @@ not possible to read return value of CAPL function at the moment. only execution
 
 
 <h2 id="py_canoe.py_canoe.CANoe.check_j1939_signal_state" class="doc doc-heading">
-            <code class="highlight language-python">check_j1939_signal_state(bus, channel, message, signal, source_addr, dest_addr)</code>
+            <code class="highlight language-python"><span class="n">check_j1939_signal_state</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">)</span></code>
 
 </h2>
 
@@ -625,7 +629,7 @@ not possible to read return value of CAPL function at the moment. only execution
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>int</code></b>(                  <code>int</code>
+<b><code>int</code></b>(                  <code><span title="int">int</span></code>
 )              –
               <div class="doc-md-description">
                 <p>State of the signal.
@@ -648,7 +652,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.check_signal_online" class="doc doc-heading">
-            <code class="highlight language-python">check_signal_online(bus, channel, message, signal)</code>
+            <code class="highlight language-python"><span class="n">check_signal_online</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></code>
 
 </h2>
 
@@ -670,7 +674,7 @@ possible values are:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -678,7 +682,7 @@ possible values are:
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -686,7 +690,7 @@ possible values are:
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -694,7 +698,7 @@ possible values are:
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -717,7 +721,7 @@ possible values are:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>TRUE if the measurement is running and the signal has been received. FALSE if not.</p>
@@ -736,7 +740,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.check_signal_state" class="doc doc-heading">
-            <code class="highlight language-python">check_signal_state(bus, channel, message, signal)</code>
+            <code class="highlight language-python"><span class="n">check_signal_state</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></code>
 
 </h2>
 
@@ -758,7 +762,7 @@ possible values are:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -766,7 +770,7 @@ possible values are:
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -774,7 +778,7 @@ possible values are:
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -782,7 +786,7 @@ possible values are:
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -805,7 +809,7 @@ possible values are:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>int</code>
+                  <code><span title="int">int</span></code>
               –
               <div class="doc-md-description">
                 <p>State of the signal.
@@ -828,7 +832,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.clear_write_window_content" class="doc doc-heading">
-            <code class="highlight language-python">clear_write_window_content()</code>
+            <code class="highlight language-python"><span class="n">clear_write_window_content</span><span class="p">()</span></code>
 
 </h2>
 
@@ -845,7 +849,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.compile_all_capl_nodes" class="doc doc-heading">
-            <code class="highlight language-python">compile_all_capl_nodes()</code>
+            <code class="highlight language-python"><span class="n">compile_all_capl_nodes</span><span class="p">()</span></code>
 
 </h2>
 
@@ -862,7 +866,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.control_replay_block" class="doc doc-heading">
-            <code class="highlight language-python">control_replay_block(block_name, start_stop)</code>
+            <code class="highlight language-python"><span class="n">control_replay_block</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">start_stop</span><span class="p">)</span></code>
 
 </h2>
 
@@ -884,7 +888,7 @@ possible values are:
         <ul class="first simple">
             <li>
               <b><code>block_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>CANoe replay block name</p>
@@ -892,7 +896,7 @@ possible values are:
             </li>
             <li>
               <b><code>start_stop</code></b>
-                  (<code>bool</code>)
+                  (<code><span title="bool">bool</span></code>)
               –
               <div class="doc-md-description">
                 <p>True to start replay block. False to Stop.</p>
@@ -911,7 +915,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.control_tester_present" class="doc doc-heading">
-            <code class="highlight language-python">control_tester_present(diag_ecu_qualifier_name, value)</code>
+            <code class="highlight language-python"><span class="n">control_tester_present</span><span class="p">(</span><span class="n">diag_ecu_qualifier_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
 
 </h2>
 
@@ -933,7 +937,7 @@ possible values are:
         <ul class="first simple">
             <li>
               <b><code>diag_ecu_qualifier_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>Diagnostic Node ECU Qualifier Name configured in "Diagnostic/ISO TP Configuration".</p>
@@ -941,7 +945,7 @@ possible values are:
             </li>
             <li>
               <b><code>value</code></b>
-                  (<code>bool</code>)
+                  (<code><span title="bool">bool</span></code>)
               –
               <div class="doc-md-description">
                 <p>True - activate tester present. False - deactivate tester present.</p>
@@ -960,7 +964,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.copy_write_window_content" class="doc doc-heading">
-            <code class="highlight language-python">copy_write_window_content()</code>
+            <code class="highlight language-python"><span class="n">copy_write_window_content</span><span class="p">()</span></code>
 
 </h2>
 
@@ -977,7 +981,7 @@ possible values are:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.define_system_variable" class="doc doc-heading">
-            <code class="highlight language-python">define_system_variable(sys_var_name, value)</code>
+            <code class="highlight language-python"><span class="n">define_system_variable</span><span class="p">(</span><span class="n">sys_var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1001,7 +1005,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>object</code></b>(                  <code>object</code>
+<b><code>object</code></b>(                  <code><span title="object">object</span></code>
 )              –
               <div class="doc-md-description">
                 <p>The new Variable object.</p>
@@ -1020,7 +1024,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.disable_write_window_output_file" class="doc doc-heading">
-            <code class="highlight language-python">disable_write_window_output_file(tab_index=None)</code>
+            <code class="highlight language-python"><span class="n">disable_write_window_output_file</span><span class="p">(</span><span class="n">tab_index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1042,7 +1046,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>tab_index</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>None</code>
 )
               –
@@ -1063,7 +1067,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.enable_write_window_output_file" class="doc doc-heading">
-            <code class="highlight language-python">enable_write_window_output_file(output_file, tab_index=None)</code>
+            <code class="highlight language-python"><span class="n">enable_write_window_output_file</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">tab_index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1085,7 +1089,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>output_file</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The complete path of the output file.</p>
@@ -1093,7 +1097,7 @@ Args:
             </li>
             <li>
               <b><code>tab_index</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>None</code>
 )
               –
@@ -1114,7 +1118,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.execute_all_test_environments" class="doc doc-heading">
-            <code class="highlight language-python">execute_all_test_environments()</code>
+            <code class="highlight language-python"><span class="n">execute_all_test_environments</span><span class="p">()</span></code>
 
 </h2>
 
@@ -1131,7 +1135,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.execute_all_test_modules_in_test_env" class="doc doc-heading">
-            <code class="highlight language-python">execute_all_test_modules_in_test_env(env_name)</code>
+            <code class="highlight language-python"><span class="n">execute_all_test_modules_in_test_env</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1153,7 +1157,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>env_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>test environment name. avoid duplicate test environment names in CANoe configuration.</p>
@@ -1172,7 +1176,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.execute_test_module" class="doc doc-heading">
-            <code class="highlight language-python">execute_test_module(test_module_name)</code>
+            <code class="highlight language-python"><span class="n">execute_test_module</span><span class="p">(</span><span class="n">test_module_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1194,7 +1198,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>test_module_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>test module name. avoid duplicate test module names in CANoe configuration.</p>
@@ -1217,7 +1221,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>int</code></b>(                  <code>int</code>
+<b><code>int</code></b>(                  <code><span title="int">int</span></code>
 )              –
               <div class="doc-md-description">
                 <p>test module execution verdict. 0 ='VerdictNotAvailable', 1 = 'VerdictPassed', 2 = 'VerdictFailed',</p>
@@ -1236,7 +1240,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_bus_databases_info" class="doc doc-heading">
-            <code class="highlight language-python">get_bus_databases_info(bus)</code>
+            <code class="highlight language-python"><span class="n">get_bus_databases_info</span><span class="p">(</span><span class="n">bus</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1258,7 +1262,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>bus (str): The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -1281,7 +1285,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>bus database info {'path': 'value', 'channel': 'value', 'full_name': 'value'}</p>
@@ -1300,7 +1304,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_bus_nodes_info" class="doc doc-heading">
-            <code class="highlight language-python">get_bus_nodes_info(bus)</code>
+            <code class="highlight language-python"><span class="n">get_bus_nodes_info</span><span class="p">(</span><span class="n">bus</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1322,7 +1326,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>bus (str): The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -1345,7 +1349,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>bus nodes info {'path': 'value', 'full_name': 'value', 'active': 'value'}</p>
@@ -1364,7 +1368,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_can_bus_statistics" class="doc doc-heading">
-            <code class="highlight language-python">get_can_bus_statistics(channel)</code>
+            <code class="highlight language-python"><span class="n">get_can_bus_statistics</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1386,7 +1390,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel of the statistic that is to be returned.</p>
@@ -1409,7 +1413,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>CAN bus statistics.</p>
@@ -1428,7 +1432,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_canoe_version_info" class="doc doc-heading">
-            <code class="highlight language-python">get_canoe_version_info()</code>
+            <code class="highlight language-python"><span class="n">get_canoe_version_info</span><span class="p">()</span></code>
 
 </h2>
 
@@ -1449,42 +1453,42 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>"full_name" - The complete CANoe version.</p>
               </div>
             </li>
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>"name" - The CANoe version.</p>
               </div>
             </li>
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>"build" - The build number of the CANoe application.</p>
               </div>
             </li>
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>"major" - The major version number of the CANoe application.</p>
               </div>
             </li>
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>"minor" - The minor version number of the CANoe application.</p>
               </div>
             </li>
             <li>
-                  <code>dict</code>
+                  <code><span title="dict">dict</span></code>
               –
               <div class="doc-md-description">
                 <p>"patch" - The patch number of the CANoe application.</p>
@@ -1503,7 +1507,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_environment_variable_value" class="doc doc-heading">
-            <code class="highlight language-python">get_environment_variable_value(env_var_name)</code>
+            <code class="highlight language-python"><span class="n">get_environment_variable_value</span><span class="p">(</span><span class="n">env_var_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1525,7 +1529,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>env_var_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the environment variable. Ex- "float_var"</p>
@@ -1548,7 +1552,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="typing.Union">Union</span>[int, float, str, tuple, None]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="int">int</span>, <span title="float">float</span>, <span title="str">str</span>, <span title="tuple">tuple</span>, None]</code>
               –
               <div class="doc-md-description">
                 <p>Environment Variable value.</p>
@@ -1567,7 +1571,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_j1939_signal_full_name" class="doc doc-heading">
-            <code class="highlight language-python">get_j1939_signal_full_name(bus, channel, message, signal, source_addr, dest_addr)</code>
+            <code class="highlight language-python"><span class="n">get_j1939_signal_full_name</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1589,7 +1593,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -1597,7 +1601,7 @@ Args:
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -1605,7 +1609,7 @@ Args:
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -1613,7 +1617,7 @@ Args:
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -1621,7 +1625,7 @@ Args:
             </li>
             <li>
               <b><code>source_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The source address of the ECU that sends the message.</p>
@@ -1629,7 +1633,7 @@ Args:
             </li>
             <li>
               <b><code>dest_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The destination address of the ECU that receives the message.</p>
@@ -1652,7 +1656,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>str</code></b>(                  <code>str</code>
+<b><code>str</code></b>(                  <code><span title="str">str</span></code>
 )              –
               <div class="doc-md-description">
                 <p>The fully qualified name of a signal. The following format will be used for signals: <DatabaseName>::<MessageName>::<SignalName></p>
@@ -1671,7 +1675,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_j1939_signal_value" class="doc doc-heading">
-            <code class="highlight language-python">get_j1939_signal_value(bus, channel, message, signal, source_addr, dest_addr, raw_value=False)</code>
+            <code class="highlight language-python"><span class="n">get_j1939_signal_value</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">,</span> <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1693,7 +1697,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -1701,7 +1705,7 @@ Args:
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -1709,7 +1713,7 @@ Args:
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -1717,7 +1721,7 @@ Args:
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -1725,7 +1729,7 @@ Args:
             </li>
             <li>
               <b><code>source_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The source address of the ECU that sends the message.</p>
@@ -1733,7 +1737,7 @@ Args:
             </li>
             <li>
               <b><code>dest_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The destination address of the ECU that receives the message.</p>
@@ -1741,7 +1745,7 @@ Args:
             </li>
             <li>
               <b><code>raw_value</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -1766,7 +1770,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="typing.Union">Union</span>[float, int]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="float">float</span>, <span title="int">int</span>]</code>
               –
               <div class="doc-md-description">
                 <p>signal value.</p>
@@ -1785,7 +1789,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_logging_blocks" class="doc doc-heading">
-            <code class="highlight language-python">get_logging_blocks()</code>
+            <code class="highlight language-python"><span class="n">get_logging_blocks</span><span class="p">()</span></code>
 
 </h2>
 
@@ -1802,7 +1806,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_measurement_index" class="doc doc-heading">
-            <code class="highlight language-python">get_measurement_index()</code>
+            <code class="highlight language-python"><span class="n">get_measurement_index</span><span class="p">()</span></code>
 
 </h2>
 
@@ -1823,7 +1827,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>int</code>
+                  <code><span title="int">int</span></code>
               –
               <div class="doc-md-description">
                 <p>Measurement Index.</p>
@@ -1842,7 +1846,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_measurement_running_status" class="doc doc-heading">
-            <code class="highlight language-python">get_measurement_running_status()</code>
+            <code class="highlight language-python"><span class="n">get_measurement_running_status</span><span class="p">()</span></code>
 
 </h2>
 
@@ -1863,14 +1867,14 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>True if The measurement is running.</p>
               </div>
             </li>
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>False if The measurement is not running.</p>
@@ -1889,7 +1893,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_messages" class="doc doc-heading">
-            <code class="highlight language-python">get_messages(logger_index)</code>
+            <code class="highlight language-python"><span class="n">get_messages</span><span class="p">(</span><span class="n">logger_index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1906,7 +1910,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_signal_full_name" class="doc doc-heading">
-            <code class="highlight language-python">get_signal_full_name(bus, channel, message, signal)</code>
+            <code class="highlight language-python"><span class="n">get_signal_full_name</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1928,7 +1932,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -1936,7 +1940,7 @@ Args:
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -1944,7 +1948,7 @@ Args:
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -1952,7 +1956,7 @@ Args:
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -1975,7 +1979,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>str</code></b>(                  <code>str</code>
+<b><code>str</code></b>(                  <code><span title="str">str</span></code>
 )              –
               <div class="doc-md-description">
                 <p>The fully qualified name of a signal. The following format will be used for signals: <DatabaseName>::<MessageName>::<SignalName></p>
@@ -1994,7 +1998,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_signal_value" class="doc doc-heading">
-            <code class="highlight language-python">get_signal_value(bus, channel, message, signal, raw_value=False)</code>
+            <code class="highlight language-python"><span class="n">get_signal_value</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2016,7 +2020,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -2024,7 +2028,7 @@ Args:
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -2032,7 +2036,7 @@ Args:
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -2040,7 +2044,7 @@ Args:
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -2048,7 +2052,7 @@ Args:
             </li>
             <li>
               <b><code>raw_value</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -2073,7 +2077,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="typing.Union">Union</span>[int, float, None]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="int">int</span>, <span title="float">float</span>, None]</code>
               –
               <div class="doc-md-description">
                 <p>signal value.</p>
@@ -2092,7 +2096,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_symbols" class="doc doc-heading">
-            <code class="highlight language-python">get_symbols(logger_index)</code>
+            <code class="highlight language-python"><span class="n">get_symbols</span><span class="p">(</span><span class="n">logger_index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2109,7 +2113,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_system_variable_value" class="doc doc-heading">
-            <code class="highlight language-python">get_system_variable_value(sys_var_name, return_symbolic_name=False)</code>
+            <code class="highlight language-python"><span class="n">get_system_variable_value</span><span class="p">(</span><span class="n">sys_var_name</span><span class="p">,</span> <span class="n">return_symbolic_name</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2131,7 +2135,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>sys_var_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the system variable. Ex- "sys_var_demo::speed"</p>
@@ -2139,7 +2143,7 @@ Args:
             </li>
             <li>
               <b><code>return_symbolic_name</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -2164,7 +2168,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="typing.Union">Union</span>[int, float, str, tuple, dict, None]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="int">int</span>, <span title="float">float</span>, <span title="str">str</span>, <span title="tuple">tuple</span>, <span title="dict">dict</span>, None]</code>
               –
               <div class="doc-md-description">
                 <p>System Variable value.</p>
@@ -2183,7 +2187,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_test_environments" class="doc doc-heading">
-            <code class="highlight language-python">get_test_environments()</code>
+            <code class="highlight language-python"><span class="n">get_test_environments</span><span class="p">()</span></code>
 
 </h2>
 
@@ -2200,7 +2204,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.get_test_modules" class="doc doc-heading">
-            <code class="highlight language-python">get_test_modules(env_name)</code>
+            <code class="highlight language-python"><span class="n">get_test_modules</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2222,7 +2226,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>env_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>test environment name. avoid duplicate test environment names in CANoe configuration.</p>
@@ -2241,7 +2245,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.load_logs_for_exporter" class="doc doc-heading">
-            <code class="highlight language-python">load_logs_for_exporter(logger_index)</code>
+            <code class="highlight language-python"><span class="n">load_logs_for_exporter</span><span class="p">(</span><span class="n">logger_index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2259,7 +2263,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.open" class="doc doc-heading">
-            <code class="highlight language-python">open(canoe_cfg, visible=True, auto_save=True, prompt_user=False, auto_stop=True)</code>
+            <code class="highlight language-python"><span class="nb">open</span><span class="p">(</span><span class="n">canoe_cfg</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auto_stop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2281,7 +2285,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>canoe_cfg</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The complete path for the CANoe configuration.</p>
@@ -2289,7 +2293,7 @@ Args:
             </li>
             <li>
               <b><code>visible</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>True</code>
 )
               –
@@ -2299,7 +2303,7 @@ Args:
             </li>
             <li>
               <b><code>auto_save</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>True</code>
 )
               –
@@ -2309,7 +2313,7 @@ Args:
             </li>
             <li>
               <b><code>prompt_user</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -2319,7 +2323,7 @@ Args:
             </li>
             <li>
               <b><code>auto_stop</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>True</code>
 )
               –
@@ -2340,7 +2344,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.quit" class="doc doc-heading">
-            <code class="highlight language-python">quit()</code>
+            <code class="highlight language-python"><span class="n">quit</span><span class="p">()</span></code>
 
 </h2>
 
@@ -2357,7 +2361,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.read_text_from_write_window" class="doc doc-heading">
-            <code class="highlight language-python">read_text_from_write_window()</code>
+            <code class="highlight language-python"><span class="n">read_text_from_write_window</span><span class="p">()</span></code>
 
 </h2>
 
@@ -2378,7 +2382,7 @@ Args:
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>str</code>
+                  <code><span title="str">str</span></code>
               –
               <div class="doc-md-description">
                 <p>The text content.</p>
@@ -2397,7 +2401,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.remove_database" class="doc doc-heading">
-            <code class="highlight language-python">remove_database(database_file, database_channel)</code>
+            <code class="highlight language-python"><span class="n">remove_database</span><span class="p">(</span><span class="n">database_file</span><span class="p">,</span> <span class="n">database_channel</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2419,7 +2423,7 @@ Args:
         <ul class="first simple">
             <li>
               <b><code>database_file</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>database file to remove. give full file path.</p>
@@ -2427,7 +2431,7 @@ Args:
             </li>
             <li>
               <b><code>database_channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>channel name on which you want to remove database.</p>
@@ -2446,7 +2450,7 @@ Args:
 
 
 <h2 id="py_canoe.py_canoe.CANoe.remove_logging_block" class="doc doc-heading">
-            <code class="highlight language-python">remove_logging_block(index)</code>
+            <code class="highlight language-python"><span class="n">remove_logging_block</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2466,7 +2470,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.reset_measurement" class="doc doc-heading">
-            <code class="highlight language-python">reset_measurement()</code>
+            <code class="highlight language-python"><span class="n">reset_measurement</span><span class="p">()</span></code>
 
 </h2>
 
@@ -2487,7 +2491,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>Measurement running status(True/False).</p>
@@ -2506,7 +2510,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.reset_measurement_in_offline_mode" class="doc doc-heading">
-            <code class="highlight language-python">reset_measurement_in_offline_mode()</code>
+            <code class="highlight language-python"><span class="n">reset_measurement_in_offline_mode</span><span class="p">()</span></code>
 
 </h2>
 
@@ -2523,7 +2527,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.save_configuration" class="doc doc-heading">
-            <code class="highlight language-python">save_configuration()</code>
+            <code class="highlight language-python"><span class="n">save_configuration</span><span class="p">()</span></code>
 
 </h2>
 
@@ -2544,7 +2548,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>True if configuration saved. else False.</p>
@@ -2563,7 +2567,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.save_configuration_as" class="doc doc-heading">
-            <code class="highlight language-python">save_configuration_as(path, major, minor, prompt_user=False, create_dir=True)</code>
+            <code class="highlight language-python"><span class="n">save_configuration_as</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">,</span> <span class="n">prompt_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2585,7 +2589,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
         <ul class="first simple">
             <li>
               <b><code>path</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The complete file name.</p>
@@ -2593,7 +2597,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
             </li>
             <li>
               <b><code>major</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The major version number of the target version.</p>
@@ -2601,7 +2605,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
             </li>
             <li>
               <b><code>minor</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The minor version number of the target version.</p>
@@ -2609,7 +2613,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
             </li>
             <li>
               <b><code>create_dir</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>True</code>
 )
               –
@@ -2634,7 +2638,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>True if configuration saved. else False.</p>
@@ -2653,7 +2657,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.send_diag_request" class="doc doc-heading">
-            <code class="highlight language-python">send_diag_request(diag_ecu_qualifier_name, request, request_in_bytes=True, return_sender_name=False)</code>
+            <code class="highlight language-python"><span class="n">send_diag_request</span><span class="p">(</span><span class="n">diag_ecu_qualifier_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">request_in_bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_sender_name</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2675,7 +2679,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
         <ul class="first simple">
             <li>
               <b><code>diag_ecu_qualifier_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>Diagnostic Node ECU Qualifier Name configured in "Diagnostic/ISO TP Configuration".</p>
@@ -2683,7 +2687,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
             </li>
             <li>
               <b><code>request</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>Diagnostic request in bytes or diagnostic request qualifier name.</p>
@@ -2691,7 +2695,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
             </li>
             <li>
               <b><code>request_in_bytes</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>True</code>
 )
               –
@@ -2701,7 +2705,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
             </li>
             <li>
               <b><code>return_sender_name</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -2726,7 +2730,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="typing.Union">Union</span>[str, dict]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="dict">dict</span>]</code>
               –
               <div class="doc-md-description">
                 <p>diagnostic response stream. Ex- "50 01 00 00 00 00" or {'Door': "50 01 00 00 00 00"}</p>
@@ -2745,7 +2749,7 @@ the new order will be [L1, L3] with indexes 1 and 2.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_configuration_modified" class="doc doc-heading">
-            <code class="highlight language-python">set_configuration_modified(modified)</code>
+            <code class="highlight language-python"><span class="n">set_configuration_modified</span><span class="p">(</span><span class="n">modified</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2766,7 +2770,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_environment_variable_value" class="doc doc-heading">
-            <code class="highlight language-python">set_environment_variable_value(env_var_name, value)</code>
+            <code class="highlight language-python"><span class="n">set_environment_variable_value</span><span class="p">(</span><span class="n">env_var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2788,7 +2792,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>env_var_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the environment variable. Ex- "speed".</p>
@@ -2796,7 +2800,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>value</code></b>
-                  (<code><span title="typing.Union">Union</span>[int, float, str, tuple]</code>)
+                  (<code><span title="typing.Union">Union</span>[<span title="int">int</span>, <span title="float">float</span>, <span title="str">str</span>, <span title="tuple">tuple</span>]</code>)
               –
               <div class="doc-md-description">
                 <p>variable value. supported CAPL environment variable data types integer, double, string and data.</p>
@@ -2815,7 +2819,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_j1939_signal_value" class="doc doc-heading">
-            <code class="highlight language-python">set_j1939_signal_value(bus, channel, message, signal, source_addr, dest_addr, value, raw_value=False)</code>
+            <code class="highlight language-python"><span class="n">set_j1939_signal_value</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">source_addr</span><span class="p">,</span> <span class="n">dest_addr</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2837,7 +2841,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -2845,7 +2849,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -2853,7 +2857,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -2861,7 +2865,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -2869,7 +2873,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>source_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The source address of the ECU that sends the message.</p>
@@ -2877,7 +2881,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>dest_addr</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The destination address of the ECU that receives the message.</p>
@@ -2885,7 +2889,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>value</code></b>
-                  (<code><span title="typing.Union">Union</span>[float, int]</code>)
+                  (<code><span title="typing.Union">Union</span>[<span title="float">float</span>, <span title="int">int</span>]</code>)
               –
               <div class="doc-md-description">
                 <p>signal value.</p>
@@ -2893,7 +2897,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>raw_value</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -2937,7 +2941,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_measurement_index" class="doc doc-heading">
-            <code class="highlight language-python">set_measurement_index(index)</code>
+            <code class="highlight language-python"><span class="n">set_measurement_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2959,7 +2963,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>index</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>index value to set.</p>
@@ -2982,7 +2986,7 @@ Without that the application will stop on that popup.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>int</code>
+                  <code><span title="int">int</span></code>
               –
               <div class="doc-md-description">
                 <p>Measurement Index value.</p>
@@ -3001,7 +3005,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_replay_block_file" class="doc doc-heading">
-            <code class="highlight language-python">set_replay_block_file(block_name, recording_file_path)</code>
+            <code class="highlight language-python"><span class="n">set_replay_block_file</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">recording_file_path</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3023,7 +3027,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>block_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>CANoe replay block name</p>
@@ -3031,7 +3035,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>recording_file_path</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>CANoe replay recording file including path.</p>
@@ -3050,7 +3054,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_signal_value" class="doc doc-heading">
-            <code class="highlight language-python">set_signal_value(bus, channel, message, signal, value, raw_value=False)</code>
+            <code class="highlight language-python"><span class="n">set_signal_value</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">raw_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3072,7 +3076,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>bus</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The Bus(CAN, LIN, FlexRay, MOST, AFDX, Ethernet) on which the signal is sent.</p>
@@ -3080,7 +3084,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>channel</code></b>
-                  (<code>int</code>)
+                  (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
                 <p>The channel on which the signal is sent.</p>
@@ -3088,7 +3092,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>message</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the message to which the signal belongs.</p>
@@ -3096,7 +3100,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>signal</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the signal.</p>
@@ -3104,7 +3108,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>value</code></b>
-                  (<code><span title="typing.Union">Union</span>[float, int]</code>)
+                  (<code><span title="typing.Union">Union</span>[<span title="float">float</span>, <span title="int">int</span>]</code>)
               –
               <div class="doc-md-description">
                 <p>signal value.</p>
@@ -3112,7 +3116,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>raw_value</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -3133,7 +3137,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_system_variable_array_values" class="doc doc-heading">
-            <code class="highlight language-python">set_system_variable_array_values(sys_var_name, value, index=0)</code>
+            <code class="highlight language-python"><span class="n">set_system_variable_array_values</span><span class="p">(</span><span class="n">sys_var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3155,7 +3159,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>sys_var_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the system variable. Ex- "sys_var_demo::speed"</p>
@@ -3163,7 +3167,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>value</code></b>
-                  (<code>tuple</code>)
+                  (<code><span title="tuple">tuple</span></code>)
               –
               <div class="doc-md-description">
                 <p>variable values. supported integer array or double array. please always give only one type.</p>
@@ -3171,7 +3175,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>index</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>0</code>
 )
               –
@@ -3192,7 +3196,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.set_system_variable_value" class="doc doc-heading">
-            <code class="highlight language-python">set_system_variable_value(sys_var_name, value)</code>
+            <code class="highlight language-python"><span class="n">set_system_variable_value</span><span class="p">(</span><span class="n">sys_var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3214,7 +3218,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>sys_var_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the system variable. Ex- "sys_var_demo::speed".</p>
@@ -3222,7 +3226,7 @@ Without that the application will stop on that popup.</p>
             </li>
             <li>
               <b><code>value</code></b>
-                  (<code><span title="typing.Union">Union</span>[int, float, str]</code>)
+                  (<code><span title="typing.Union">Union</span>[<span title="int">int</span>, <span title="float">float</span>, <span title="str">str</span>]</code>)
               –
               <div class="doc-md-description">
                 <p>variable value. supported CAPL system variable data types integer, double, string and data.</p>
@@ -3241,7 +3245,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.start_export" class="doc doc-heading">
-            <code class="highlight language-python">start_export(logger_index)</code>
+            <code class="highlight language-python"><span class="n">start_export</span><span class="p">(</span><span class="n">logger_index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3259,7 +3263,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.start_measurement" class="doc doc-heading">
-            <code class="highlight language-python">start_measurement(timeout=60)</code>
+            <code class="highlight language-python"><span class="n">start_measurement</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3281,7 +3285,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>timeout</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>60</code>
 )
               –
@@ -3306,7 +3310,7 @@ Without that the application will stop on that popup.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>True if measurement started. else False.</p>
@@ -3325,7 +3329,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.start_measurement_in_animation_mode" class="doc doc-heading">
-            <code class="highlight language-python">start_measurement_in_animation_mode(animation_delay=100)</code>
+            <code class="highlight language-python"><span class="n">start_measurement_in_animation_mode</span><span class="p">(</span><span class="n">animation_delay</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3347,7 +3351,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>animation_delay</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>100</code>
 )
               –
@@ -3368,7 +3372,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.step_measurement_event_in_single_step" class="doc doc-heading">
-            <code class="highlight language-python">step_measurement_event_in_single_step()</code>
+            <code class="highlight language-python"><span class="n">step_measurement_event_in_single_step</span><span class="p">()</span></code>
 
 </h2>
 
@@ -3385,7 +3389,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.stop_all_test_environments" class="doc doc-heading">
-            <code class="highlight language-python">stop_all_test_environments()</code>
+            <code class="highlight language-python"><span class="n">stop_all_test_environments</span><span class="p">()</span></code>
 
 </h2>
 
@@ -3402,7 +3406,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.stop_all_test_modules_in_test_env" class="doc doc-heading">
-            <code class="highlight language-python">stop_all_test_modules_in_test_env(env_name)</code>
+            <code class="highlight language-python"><span class="n">stop_all_test_modules_in_test_env</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3424,7 +3428,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>env_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>test environment name. avoid duplicate test environment names in CANoe configuration.</p>
@@ -3443,7 +3447,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.stop_ex_measurement" class="doc doc-heading">
-            <code class="highlight language-python">stop_ex_measurement(timeout=60)</code>
+            <code class="highlight language-python"><span class="n">stop_ex_measurement</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3465,7 +3469,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>timeout</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>60</code>
 )
               –
@@ -3490,7 +3494,7 @@ Without that the application will stop on that popup.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>True if measurement stopped. else False.</p>
@@ -3509,7 +3513,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.stop_measurement" class="doc doc-heading">
-            <code class="highlight language-python">stop_measurement(timeout=60)</code>
+            <code class="highlight language-python"><span class="n">stop_measurement</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3531,7 +3535,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>timeout</code></b>
-                  (<code>int</code>, default:
+                  (<code><span title="int">int</span></code>, default:
                       <code>60</code>
 )
               –
@@ -3556,7 +3560,7 @@ Without that the application will stop on that popup.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
               –
               <div class="doc-md-description">
                 <p>True if measurement stopped. else False.</p>
@@ -3575,7 +3579,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.stop_test_module" class="doc doc-heading">
-            <code class="highlight language-python">stop_test_module(test_module_name)</code>
+            <code class="highlight language-python"><span class="n">stop_test_module</span><span class="p">(</span><span class="n">test_module_name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3597,7 +3601,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>test_module_name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>test module name. avoid duplicate test module names in CANoe configuration.</p>
@@ -3616,7 +3620,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.ui_activate_desktop" class="doc doc-heading">
-            <code class="highlight language-python">ui_activate_desktop(name)</code>
+            <code class="highlight language-python"><span class="n">ui_activate_desktop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3638,7 +3642,7 @@ Without that the application will stop on that popup.</p>
         <ul class="first simple">
             <li>
               <b><code>name</code></b>
-                  (<code>str</code>)
+                  (<code><span title="str">str</span></code>)
               –
               <div class="doc-md-description">
                 <p>The name of the desktop to be activated.</p>
@@ -3657,7 +3661,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.ui_open_baudrate_dialog" class="doc doc-heading">
-            <code class="highlight language-python">ui_open_baudrate_dialog()</code>
+            <code class="highlight language-python"><span class="n">ui_open_baudrate_dialog</span><span class="p">()</span></code>
 
 </h2>
 
@@ -3674,7 +3678,7 @@ Without that the application will stop on that popup.</p>
 
 
 <h2 id="py_canoe.py_canoe.CANoe.write_text_in_write_window" class="doc doc-heading">
-            <code class="highlight language-python">write_text_in_write_window(text)</code>
+            <code class="highlight language-python"><span class="n">write_text_in_write_window</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3737,6 +3741,7 @@ Args:
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
       <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
+      <script src="../search/main.js"></script>
     <script>
         jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
