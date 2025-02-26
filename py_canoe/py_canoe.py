@@ -9,8 +9,8 @@ from typing import Union, Iterable
 from datetime import datetime
 
 # import internal modules here
-from .logging_collection import LoggingCollection, Logging, ExporterSymbol, Message
-from .py_canoe_logger import PyCanoeLogger
+from .py_canoe_utils.logging_collection import LoggingCollection, Logging, ExporterSymbol, Message
+from .py_canoe_utils.py_canoe_logger import PyCanoeLogger
 
 
 class PyCanoeException(Exception):
