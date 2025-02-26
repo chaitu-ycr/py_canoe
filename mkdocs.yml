@@ -7,11 +7,6 @@ repo_name: chaitu-ycr/py_canoe
 repo_url: https://github.com/chaitu-ycr/py_canoe
 edit_uri: blob/main/docs/
 
-theme:
-  name: readthedocs
-  features:
-    - toc.integrate
-
 nav:
   - py_canoe: index.md
   - reference_manual: 999_reference.md
@@ -25,13 +20,15 @@ plugins:
             show_source: false
             merge_init_into_class: true
             show_docstring_modules: false
-          setup_commands:
-            - import sys
-            - sys.path.append('./py_canoe')
-          selection:
-            new_path_syntax: true
   - include-markdown:
       recursive: true
+  - search
+
+theme:
+  name: readthedocs
+  features:
+    - toc.integrate
+    - search
 
 extra_javascript:
   - https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js
