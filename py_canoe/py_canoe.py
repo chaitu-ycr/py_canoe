@@ -170,6 +170,39 @@ class CANoe:
             error_message = f'😡 Error opening CANoe configuration: {str(e)}'
             self.__log.error(error_message)
             raise PyCanoeException(error_message)
+        
+    def  get_running_instance(self, visible=True):
+        
+        try:
+            self.application = None
+            self.application = win32com.client.DispatchEx("CANoe.Application")
+            self.ver = self.application.Version
+
+            self.__init_canoe_application()
+            self.__init_canoe_application_measurement()
+            self.__init_canoe_application_simulation()
+            self.__init_canoe_application_version()
+
+            self.application_com_obj.Visible = visible
+            
+            self.__init_canoe_application_bus()
+            self.__init_canoe_application_capl()
+            self.__init_canoe_application_configuration()
+            self.__init_canoe_application_environment()
+            self.__init_canoe_application_networks()
+            self.__init_canoe_application_system()
+            self.__init_canoe_application_ui()
+            self.__init_logging_collection()
+
+            self.get_canoe_version_info()
+            
+            self.Measurement = self.application.Measurement.Running
+            self.__log.debug(f'👉 Measurement runnung: {self.Measurement}')
+
+        except Exception as e:
+            error_message = f'😡 Error opening CANoe configuration: {str(e)}'
+            self.__log.error(error_message)
+            raise PyCanoeException(error_message)
 
     def quit(self):
         """Quits CANoe without saving changes in the configuration."""
