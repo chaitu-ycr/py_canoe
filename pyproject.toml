@@ -1,10 +1,10 @@
 [project]
 name = "py_canoe"
-version = "3.0.4"
+version = "25.07.0"
 description = "Python CANoe Package"
 license = { text = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9, <=3.13"
 authors = [{ name = "chaitu-ycr", email = "chaitu.ycr@gmail.com" }]
 keywords = ["Vector", "CANoe", "py_canoe"]
 classifiers = [
@@ -13,24 +13,44 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Topic :: Software Development :: Embedded Systems"
 ]
-dynamic = [ "dependencies" ]
+dependencies = [
+    "pywin32",
+]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "pytest",
+    "pytest-html",
+    "pytest-sugar",
+    "pytest-clarity",
+    "pytest-cov",
+    "pytest-xdist",
+    "pytest-watch",
+    "mkdocs-puml",
+    "mkdocs-exclude",
+    "mkdocs-material",
+    "mkdocs-jupyter",
+    "mkdocstrings-python",
+    "mkdocs-macros-plugin",
+    "mkdocs-include-markdown-plugin",
+]
 
 [project.urls]
 homepage = "https://github.com/chaitu-ycr/py_canoe"
 repository = "https://github.com/chaitu-ycr/py_canoe"
 documentation = "https://chaitu-ycr.github.io/py_canoe/"
 
-[tool.poetry.dependencies]
-python = ">=3.9"
-pywin32 = "*"
+[tool.uv]
+package = true
 
-[tool.poetry.group.dev.dependencies]
-mkdocs-material = "*"
-mkdocstrings-python = "*"
-mkdocs-include-markdown-plugin = "*"
-pytest = "*"
-pytest-html = "*"
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build"]
+build-backend = "uv_build"
