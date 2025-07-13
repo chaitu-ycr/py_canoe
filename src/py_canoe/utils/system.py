@@ -1,4 +1,4 @@
-# TODO: Implement system
+# TODO: complete implementation of the System class
 import logging
 import win32com.client
 

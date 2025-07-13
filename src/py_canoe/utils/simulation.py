@@ -1,3 +1,4 @@
+# TODO: complete implementation of the Simulation class
 import logging
 import win32com.client
 

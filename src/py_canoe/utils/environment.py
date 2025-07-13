@@ -1,4 +1,4 @@
-# TODO: Implement Environment
+# TODO: complete implementation of the Environment class
 import logging
 import win32com.client
 

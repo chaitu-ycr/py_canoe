@@ -1,4 +1,4 @@
-# TODO: Implement Capl
+# TODO: complete implementation of the Capl class
 import logging
 import win32com.client
 

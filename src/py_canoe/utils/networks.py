@@ -1,4 +1,4 @@
-# TODO: Implement Networks
+# TODO: complete implementation of the Networks class
 import logging
 import win32com.client
 

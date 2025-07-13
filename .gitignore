@@ -174,3 +174,4 @@ tests/report/
 *.cbf
 *.sttse
 demo_test_environment_*ver*.tse
+uv.lock

@@ -1,3 +1,4 @@
+# TODO: complete implementation of the Bus class
 import logging
 import win32com.client
 

@@ -1,4 +1,4 @@
-# TODO: Implement Configuration
+# TODO: complete implementation of the Configuration class
 import logging
 import win32com.client
 
