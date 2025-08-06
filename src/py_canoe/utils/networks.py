@@ -1,6 +1,39 @@
 import win32com.client
 from typing import Union
-import py_canoe.utils.events as events
+from py_canoe.utils.common import logger
+from py_canoe.utils.common import DoEventsUntil
+
+
+class DiagnosticRequestEvents:
+    TIMEOUT = False
+    RECEIVED_RESPONSE = False
+    RESPONSE: Union['DiagnosticResponse', None] = None
+
+    @staticmethod
+    def OnCompletion():
+        DiagnosticRequestEvents.TIMEOUT = False
+        DiagnosticRequestEvents.RECEIVED_RESPONSE = False
+        DiagnosticRequestEvents.RESPONSE = None
+
+    @staticmethod
+    def OnConfirmation():
+        DiagnosticRequestEvents.TIMEOUT = False
+        DiagnosticRequestEvents.RECEIVED_RESPONSE = False
+        DiagnosticRequestEvents.RESPONSE = None
+
+
+    @staticmethod
+    def OnResponse(response):
+        DiagnosticRequestEvents.TIMEOUT = False
+        DiagnosticRequestEvents.RECEIVED_RESPONSE = True
+        DiagnosticRequestEvents.RESPONSE = DiagnosticResponse(response)
+
+    @staticmethod
+    def OnTimeout():
+        DiagnosticRequestEvents.TIMEOUT = True
+        DiagnosticRequestEvents.RECEIVED_RESPONSE = False
+        DiagnosticRequestEvents.RESPONSE = None
+
 
 class Diagnostic:
     def __init__(self, diagnostic):
@@ -26,11 +59,11 @@ class Diagnostic:
 class DiagnosticRequest:
     def __init__(self, diagnostic_request, enable_events: bool = True):
         self.com_object = diagnostic_request
-        events.DiagnosticRequestEvents.TIMEOUT = False
-        events.DiagnosticRequestEvents.RECEIVED_RESPONSE = False
-        self.wait_for_response_or_timeout = lambda: events.DoEventsUntil(lambda: (events.DiagnosticRequestEvents.RECEIVED_RESPONSE or events.DiagnosticRequestEvents.TIMEOUT), lambda: 300, "Diagnostic Request Response")
+        DiagnosticRequestEvents.TIMEOUT = False
+        DiagnosticRequestEvents.RECEIVED_RESPONSE = False
+        self.wait_for_response_or_timeout = lambda: DoEventsUntil(lambda: (DiagnosticRequestEvents.RECEIVED_RESPONSE or DiagnosticRequestEvents.TIMEOUT), lambda: 300, "Diagnostic Request Response")
         if enable_events:
-            win32com.client.WithEvents(self.com_object, events.DiagnosticRequestEvents)
+            win32com.client.WithEvents(self.com_object, DiagnosticRequestEvents)
 
     @property
     def pending(self) -> bool:

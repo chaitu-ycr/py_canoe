@@ -4,20 +4,23 @@ import pythoncom
 import win32com.client
 import win32com.client.gencache
 from typing import Union
-from py_canoe.utils.common import logger
-import py_canoe.utils.events as events
+from py_canoe.utils.common import logger, wait
+from py_canoe.utils import application
+from py_canoe.utils import configuration
+from py_canoe.utils import measurement
+from py_canoe.utils import networks
 
 
 class CANoe:
     def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
         pythoncom.CoInitialize()
         self.bus_type = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
-        events.MeasurementEvents.CAPL_FUNCTION_NAMES = user_capl_functions
-        self.capl_function_objects = lambda: events.MeasurementEvents.CAPL_FUNCTION_OBJECTS
+        measurement.MeasurementEvents.CAPL_FUNCTION_NAMES = user_capl_functions
+        self.capl_function_objects = lambda: measurement.MeasurementEvents.CAPL_FUNCTION_OBJECTS
         self.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
-        win32com.client.WithEvents(self.com_object, events.ApplicationEvents)
-        win32com.client.WithEvents(self.com_object.Measurement, events.MeasurementEvents)
-        win32com.client.WithEvents(self.com_object.Configuration, events.ConfigurationEvents)
+        win32com.client.WithEvents(self.com_object, application.ApplicationEvents)
+        win32com.client.WithEvents(self.com_object.Measurement, measurement.MeasurementEvents)
+        win32com.client.WithEvents(self.com_object.Configuration, configuration.ConfigurationEvents)
 
     def __del__(self):
         try:
@@ -40,7 +43,7 @@ class CANoe:
             if auto_stop:
                 self.stop_measurement(timeout=timeout)
             self.com_object.Open(canoe_cfg, auto_save, prompt_user)
-            status = events.wait_for_event_canoe_configuration_to_open(timeout)
+            status = application.wait_for_event_canoe_configuration_to_open(timeout)
             if status:
                 self._fetch_diagnostic_devices()
             return status
@@ -51,7 +54,7 @@ class CANoe:
     def quit(self, timeout=30) -> bool:
         try:
             self.com_object.Quit()
-            return events.wait_for_event_canoe_quit(timeout)
+            return application.wait_for_event_canoe_quit(timeout)
         except Exception as e:
             logger.error(f"😡 Error quitting CANoe application: {e}")
             return False
@@ -62,7 +65,7 @@ class CANoe:
                 logger.info("Measurement is already running.")
                 return True
             self.com_object.Measurement.Start()
-            return events.wait_for_event_canoe_measurement_started(timeout, self.com_object)
+            return measurement.wait_for_event_canoe_measurement_started(timeout, self.com_object)
         except Exception as e:
             logger.error(f"😡 Error starting CANoe measurement: {e}")
             return False
@@ -76,7 +79,7 @@ class CANoe:
                 logger.info("Measurement is already stopped.")
                 return True
             self.com_object.Measurement.StopEx()
-            return events.wait_for_event_canoe_measurement_stopped(timeout, self.com_object)
+            return measurement.wait_for_event_canoe_measurement_stopped(timeout, self.com_object)
         except Exception as e:
             logger.error(f"😡 Error stopping CANoe measurement with StopEx: {e}")
             return False
@@ -105,7 +108,7 @@ class CANoe:
                 return True
             self.com_object.Measurement.AnimationDelay = animation_delay
             self.com_object.Measurement.Animate()
-            started = events.wait_for_event_canoe_measurement_started(timeout, self.com_object)
+            started = measurement.wait_for_event_canoe_measurement_started(timeout, self.com_object)
             if started:
                 logger.info(f"Measurement started 🏃‍♂️ in Animation mode with delay: {animation_delay} ⏲️")
             return started
@@ -592,7 +595,7 @@ class CANoe:
                     diag_request = diag_device.CreateRequest(request)
                 diag_request.Send()
                 while diag_request.Pending:
-                    events.wait(0.05)
+                    wait(0.05)
                 responses = [diag_request.Responses.item(i).Stream for i in range(1, diag_request.Responses.Count + 1)]
                 response = " ".join(f"{d:02X}" for d in responses[0]).upper()
                 return response
