@@ -1,0 +1,1 @@
+from py_canoe.canoe import CANoe

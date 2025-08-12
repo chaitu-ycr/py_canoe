@@ -37,8 +37,7 @@ uv run pytest tests/ ^
     --cov-report=xml:tests/report/cov/coverage.xml ^
     --cov-report=json:tests/report/cov/coverage.json ^
     --maxfail=5 ^
-    --tb=short ^
-    -n auto
+    --tb=short
 if %ERRORLEVEL% NEQ 0 goto ERROR
 
 REM ----------------------------
