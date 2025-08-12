@@ -1,0 +1,5 @@
+.wy-nav-content {
+    max-width: none; /* Removes max-width restriction */
+    width: 99%; /* Example: Use a percentage of the viewport */
+    margin: 0 auto; /* Center the content */
+}

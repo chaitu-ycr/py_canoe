@@ -1,7 +1,8 @@
 from typing import Union
-from py_canoe.utils.common import logger
+
+from py_canoe.core.capl import CaplFunction
 from py_canoe.utils.common import DoEventsUntil
-from py_canoe.utils.capl import CaplFunction
+from py_canoe.utils.common import logger
 
 
 class MeasurementEvents:

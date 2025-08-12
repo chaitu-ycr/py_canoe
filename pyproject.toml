@@ -1,17 +1,16 @@
 [project]
 name = "py_canoe"
-version = "25.07.0"
-description = "Python CANoe Package"
-license = { text = "LICENSE" }
+version = "25.00.0"
+description = "Python 🐍 Package for accessing Vector CANoe 🛶 Tool"
+license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.9, <=3.13"
+requires-python = ">=3.9, <=3.14"
 authors = [{ name = "chaitu-ycr", email = "chaitu.ycr@gmail.com" }]
-keywords = ["Vector", "CANoe", "py_canoe"]
+keywords = ["Vector", "CANoe", "Python","Test", "Automation"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: Microsoft :: Windows",
-    "Topic :: Software Development :: Embedded Systems"
+    "Operating System :: Microsoft :: Windows"
 ]
 dependencies = [
     "pywin32",

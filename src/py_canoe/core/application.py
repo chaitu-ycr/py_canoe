@@ -1,9 +1,10 @@
+from typing import Union
 import pythoncom
 import win32com.client
 import win32com.client.gencache
-from typing import Union
-from py_canoe.utils.common import logger
+
 from py_canoe.utils.common import DoEventsUntil
+from py_canoe.utils.common import logger
 
 
 class ApplicationEvents:

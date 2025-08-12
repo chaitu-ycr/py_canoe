@@ -1,5 +1,7 @@
 from typing import Union
-from py_canoe.utils.common import logger, wait
+
+from py_canoe.utils.common import logger
+from py_canoe.utils.common import wait
 
 
 class CompileResult:

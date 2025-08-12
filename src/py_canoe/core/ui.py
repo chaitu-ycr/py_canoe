@@ -1,6 +1,7 @@
 from typing import Union
+
 from py_canoe.utils.common import logger
-from py_canoe.utils.version import Version
+from py_canoe.core.version import Version
 
 
 class Ui:

@@ -1,6 +1,7 @@
 # TODO: complete implementation of the Environment class
 import win32com.client
 from typing import Union
+
 from py_canoe.utils.common import DoEventsUntil
 
 

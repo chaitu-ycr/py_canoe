@@ -2,16 +2,17 @@ import pythoncom
 import win32com.client
 import win32com.client.gencache
 from typing import Union
+
+from py_canoe.core import application
+from py_canoe.core import bus as bus_utils
+from py_canoe.core import capl
+from py_canoe.core import configuration
+from py_canoe.core import measurement
+from py_canoe.core import networks
+from py_canoe.core import system
+from py_canoe.core import ui
+from py_canoe.core import version
 from py_canoe.utils.common import logger
-from py_canoe.utils import application
-from py_canoe.utils import bus as bus_utils
-from py_canoe.utils import capl
-from py_canoe.utils import configuration
-from py_canoe.utils import measurement
-from py_canoe.utils import networks
-from py_canoe.utils import system
-from py_canoe.utils import ui
-from py_canoe.utils import version
 
 
 class CANoe:

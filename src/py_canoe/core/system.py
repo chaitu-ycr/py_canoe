@@ -1,6 +1,8 @@
 import win32com.client
 from typing import Union
-from py_canoe.utils.common import logger, DoEventsUntil
+
+from py_canoe.utils.common import DoEventsUntil
+from py_canoe.utils.common import logger
 
 
 class VariablesFile:
