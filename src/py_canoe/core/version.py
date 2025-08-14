@@ -35,22 +35,20 @@ class Version:
     def patch(self):
         return self.com_object.Patch
 
-
-def get_canoe_version_info(app) -> dict:
-        try:
-            version = Version(app)
-            version_info = {
-                'full_name': version.full_name,
-                'name': version.name,
-                'major': version.major,
-                'minor': version.minor,
-                'build': version.build,
-                'patch': version.patch
-            }
-            logger.info('📜 CANoe Version Information:')
-            for key, value in version_info.items():
-                logger.info(f"    {key}: {value}")
-            return version_info
-        except Exception as e:
-            logger.error(f"😡 Error retrieving CANoe version information: {e}")
-            return {}
+    def get_canoe_version_info(self) -> dict:
+            try:
+                version_info = {
+                    'full_name': self.full_name,
+                    'name': self.name,
+                    'major': self.major,
+                    'minor': self.minor,
+                    'build': self.build,
+                    'patch': self.patch
+                }
+                logger.info('📜 CANoe Version Information:')
+                for key, value in version_info.items():
+                    logger.info(f"    {key}: {value}")
+                return version_info
+            except Exception as e:
+                logger.error(f"❌ Error retrieving CANoe version information: {e}")
+                return {}

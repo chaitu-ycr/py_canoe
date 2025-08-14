@@ -34,7 +34,7 @@ def wait(timeout_seconds=0.1):
     time.sleep(timeout_seconds)
 
 def DoEvents() -> None:
-    wait(0.05)
+    wait(0.01)
 
 def DoEventsUntil(cond, timeout, title) -> bool:
     base_time = datetime.now()

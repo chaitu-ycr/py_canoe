@@ -1,54 +1,38 @@
+
+import gc
 import pythoncom
-import win32com.client
-import win32com.client.gencache
 from typing import Union
 
-from py_canoe.core import application
-from py_canoe.core import bus as bus_utils
-from py_canoe.core import capl
-from py_canoe.core import configuration
-from py_canoe.core import measurement
-from py_canoe.core import networks
-from py_canoe.core import system
-from py_canoe.core import ui
-from py_canoe.core import version
+from py_canoe.core.application import Application
+from py_canoe.core.capl import CompileResult
 from py_canoe.utils.common import logger
 
 
 class CANoe:
-    """
-    Represents a CANoe instance.
-    Args:
-        py_canoe_log_dir (str): The path for the CANoe log file. Defaults to an empty string.
-        user_capl_functions (tuple): A tuple of user-defined CAPL function names. Defaults to an empty tuple.
-    """
     def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
-        self.bus_type = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
+        try:
+            pythoncom.CoInitialize()
+        except pythoncom.com_error:
+            logger.warning("⚠️ COM already initialized in this thread.")
         self.user_capl_functions = user_capl_functions
-        self.application = application
-        self.bus_utils = bus_utils
-        self.capl = capl
-        self.configuration = configuration
-        self.measurement = measurement
-        self.networks = networks
-        self.system = system
-        self.ui = ui
-        self.version = version
-        pythoncom.CoInitialize()
-        self.capl_function_objects = lambda: self.measurement.MeasurementEvents.CAPL_FUNCTION_OBJECTS
-        self.measurement.MeasurementEvents.CAPL_FUNCTION_NAMES = self.user_capl_functions
-        self.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
-        win32com.client.WithEvents(self.com_object, self.application.ApplicationEvents)
-        win32com.client.WithEvents(self.com_object.Measurement, self.measurement.MeasurementEvents)
-        win32com.client.WithEvents(self.com_object.Configuration, self.configuration.ConfigurationEvents)
+        self.application: Application = None
 
     def __del__(self):
         try:
             pythoncom.CoUninitialize()
         except Exception as e:
-            logger.error(f"Error during COM uninitialization: {e}")
+            logger.error(f"❌ Error during COM uninitialization: {e}")
 
-    def new(self, auto_save: bool = False, prompt_user: bool = False, timeout: int = 5) -> bool:
+    def _reset_application(self):
+        try:
+            if self.application:
+                del self.application
+                self.application = None
+            gc.collect()
+        except Exception as e:
+            logger.error(f"❌ Error during application reset: {e}")
+
+    def new(self, auto_save=False, prompt_user=False, timeout=5) -> bool:
         """
         Creates a new configuration.
 
@@ -60,7 +44,9 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.application.new(self, auto_save, prompt_user, timeout)
+        self._reset_application()
+        self.application = Application()
+        return self.application.new(auto_save, prompt_user, timeout)
 
     def open(self, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, auto_stop=True, timeout=30) -> bool:
         """
@@ -77,7 +63,10 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.application.open(self, canoe_cfg, visible, auto_save, prompt_user, auto_stop, timeout)
+        self._reset_application()
+        self.application = Application()
+        self.application.user_capl_functions = self.user_capl_functions
+        return self.application.open(canoe_cfg, visible, auto_save, prompt_user, timeout)
 
     def quit(self, timeout=30) -> bool:
         """
@@ -89,19 +78,21 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.application.quit(self, timeout)
+        status = self.application.quit(timeout)
+        self._reset_application()
+        return status
 
-    def get_running_instance(self, visible=True) -> Union[win32com.client.CDispatch, None]:
+    def attach_to_active_application(self) -> bool:
         """
-        Gets the running instance of the CANoe application.
-
-        Args:
-            visible (bool): Whether to return only visible instances. Defaults to True.
+        Attach to a active instance of the CANoe application.
 
         Returns:
-            Union[win32com.client.CDispatch, None]: The running instance of the CANoe application, or None if not found.
+            bool: True if the operation was successful, False otherwise.
         """
-        return self.application.get_running_instance(self, visible)
+        self._reset_application()
+        self.application = Application()
+        self.application.user_capl_functions = self.user_capl_functions
+        return self.application.attach_to_active_application()
 
     def start_measurement(self, timeout=30) -> bool:
         """
@@ -113,7 +104,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.start_measurement(self, timeout)
+        return self.application.measurement.start(timeout)
 
     def stop_measurement(self, timeout=30) -> bool:
         """
@@ -125,7 +116,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.stop_ex_measurement(timeout)
+        return self.application.measurement.stop(timeout)
 
     def stop_ex_measurement(self, timeout=30) -> bool:
         """
@@ -137,11 +128,11 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.stop_ex_measurement(self, timeout)
+        return self.application.measurement.stop_ex(timeout)
 
     def reset_measurement(self, timeout=30) -> bool:
         """
-        Resets the measurement.
+        Restarts the measurement if running.
 
         Args:
             timeout (int): The timeout in seconds for the operation. Defaults to 30.
@@ -149,7 +140,13 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.reset_measurement(self, timeout)
+        if self.application.measurement.running:
+            stop_status = self.stop_measurement(timeout)
+            start_status = self.start_measurement(timeout)
+            return stop_status and start_status
+        else:
+            logger.warning("⚠️ Measurement is not running, cannot reset.")
+            return False
 
     def get_measurement_running_status(self) -> bool:
         """
@@ -158,7 +155,7 @@ class CANoe:
         Returns:
             bool: True if the measurement is running, False otherwise.
         """
-        return self.com_object.Measurement.Running
+        return self.application.measurement.running
 
     def add_offline_source_log_file(self, absolute_log_file_path: str) -> bool:
         """
@@ -170,7 +167,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.configuration.add_offline_source_log_file(self, absolute_log_file_path)
+        return self.application.configuration.add_offline_source_log_file(absolute_log_file_path)
 
     def start_measurement_in_animation_mode(self, animation_delay=100, timeout=30) -> bool:
         """
@@ -183,7 +180,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.start_measurement_in_animation_mode(self, animation_delay, timeout)
+        return self.application.measurement.start_measurement_in_animation_mode(animation_delay, timeout)
 
     def break_measurement_in_offline_mode(self) -> bool:
         """
@@ -192,7 +189,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.break_measurement_in_offline_mode(self)
+        return self.application.measurement.break_measurement_in_offline_mode()
 
     def reset_measurement_in_offline_mode(self) -> bool:
         """
@@ -201,7 +198,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.reset_measurement_in_offline_mode(self)
+        return self.application.measurement.reset_measurement_in_offline_mode()
 
     def step_measurement_event_in_single_step(self) -> bool:
         """
@@ -210,7 +207,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.step_measurement_event_in_single_step(self)
+        return self.application.measurement.process_measurement_event_in_single_step()
 
     def get_measurement_index(self) -> int:
         """
@@ -219,7 +216,7 @@ class CANoe:
         Returns:
             int: The measurement index.
         """
-        return self.measurement.get_measurement_index(self)
+        return self.application.measurement.measurement_index
 
     def set_measurement_index(self, index: int) -> bool:
         """
@@ -231,7 +228,8 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.measurement.set_measurement_index(self, index)
+        self.application.measurement.measurement_index = index
+        return True
 
     def save_configuration(self) -> bool:
         """
@@ -240,7 +238,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.configuration.save_configuration(self)
+        return self.application.configuration.save()
 
     def save_configuration_as(self, path: str, major: int, minor: int, prompt_user: bool = False, create_dir: bool = True) -> bool:
         """
@@ -256,7 +254,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.configuration.save_configuration_as(self, path, major, minor, prompt_user, create_dir)
+        return self.application.configuration.save_as(path, major, minor, prompt_user, create_dir)
 
     def get_can_bus_statistics(self, channel: int) -> dict:
         """
@@ -268,7 +266,7 @@ class CANoe:
         Returns:
             dict: The CAN bus statistics.
         """
-        return self.configuration.get_can_bus_statistics(self, channel)
+        return self.application.configuration.get_can_bus_statistics(channel)
 
     def get_canoe_version_info(self) -> dict:
         """
@@ -277,7 +275,7 @@ class CANoe:
         Returns:
             dict: The version information.
         """
-        return self.version.get_canoe_version_info(self)
+        return self.application.version.get_canoe_version_info()
 
     def get_bus_databases_info(self, bus: str = 'CAN') -> dict:
         """
@@ -286,7 +284,7 @@ class CANoe:
         Returns:
             dict: The bus databases information.
         """
-        return self.bus_utils.get_bus_databases_info(self, bus)
+        return self.application.bus.get_bus_databases_info(bus)
 
     def get_bus_nodes_info(self, bus: str = 'CAN') -> dict:
         """
@@ -295,7 +293,7 @@ class CANoe:
         Returns:
             dict: The bus nodes information.
         """
-        return self.bus_utils.get_bus_nodes_info(self, bus)
+        return self.application.bus.get_bus_nodes_info(bus)
 
     def get_signal_value(self, bus: str, channel: int, message: str, signal: str, raw_value: bool = False) -> Union[int, float, None]:
         """
@@ -311,7 +309,7 @@ class CANoe:
         Returns:
             Union[int, float, None]: The signal value or None if not found.
         """
-        return self.bus_utils.get_signal_value(self, bus, channel, message, signal, raw_value)
+        return self.application.bus.get_signal_value(bus, channel, message, signal, raw_value)
 
     def set_signal_value(self, bus: str, channel: int, message: str, signal: str, value: Union[int, float], raw_value: bool = False) -> bool:
         """
@@ -328,7 +326,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.bus_utils.set_signal_value(self, bus, channel, message, signal, value, raw_value)
+        return self.application.bus.set_signal_value(bus, channel, message, signal, value, raw_value)
 
     def get_signal_full_name(self, bus: str, channel: int, message: str, signal: str) -> Union[str, None]:
         """
@@ -343,7 +341,7 @@ class CANoe:
         Returns:
             Union[str, None]: The full name of the signal or None if not found.
         """
-        return self.bus_utils.get_signal_full_name(self, bus, channel, message, signal)
+        return self.application.bus.get_signal_full_name(bus, channel, message, signal)
 
     def check_signal_online(self, bus: str, channel: int, message: str, signal: str) -> bool:
         """
@@ -358,7 +356,7 @@ class CANoe:
         Returns:
             bool: True if the signal is online, False otherwise.
         """
-        return self.bus_utils.check_signal_online(self, bus, channel, message, signal)
+        return self.application.bus.check_signal_online(bus, channel, message, signal)
 
     def check_signal_state(self, bus: str, channel: int, message: str, signal: str) -> int:
         """
@@ -373,7 +371,7 @@ class CANoe:
         Returns:
             int: The state of the signal.
         """
-        return self.bus_utils.check_signal_state(self, bus, channel, message, signal)
+        return self.application.bus.check_signal_state(bus, channel, message, signal)
 
     def get_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int, raw_value=False) -> Union[float, int, None]:
         """
@@ -391,7 +389,7 @@ class CANoe:
         Returns:
             Union[float, int, None]: The signal value or None if not found.
         """
-        return self.bus_utils.get_j1939_signal_value(self, bus, channel, message, signal, source_addr, dest_addr, raw_value)
+        return self.application.bus.get_j1939_signal_value(bus, channel, message, signal, source_addr, dest_addr, raw_value)
 
     def set_j1939_signal_value(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int, value: Union[float, int], raw_value: bool = False) -> bool:
         """
@@ -410,7 +408,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.bus_utils.set_j1939_signal_value(self, bus, channel, message, signal, source_addr, dest_addr, value, raw_value)
+        return self.application.bus.set_j1939_signal_value(bus, channel, message, signal, source_addr, dest_addr, value, raw_value)
 
     def get_j1939_signal_full_name(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> Union[str, None]:
         """
@@ -427,7 +425,7 @@ class CANoe:
         Returns:
             Union[str, None]: The full name of the signal or None if not found.
         """
-        return self.bus_utils.get_j1939_signal_full_name(self, bus, channel, message, signal, source_addr, dest_addr)
+        return self.application.bus.get_j1939_signal_full_name(bus, channel, message, signal, source_addr, dest_addr)
 
     def check_j1939_signal_online(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> bool:
         """
@@ -444,7 +442,7 @@ class CANoe:
         Returns:
             bool: True if the signal is online, False otherwise.
         """
-        return self.bus_utils.check_j1939_signal_online(self, bus, channel, message, signal, source_addr, dest_addr)
+        return self.application.bus.check_j1939_signal_online(bus, channel, message, signal, source_addr, dest_addr)
 
     def check_j1939_signal_state(self, bus: str, channel: int, message: str, signal: str, source_addr: int, dest_addr: int) -> int:
         """
@@ -461,7 +459,7 @@ class CANoe:
         Returns:
             int: The state of the signal.
         """
-        return self.bus_utils.check_j1939_signal_state(self, bus, channel, message, signal, source_addr, dest_addr)
+        return self.application.bus.check_j1939_signal_state(bus, channel, message, signal, source_addr, dest_addr)
 
     def ui_activate_desktop(self, name: str) -> bool:
         """
@@ -473,7 +471,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.activate_desktop(self, name)
+        return self.application.ui.activate_desktop(name)
 
     def ui_open_baudrate_dialog(self) -> bool:
         """
@@ -482,7 +480,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.open_baudrate_dialog(self)
+        return self.application.ui.open_baudrate_dialog()
 
     def write_text_in_write_window(self, text: str) -> bool:
         """
@@ -494,7 +492,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.write_text_in_write_window(self, text)
+        return self.application.ui.write.output(text)
 
     def read_text_from_write_window(self) -> Union[str, None]:
         """
@@ -503,7 +501,7 @@ class CANoe:
         Returns:
             Union[str, None]: The text from the write window or None if not found.
         """
-        return self.ui.read_text_from_write_window(self)
+        return self.application.ui.write.text
 
     def clear_write_window_content(self) -> bool:
         """
@@ -512,7 +510,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.clear_write_window_content(self)
+        return self.application.ui.write.clear()
 
     def copy_write_window_content(self) -> bool:
         """
@@ -521,7 +519,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.copy_write_window_content(self)
+        return self.application.ui.write.copy()
 
     def enable_write_window_output_file(self, output_file: str, tab_index=None) -> bool:
         """
@@ -534,7 +532,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.enable_write_window_output_file(self, output_file, tab_index)
+        return self.application.ui.write.enable_output_file(output_file, tab_index)
 
     def disable_write_window_output_file(self, tab_index=None) -> bool:
         """
@@ -546,7 +544,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.ui.disable_write_window_output_file(self, tab_index)
+        return self.application.ui.write.disable_output_file(tab_index)
 
     def define_system_variable(self, sys_var_name: str, value: Union[int, float, str], read_only: bool = False) -> object:
         """
@@ -560,7 +558,7 @@ class CANoe:
         Returns:
             object: The created system variable object.
         """
-        return self.system.add_system_variable(self, sys_var_name, value, read_only)
+        return self.application.system.add_system_variable(sys_var_name, value, read_only)
 
     def get_system_variable_value(self, sys_var_name: str, return_symbolic_name=False) -> Union[int, float, str, None]:
         """
@@ -573,7 +571,7 @@ class CANoe:
         Returns:
             Union[int, float, str, None]: The value of the system variable or None if not found.
         """
-        return self.system.get_system_variable_value(self, sys_var_name, return_symbolic_name)
+        return self.application.system.get_system_variable_value(sys_var_name, return_symbolic_name)
 
     def set_system_variable_value(self, sys_var_name: str, value: Union[int, float, str]) -> bool:
         """
@@ -586,7 +584,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.system.set_system_variable_value(self, sys_var_name, value)
+        return self.application.system.set_system_variable_value(sys_var_name, value)
 
     def set_system_variable_array_values(self, sys_var_name: str, value: tuple, index: int = 0) -> bool:
         """
@@ -600,13 +598,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.system.set_system_variable_array_values(self, sys_var_name, value, index)
-
-    def _fetch_diagnostic_devices(self):
-        """
-        Fetches the diagnostic devices.
-        """
-        return self.networks.fetch_diagnostic_devices(self)
+        return self.application.system.set_system_variable_array_values(sys_var_name, value, index)
 
     def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True, return_sender_name=False, response_in_bytearray=False) -> Union[str, dict]:
         """
@@ -622,7 +614,7 @@ class CANoe:
         Returns:
             Union[str, dict]: The response from the diagnostic request.
         """
-        return self.networks.send_diag_request(self, diag_ecu_qualifier_name, request, request_in_bytes, return_sender_name, response_in_bytearray)
+        return self.application.networks.send_diag_request(diag_ecu_qualifier_name, request, request_in_bytes, return_sender_name, response_in_bytearray)
 
     def control_tester_present(self, diag_ecu_qualifier_name: str, value: bool) -> bool:
         """
@@ -635,7 +627,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.networks.control_tester_present(self, diag_ecu_qualifier_name, value)
+        return self.application.networks.control_tester_present(diag_ecu_qualifier_name, value)
 
     def set_replay_block_file(self, block_name: str, recording_file_path: str) -> bool:
         """
@@ -648,7 +640,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.configuration.set_replay_block_file(self, block_name, recording_file_path)
+        return self.application.configuration.set_replay_block_file(block_name, recording_file_path)
 
     def control_replay_block(self, block_name: str, start_stop: bool) -> bool:
         """
@@ -661,7 +653,7 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.configuration.control_replay_block(self, block_name, start_stop)
+        return self.application.configuration.control_replay_block(block_name, start_stop)
 
     def enable_disable_replay_block(self, block_name: str, enable_disable: bool) -> bool:
         """
@@ -674,9 +666,9 @@ class CANoe:
         Returns:
             bool: True if the operation was successful, False otherwise.
         """
-        return self.configuration.enable_disable_replay_block(self, block_name, enable_disable)
+        return self.application.configuration.enable_disable_replay_block(block_name, enable_disable)
 
-    def compile_all_capl_nodes(self, wait_time: Union[int, float] = 5) -> Union[capl.CompileResult, None]:
+    def compile_all_capl_nodes(self, wait_time: Union[int, float] = 5) -> Union[CompileResult, None]:
         """
         Compiles all CAPL nodes in the application.
 
@@ -684,9 +676,9 @@ class CANoe:
             wait_time (Union[int, float]): The time to wait for the compilation to complete.
 
         Returns:
-            Union[capl.CompileResult, None]: The compilation result or None if an error occurred.
+            The compilation result or None if an error occurred.
         """
-        return self.capl.compile_all_capl_nodes(self, wait_time)
+        return self.application.capl.compile(wait_time)
 
     def call_capl_function(self, name: str, *arguments) -> bool:
         """
@@ -699,4 +691,84 @@ class CANoe:
         Returns:
             bool: True if the function call was successful, False otherwise.
         """
-        return self.capl.call_capl_function(self, name, *arguments)
+        return self.application.capl.call_capl_function(name, *arguments)
+
+    def get_environment_variable_value(self, env_var_name: str) -> Union[int, float, str, tuple, None]:
+        """
+        returns a environment variable value.
+
+        Args:
+            env_var_name (str): The name of the environment variable. Ex- "float_var"
+
+        Returns:
+            Environment Variable value.
+        """
+        return self.application.environment.get_environment_variable_value(env_var_name)
+
+    def set_environment_variable_value(self, env_var_name: str, value: Union[int, float, str, tuple]) -> bool:
+        """
+        Sets the value of an environment variable.
+
+        Args:
+            env_var_name (str): The name of the environment variable. Ex- "speed".
+            value (Union[int, float, str, tuple]): variable value. supported CAPL environment variable data types integer, double, string and data.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.environment.set_environment_variable_value(env_var_name, value)
+
+    def get_test_environments(self) -> dict:
+        """returns dictionary of test environment names and class."""
+        return self.application.configuration.get_test_environments()
+
+    def get_test_modules(self, env_name: str) -> dict:
+        """returns dictionary of test environment test module names and its class object.
+
+        Args:
+            env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
+        """
+        return self.application.configuration.get_test_modules(env_name)
+
+    def execute_test_module(self, test_module_name: str) -> int:
+        """use this method to execute test module.
+
+        Args:
+            test_module_name (str): test module name. avoid duplicate test module names in CANoe configuration.
+
+        Returns:
+            int: test module execution verdict. 0 ='VerdictNotAvailable', 1 = 'VerdictPassed', 2 = 'VerdictFailed',
+        """
+        return self.application.configuration.execute_test_module(test_module_name)
+
+    def stop_test_module(self, test_module_name: str):
+        """stops execution of test module.
+
+        Args:
+            test_module_name (str): test module name. avoid duplicate test module names in CANoe configuration.
+        """
+        return self.application.configuration.stop_test_module(test_module_name)
+
+    def execute_all_test_modules_in_test_env(self, env_name: str):
+        """executes all test modules available in test environment.
+
+        Args:
+            env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
+        """
+        return self.application.configuration.execute_all_test_modules_in_test_env(env_name)
+
+    def stop_all_test_modules_in_test_env(self, env_name: str):
+        """stops execution of all test modules available in test environment.
+
+        Args:
+            env_name (str): test environment name. avoid duplicate test environment names in CANoe configuration.
+        """
+        return self.application.configuration.stop_all_test_modules_in_test_env(env_name)
+
+    def execute_all_test_environments(self):
+        """executes all test environments available in test setup."""
+        return self.application.configuration.execute_all_test_environments()
+
+    def stop_all_test_environments(self):
+        """stops execution of all test environments available in test setup."""
+        return self.application.configuration.stop_all_test_environments()

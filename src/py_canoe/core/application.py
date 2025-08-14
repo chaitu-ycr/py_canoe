@@ -1,106 +1,158 @@
-from typing import Union
-import pythoncom
 import win32com.client
 import win32com.client.gencache
 
-from py_canoe.utils.common import DoEventsUntil
-from py_canoe.utils.common import logger
+from py_canoe.core.bus import Bus
+from py_canoe.core.capl import Capl
+from py_canoe.core.configuration import Configuration
+from py_canoe.core.environment import Environment
+from py_canoe.core.measurement import Measurement
+from py_canoe.core.networks import Networks
+from py_canoe.core.system import System
+from py_canoe.core.ui import Ui
+from py_canoe.core.version import Version
+from py_canoe.utils.common import DoEventsUntil, logger
 
 
 class ApplicationEvents:
-    CONFIGURATION_OPENED: bool = False
-    CANOE_IS_QUIT: bool = False
+    def __init__(self):
+        self.OPENED: bool = False
+        self.QUIT: bool = False
+        self.CANOE_CFG_FULLNAME: str = ""
 
-    @staticmethod
-    def OnOpen(fullname):
-        ApplicationEvents.CONFIGURATION_OPENED = True
-        logger.info(f'[EVENT][APPLICATION] 📢 CANoe Configuration Opened: {fullname} 🎉')
+    def OnOpen(self, fullname: str):
+        self.CANOE_CFG_FULLNAME = fullname
+        self.OPENED = True
 
-    @staticmethod
-    def OnQuit():
-        ApplicationEvents.CANOE_IS_QUIT = True
-        logger.info('[EVENT][APPLICATION] 📢 CANoe Application Quit 🎉')
+    def OnQuit(self):
+        self.QUIT = True
 
 
-def wait_for_event_canoe_configuration_to_open(timeout: Union[int, float]) -> bool:
-    ApplicationEvents.CONFIGURATION_OPENED = False
-    status = DoEventsUntil(lambda: ApplicationEvents.CONFIGURATION_OPENED, timeout, "CANoe Configuration Open")
-    if not status:
-        logger.error(f"😡 Unable to open CANoe configuration within {timeout} seconds.")
-    return status
+class Application:
+    def __init__(self):
+        self.bus_types = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
+        self.com_object = None
+        self.application_events = None
+        self.bus: Bus = None
+        self.capl: Capl = None
+        self.configuration: Configuration = None
+        self.environment: Environment = None
+        self.measurement: Measurement = None
+        self.system: System = None
+        self.ui: Ui = None
+        self.version: Version = None
+        self.capl_function_objects = object()
+        self.user_capl_functions = tuple()
 
-def wait_for_event_canoe_quit(timeout: Union[int, float]) -> bool:
-    ApplicationEvents.CANOE_IS_QUIT = False
-    status = DoEventsUntil(lambda: ApplicationEvents.CANOE_IS_QUIT, timeout, "CANoe Application Quit")
-    if not status:
-        logger.error(f"😡 Unable to quit CANoe application within {timeout} seconds.")
-    return status
+    @property
+    def full_name(self) -> str:
+        return self.com_object.FullName
 
-def new(app, auto_save: bool = False, prompt_user: bool = False, timeout=5) -> bool:
-    try:
-        if app.com_object is None:
-            pythoncom.CoInitialize()
-            app.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
-        win32com.client.WithEvents(app.com_object, ApplicationEvents)
-        app.com_object.New(auto_save, prompt_user)
-        status = wait_for_event_canoe_configuration_to_open(timeout)
-        if status:
-            logger.info('📢 New empty CANoe configuration Opened 🎉')
-        return status
-    except Exception as e:
-        logger.error(f"😡 Error creating new CANoe configuration: {e}")
-        return False
+    @property
+    def name(self) -> str:
+        return self.com_object.Name
 
-def open(app, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, auto_stop=True, timeout=5) -> bool:
-    try:
-        if app.com_object is None:
-            pythoncom.CoInitialize()
-            app.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
-            win32com.client.WithEvents(app.com_object, ApplicationEvents)
-            win32com.client.WithEvents(app.com_object.Measurement, app.measurement.MeasurementEvents)
-            win32com.client.WithEvents(app.com_object.Configuration, app.configuration.ConfigurationEvents)
-        app.com_object.Visible = visible
-        if auto_stop:
-            app.stop_measurement(timeout=timeout)
-        app.com_object.Open(canoe_cfg, auto_save, prompt_user)
-        status = wait_for_event_canoe_configuration_to_open(timeout)
-        if status:
-            app._fetch_diagnostic_devices()
-        return status
-    except Exception as e:
-        logger.error(f"😡 Error opening CANoe configuration '{canoe_cfg}': {e}")
-        return False
+    @property
+    def path(self) -> str:
+        return self.com_object.Path
 
-def quit(app, timeout=5) -> bool:
-    try:
-        if app.com_object is None:
-            logger.warning("⚠️ Cannot quit, CANoe COM object is not initialized.")
-            return False
-        else:
-            app.com_object.Configuration.Modified = False
-            app.com_object.Quit()
-            status = wait_for_event_canoe_quit(timeout)
+    @property
+    def visible(self) -> bool:
+        return self.com_object.Visible
+
+    @visible.setter
+    def visible(self, visible: bool):
+        self.com_object.Visible = visible
+
+    def _common_between_pre_and_post_cfg_open(self):
+        self.bus = Bus(self)
+        self.capl = Capl(self)
+        self.configuration = Configuration(self)
+        self.environment = Environment(self)
+        self.networks = Networks(self)
+        self.system = System(self)
+        self.ui = Ui(self)
+        self.version = Version(self)
+
+    def _launch_application(self):
+        try:
+            self.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
+            self.application_events = win32com.client.WithEvents(self.com_object, ApplicationEvents)
+            self.measurement = Measurement(self)
+            self.capl_function_objects = lambda: self.measurement.measurement_events.CAPL_FUNCTION_OBJECTS
+            self.measurement.measurement_events.CAPL_FUNCTION_NAMES = self.user_capl_functions
+            self._common_between_pre_and_post_cfg_open()
+        except Exception as e:
+            logger.error(f"❌ Failed to launch CANoe application: {e}")
+            raise
+    def _setup_post_configuration_loading(self):
+        try:
+            self._common_between_pre_and_post_cfg_open()
+            self.networks.fetch_diagnostic_devices()
+            self.configuration.configuration_fetch_test_modules()
+        except Exception as e:
+            logger.error(f"❌ Error initializing objects after loading configuration: {e}")
+
+    def new(self, auto_save=False, prompt_user=False, timeout=5) -> bool:
+        """Create a new empty CANoe configuration."""
+        self._launch_application()
+        status = False
+        try:
+            logger.info("📢 Opening new empty CANoe configuration...")
+            self.com_object.New(auto_save, prompt_user)
+            status = DoEventsUntil(lambda: self.application_events.OPENED, timeout, "New CANoe configuration")
             if status:
-                # pythoncom.CoUninitialize()
-                # app.com_object = None
+                logger.info("📢 New empty CANoe configuration Opened 🎉")
+                self._setup_post_configuration_loading()
+        except Exception as e:
+            logger.error(f"❌ Error creating new configuration: {e}")
+            status = False
+        finally:
+            return status
+
+    def open(self, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, timeout=5) -> bool:
+        """Open an existing CANoe configuration."""
+        self._launch_application()
+        status = False
+        try:
+            self.visible = visible
+            logger.info("📢 Opening CANoe configuration ...")
+            self.com_object.Open(canoe_cfg, auto_save, prompt_user)
+            status = DoEventsUntil(lambda: self.application_events.OPENED, timeout, "Open CANoe configuration")
+            if status:
+                logger.info(f"📢 CANoe Configuration {canoe_cfg} Opened 🎉")
+                self._setup_post_configuration_loading()
+        except Exception as e:
+            logger.error(f"❌ Error opening configuration: {e}")
+            status = False
+        finally:
+            return status
+
+    def quit(self, timeout=5) -> bool:
+        """Quit CANoe and clean up COM references."""
+        status = False
+        try:
+            self.configuration.modified = False
+            self.com_object.Quit()
+            status = DoEventsUntil(lambda: self.application_events.QUIT, timeout, "Quit CANoe application")
+            if status:
+                logger.info("📢 CANoe Application Quit Successfully 🎉")
+        except Exception as e:
+            logger.error(f"❌ Error during CANoe quit: {e}")
+            status = False
+        finally:
+            return status
+
+    def attach_to_active_application(self) -> bool:
+        """Attach to a active instance of the CANoe application."""
+        try:
+            self._launch_application()
+            if self.com_object:
+                logger.info("📢 Successfully attached to active CANoe application 🎉")
+                self._setup_post_configuration_loading()
                 return True
             else:
+                logger.error("❌ Failed to attach to active CANoe application")
                 return False
-    except Exception as e:
-        logger.error(f"😡 Error quitting CANoe application: {e}")
-        return False
-
-def get_running_instance(app, visible=True) -> Union[win32com.client.CDispatch, None]:
-    try:
-        if app.com_object is None:
-            pythoncom.CoInitialize()
-            app.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
-            win32com.client.WithEvents(app.com_object, ApplicationEvents)
-            win32com.client.WithEvents(app.com_object.Measurement, app.measurement.MeasurementEvents)
-            win32com.client.WithEvents(app.com_object.Configuration, app.configuration.ConfigurationEvents)
-        app.com_object.Visible = visible
-        app._fetch_diagnostic_devices()
-        return app.com_object
-    except Exception as e:
-        logger.error(f"😡 Error fetching running instance of CANoe application: {e}")
-        return None
+        except Exception as e:
+            logger.error(f"❌ Error attaching to active CANoe application: {e}")
+            return False
