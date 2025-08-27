@@ -15,7 +15,7 @@ Python 🐍 Package for accessing Vector CANoe 🛶 Tool
 
 ## prerequisites
 
-- [Python(>=3.9)](https://www.python.org/downloads/)
+- [Python(>=3.10)](https://www.python.org/downloads/)
 - [Vector CANoe software(>=v11)](https://www.vector.com/int/en/support-downloads/download-center/)
 - Vector CANoe license. Also works with Demo version of CANoe with limited functionalities.
 - [visual studio code](https://code.visualstudio.com/Download)
