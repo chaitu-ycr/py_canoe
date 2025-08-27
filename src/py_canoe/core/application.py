@@ -88,7 +88,7 @@ class Application:
         try:
             self._common_between_pre_and_post_cfg_open()
             self.networks.fetch_diagnostic_devices()
-            self.configuration.configuration_fetch_test_modules()
+            self.configuration.fetch_test_modules()
         except Exception as e:
             logger.error(f"❌ Error initializing objects after loading configuration: {e}")
 

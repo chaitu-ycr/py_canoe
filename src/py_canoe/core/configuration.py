@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING, Iterable
+if TYPE_CHECKING:
+    from py_canoe.core.application import Application
+    from py_canoe.core.conf_children.measurement_setup import Logging, ExporterSymbol, Message
 import os
 import win32com.client
 
+from py_canoe.core.conf_children.measurement_setup import MeasurementSetup
 from py_canoe.utils.common import DoEventsUntil, logger, wait
 
 TEST_MODULE_START_EVENT_TIMEOUT = 5  # seconds
@@ -390,6 +395,63 @@ class TestSetup:
         return TestEnvironments(self.com_object)
 
 
+class Database:
+    """The Database object represents the assigned database of the CANoe application."""
+    def __init__(self, database_com_obj):
+        self.com_object = win32com.client.Dispatch(database_com_obj)
+
+    @property
+    def channel(self) -> int:
+        return self.com_object.Channel
+
+    @channel.setter
+    def channel(self, channel: int) -> None:
+        self.com_object.Channel = channel
+
+    @property
+    def full_name(self) -> str:
+        return self.com_object.FullName
+
+    @full_name.setter
+    def full_name(self, full_name: str) -> None:
+        self.com_object.FullName = full_name
+
+    @property
+    def name(self) -> str:
+        return self.com_object.Name
+
+    @property
+    def path(self) -> str:
+        return self.com_object.Path
+
+
+class Databases:
+    """The Databases object represents the assigned databases of CANoe."""
+    def __init__(self, databases_com_obj):
+        self.com_object = win32com.client.Dispatch(databases_com_obj)
+
+    @property
+    def count(self) -> int:
+        return self.com_object.Count
+
+    def fetch_databases(self) -> dict:
+        databases = dict()
+        for index in range(1, self.count + 1):
+            db_com_obj = self.com_object.Item(index)
+            db_inst = Database(db_com_obj)
+            databases[db_inst.name] = db_inst
+        return databases
+
+    def add(self, full_name: str) -> object:
+        return self.com_object.Add(full_name)
+
+    def add_network(self, database_name: str, network_name: str) -> object:
+        return self.com_object.AddNetwork(database_name, network_name)
+
+    def remove(self, index: int) -> None:
+        self.com_object.Remove(index)
+
+
 class ConfigurationEvents:
     def __init__(self):
         self.CONFIGURATION_CLOSED = False
@@ -406,15 +468,16 @@ class Configuration:
     """
     The Configuration object represents the active configuration.
     """
-    def __init__(self, app):
-        self.bus_types = app.bus_types
-        self.com_object = win32com.client.Dispatch(app.com_object.Configuration)
+    def __init__(self, app: 'Application'):
+        self.app = app
+        self.bus_types = self.app.bus_types
+        self.com_object = win32com.client.Dispatch(self.app.com_object.Configuration)
         self.configuration_events: ConfigurationEvents = win32com.client.WithEvents(self.com_object, ConfigurationEvents)
         self.configuration_test_setup = lambda: self.test_setup
         self.__test_setup_environments = self.configuration_test_setup().test_environments.fetch_all_test_environments()
         self.__test_modules = list()
 
-    def configuration_fetch_test_modules(self):
+    def fetch_test_modules(self):
         for te_name, te_inst in self.__test_setup_environments.items():
             for tm_name, tm_inst in te_inst.get_all_test_modules().items():
                 self.__test_modules.append({'name': tm_name, 'object': tm_inst, 'environment': te_name})
@@ -428,6 +491,14 @@ class Configuration:
         return self.com_object.FullName
 
     @property
+    def mode(self) -> int:
+        return self.com_object.Mode
+
+    @mode.setter
+    def mode(self, type: int):
+        self.com_object.Mode = type
+
+    @property
     def modified(self) -> bool:
         return self.com_object.Modified
 
@@ -438,6 +509,10 @@ class Configuration:
     @property
     def name(self) -> str:
         return self.com_object.Name
+
+    @property
+    def online_setup(self):
+        return MeasurementSetup(self.com_object.OnlineSetup)
 
     @property
     def path(self) -> str:
@@ -483,7 +558,7 @@ class Configuration:
 
     def get_can_bus_statistics(self, channel: int) -> dict:
         try:
-            can_stat_obj = self.com_object.OnlineSetup.BusStatistics.BusStatistic(self.bus_types['CAN'], channel)
+            can_stat_obj = self.online_setup.bus_statistics.BusStatistic(self.bus_types['CAN'], channel)
             keys = [
                 'BusLoad', 'ChipState', 'Error', 'ErrorTotal', 'Extended', 'ExtendedTotal',
                 'ExtendedRemote', 'ExtendedRemoteTotal', 'Overload', 'OverloadTotal', 'PeakLoad',
@@ -691,3 +766,113 @@ class Configuration:
                 logger.warning('🧐⚠️ Zero test environments found in configuration')
         except Exception as e:
             logger.error(f'🧐❌ failed to stop all test environments. {e}')
+
+    def fetch_databases(self) -> dict:
+        try:
+            databases_instance = Databases(self.com_object.GeneralSetup.DatabaseSetup.Databases)
+            return databases_instance.fetch_databases()
+        except Exception as e:
+            logger.error(f"❌ Error fetching databases: {e}")
+            return {}
+
+    def add_database(self, database_file: str, database_network: str, database_channel: int) -> bool:
+        try:
+            if self.app.measurement.running:
+                logger.warning("⚠️ Cannot add database while measurement is running. Please stop the measurement first.")
+                return False
+            else:
+                databases = Databases(self.com_object.GeneralSetup.DatabaseSetup.Databases)
+                databases_info = databases.fetch_databases()
+                if database_file in [database.full_name for database in databases_info.values()]:
+                    logger.warning(f'⚠️ database "{database_file}" already added')
+                    return False
+                else:
+                    databases.add_network(database_file, database_network)
+                    wait(1)
+                    databases_info = databases.fetch_databases()
+                    for database in databases_info.values():
+                        if database.full_name == database_file:
+                            database.channel = database_channel
+                            wait(1)
+                            logger.info(f'📢 database "{database_file}" added to network "{database_network}" and channel "{database_channel}"')
+                            return True
+                    logger.warning(f'⚠️ unable to add database "{database_file}"')
+                    return False
+        except Exception as e:
+            logger.error(f"❌ Error adding database '{database_file}': {e}")
+            return False
+
+    def remove_database(self, database_file: str, database_channel: int) -> bool:
+        try:
+            if self.app.measurement.running:
+                logger.warning("⚠️ Cannot remove database while measurement is running. Please stop the measurement first.")
+                return False
+            else:
+                databases = Databases(self.com_object.GeneralSetup.DatabaseSetup.Databases)
+                if database_file not in [database.full_name for database in databases.fetch_databases().values()]:
+                    logger.warning(f'⚠️ database "{database_file}" not available to remove')
+                    return False
+                else:
+                    for index in range(1, databases.count + 1):
+                        database = databases.com_object.Item(index)
+                        if (database.FullName == database_file) and (database.Channel == database_channel):
+                            databases.remove(index)
+                            wait(1)
+                            logger.info(f'📢 database "{database_file}" removed from channel "{database_channel}"')
+                            return True
+                    logger.warning(f'⚠️ unable to remove database "{database_file}" from channel "{database_channel}"')
+                    return False
+        except Exception as e:
+            logger.error(f"❌ Error removing database '{database_file}': {e}")
+            return False
+
+    def get_mode(self) -> int:
+        logger.info(f"⚙️ CANoe Configuration mode = ({self.mode} - {'Offline mode' if self.mode == 1 else 'Online mode'})")
+        return self.mode
+
+    def set_mode(self, type: int) -> bool:
+        try:
+            if type in [0, 1]:
+                self.mode = type
+                logger.info(f"⚙️ CANoe Configuration mode set to ({type} - {'Offline mode' if type == 1 else 'Online mode'})")
+                return True
+            else:
+                logger.warning("⚠️ Invalid mode type. Use 0 for Offline mode and 1 for Online mode.")
+                return False
+        except Exception as e:
+            logger.error(f"❌ Error setting CANoe Configuration mode: {e}")
+            return False
+
+    def get_logging_blocks(self) -> list['Logging']:
+        blocks = []
+        for i in range(1, self.online_setup.logging_collection.count + 1):
+            blocks.append(self.online_setup.logging_collection.item(i))
+        return blocks
+
+    def add_logging_block(self, full_name: str) -> 'Logging':
+        return self.online_setup.logging_collection.add(full_name)
+
+    def remove_logging_block(self, index: int) -> None:
+        if index == 0:
+            raise ValueError("Logging blocks indexing starts from 1 and not 0.")
+        self.online_setup.logging_collection.remove(index)
+
+    def load_logs_for_exporter(self, logger_index: int) -> None:
+        self.online_setup.logging_collection.item(logger_index).exporter.load()
+
+    def get_symbols(self, logger_index: int) -> list['ExporterSymbol']:
+        return self.online_setup.logging_collection.item(logger_index).exporter.symbols
+
+    def get_messages(self, logger_index: int) -> list['Message']:
+        return self.online_setup.logging_collection.item(logger_index).exporter.messages
+
+    def add_filters_to_exporter(self, logger_index: int, full_names: 'Iterable'):
+        expo_filter = self.online_setup.logging_collection.item(logger_index).exporter.filter
+        for name in full_names:
+            expo_filter.add(name)
+
+    def start_export(self, logger_index: int):
+        self.online_setup.logging_collection.item(logger_index).exporter.save()
+
+    def set_configuration_modified(self, modified: bool) -> None:
+        self.modified = modified

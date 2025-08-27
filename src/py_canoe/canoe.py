@@ -1,11 +1,15 @@
 
+from typing import TYPE_CHECKING, Iterable
+if TYPE_CHECKING:
+    from py_canoe.core.conf_children.measurement_setup import Logging, ExporterSymbol, Message
+
 import gc
 import pythoncom
 from typing import Union
 
 from py_canoe.core.application import Application
 from py_canoe.core.capl import CompileResult
-from py_canoe.utils.common import logger
+from py_canoe.utils.common import logger, wait
 
 
 class CANoe:
@@ -19,16 +23,21 @@ class CANoe:
 
     def __del__(self):
         try:
+            wait(0.5)
             pythoncom.CoUninitialize()
+            wait(0.5)
         except Exception as e:
             logger.error(f"❌ Error during COM uninitialization: {e}")
 
     def _reset_application(self):
         try:
+            wait(0.5)
             if self.application:
                 del self.application
                 self.application = None
+            wait(0.5)
             gc.collect()
+            wait(0.5)
         except Exception as e:
             logger.error(f"❌ Error during application reset: {e}")
 
@@ -93,6 +102,31 @@ class CANoe:
         self.application = Application()
         self.application.user_capl_functions = self.user_capl_functions
         return self.application.attach_to_active_application()
+
+    def save_configuration(self) -> bool:
+        """
+        Saves the current configuration.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.configuration.save()
+
+    def save_configuration_as(self, path: str, major: int, minor: int, prompt_user: bool = False, create_dir: bool = True) -> bool:
+        """
+        Saves the current configuration as a new file.
+
+        Args:
+            path (str): The path to save the configuration file.
+            major (int): The major version number.
+            minor (int): The minor version number.
+            prompt_user (bool): Whether to prompt the user for confirmation. Defaults to False.
+            create_dir (bool): Whether to create the directory if it doesn't exist. Defaults to True.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.configuration.save_as(path, major, minor, prompt_user, create_dir)
 
     def start_measurement(self, timeout=30) -> bool:
         """
@@ -230,31 +264,6 @@ class CANoe:
         """
         self.application.measurement.measurement_index = index
         return True
-
-    def save_configuration(self) -> bool:
-        """
-        Saves the current configuration.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.configuration.save()
-
-    def save_configuration_as(self, path: str, major: int, minor: int, prompt_user: bool = False, create_dir: bool = True) -> bool:
-        """
-        Saves the current configuration as a new file.
-
-        Args:
-            path (str): The path to save the configuration file.
-            major (int): The major version number.
-            minor (int): The minor version number.
-            prompt_user (bool): Whether to prompt the user for confirmation. Defaults to False.
-            create_dir (bool): Whether to create the directory if it doesn't exist. Defaults to True.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.configuration.save_as(path, major, minor, prompt_user, create_dir)
 
     def get_can_bus_statistics(self, channel: int) -> dict:
         """
@@ -461,91 +470,6 @@ class CANoe:
         """
         return self.application.bus.check_j1939_signal_state(bus, channel, message, signal, source_addr, dest_addr)
 
-    def ui_activate_desktop(self, name: str) -> bool:
-        """
-        Activates a desktop by name.
-
-        Args:
-            name (str): The name of the desktop to activate.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.activate_desktop(name)
-
-    def ui_open_baudrate_dialog(self) -> bool:
-        """
-        Opens the baudrate dialog.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.open_baudrate_dialog()
-
-    def write_text_in_write_window(self, text: str) -> bool:
-        """
-        Writes text in the write window.
-
-        Args:
-            text (str): The text to write.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.write.output(text)
-
-    def read_text_from_write_window(self) -> Union[str, None]:
-        """
-        Reads text from the write window.
-
-        Returns:
-            Union[str, None]: The text from the write window or None if not found.
-        """
-        return self.application.ui.write.text
-
-    def clear_write_window_content(self) -> bool:
-        """
-        Clears the content of the write window.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.write.clear()
-
-    def copy_write_window_content(self) -> bool:
-        """
-        Copies the content of the write window.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.write.copy()
-
-    def enable_write_window_output_file(self, output_file: str, tab_index=None) -> bool:
-        """
-        Enables the write window output file.
-
-        Args:
-            output_file (str): The output file path.
-            tab_index (Optional[int]): The tab index to enable the output file for.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.write.enable_output_file(output_file, tab_index)
-
-    def disable_write_window_output_file(self, tab_index=None) -> bool:
-        """
-        Disables the write window output file.
-
-        Args:
-            tab_index (Optional[int]): The tab index to disable the output file for.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.ui.write.disable_output_file(tab_index)
-
     def define_system_variable(self, sys_var_name: str, value: Union[int, float, str], read_only: bool = False) -> object:
         """
         Defines a system variable.
@@ -599,6 +523,31 @@ class CANoe:
             bool: True if the operation was successful, False otherwise.
         """
         return self.application.system.set_system_variable_array_values(sys_var_name, value, index)
+
+    def get_environment_variable_value(self, env_var_name: str) -> Union[int, float, str, tuple, None]:
+        """
+        returns a environment variable value.
+
+        Args:
+            env_var_name (str): The name of the environment variable. Ex- "float_var"
+
+        Returns:
+            Environment Variable value.
+        """
+        return self.application.environment.get_environment_variable_value(env_var_name)
+
+    def set_environment_variable_value(self, env_var_name: str, value: Union[int, float, str, tuple]) -> bool:
+        """
+        Sets the value of an environment variable.
+
+        Args:
+            env_var_name (str): The name of the environment variable. Ex- "speed".
+            value (Union[int, float, str, tuple]): variable value. supported CAPL environment variable data types integer, double, string and data.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.environment.set_environment_variable_value(env_var_name, value)
 
     def send_diag_request(self, diag_ecu_qualifier_name: str, request: str, request_in_bytes=True, return_sender_name=False, response_in_bytearray=False) -> Union[str, dict]:
         """
@@ -693,31 +642,6 @@ class CANoe:
         """
         return self.application.capl.call_capl_function(name, *arguments)
 
-    def get_environment_variable_value(self, env_var_name: str) -> Union[int, float, str, tuple, None]:
-        """
-        returns a environment variable value.
-
-        Args:
-            env_var_name (str): The name of the environment variable. Ex- "float_var"
-
-        Returns:
-            Environment Variable value.
-        """
-        return self.application.environment.get_environment_variable_value(env_var_name)
-
-    def set_environment_variable_value(self, env_var_name: str, value: Union[int, float, str, tuple]) -> bool:
-        """
-        Sets the value of an environment variable.
-
-        Args:
-            env_var_name (str): The name of the environment variable. Ex- "speed".
-            value (Union[int, float, str, tuple]): variable value. supported CAPL environment variable data types integer, double, string and data.
-
-        Returns:
-            bool: True if the operation was successful, False otherwise.
-        """
-        return self.application.environment.set_environment_variable_value(env_var_name, value)
-
     def get_test_environments(self) -> dict:
         """returns dictionary of test environment names and class."""
         return self.application.configuration.get_test_environments()
@@ -772,3 +696,171 @@ class CANoe:
     def stop_all_test_environments(self):
         """stops execution of all test environments available in test setup."""
         return self.application.configuration.stop_all_test_environments()
+
+    def ui_activate_desktop(self, name: str) -> bool:
+        """
+        Activates a desktop by name.
+
+        Args:
+            name (str): The name of the desktop to activate.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.activate_desktop(name)
+
+    def ui_open_baudrate_dialog(self) -> bool:
+        """
+        Opens the baudrate dialog.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.open_baudrate_dialog()
+
+    def write_text_in_write_window(self, text: str) -> bool:
+        """
+        Writes text in the write window.
+
+        Args:
+            text (str): The text to write.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.write.output(text)
+
+    def read_text_from_write_window(self) -> Union[str, None]:
+        """
+        Reads text from the write window.
+
+        Returns:
+            Union[str, None]: The text from the write window or None if not found.
+        """
+        return self.application.ui.write.text
+
+    def clear_write_window_content(self) -> bool:
+        """
+        Clears the content of the write window.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.write.clear()
+
+    def copy_write_window_content(self) -> bool:
+        """
+        Copies the content of the write window.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.write.copy()
+
+    def enable_write_window_output_file(self, output_file: str, tab_index=None) -> bool:
+        """
+        Enables the write window output file.
+
+        Args:
+            output_file (str): The output file path.
+            tab_index (Optional[int]): The tab index to enable the output file for.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.write.enable_output_file(output_file, tab_index)
+
+    def disable_write_window_output_file(self, tab_index=None) -> bool:
+        """
+        Disables the write window output file.
+
+        Args:
+            tab_index (Optional[int]): The tab index to disable the output file for.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
+        return self.application.ui.write.disable_output_file(tab_index)
+
+    def add_database(self, database_file: str, database_network: str, database_channel: int) -> bool:
+        """adds database file to a network channel
+
+        Args:
+            database_file (str): database file to attach. give full file path.
+            database_network (str): network name on which you want to add this database.
+            database_channel (int): channel name on which you want to add this database.
+        """
+        return self.application.configuration.add_database(database_file, database_network, database_channel)
+
+    def remove_database(self, database_file: str, database_channel: int) -> bool:
+        """remove database file from a channel
+
+        Args:
+            database_file (str): database file to remove. give full file path.
+            database_channel (int): channel name on which you want to remove database.
+        """
+        return self.application.configuration.remove_database(database_file, database_channel)
+
+    def get_logging_blocks(self) -> list['Logging']:
+        """Return all available logging blocks."""
+        return list(self.application.configuration.get_logging_blocks())
+
+    def add_logging_block(self, full_name: str) -> 'Logging':
+        """adds a new logging block to configuration measurement setup.
+
+        Args:
+            full_name (str): full path to log file as "C:/file.(asc|blf|mf4|...)", may have field functions like {IncMeasurement} in the file name.
+
+        Returns:
+            Logging: returns Logging object of added logging block.
+        """
+        return self.application.configuration.add_logging_block(full_name)
+
+    def remove_logging_block(self, index: int) -> None:
+        """removes a logging block from configuration measurement setup.
+
+        Args:
+            index (int): index of logging block to remove. logging blocks indexing starts from 1 and not 0.
+        """
+        return self.application.configuration.remove_logging_block(index)
+
+    def load_logs_for_exporter(self, logger_index: int) -> None:
+        """Load all source files of exporter and determine symbols/messages.
+
+        Args:
+            logger_index (int): indicates logger and its log files
+        """
+        return self.application.configuration.load_logs_for_exporter(logger_index)
+
+    def get_symbols(self, logger_index: int) -> list['ExporterSymbol']:
+        """Return all exporter symbols from given logger."""
+        return self.application.configuration.get_symbols(logger_index)
+
+    def get_messages(self, logger_index: int) -> list['Message']:
+        """Return all messages from given logger."""
+        return self.application.configuration.get_messages(logger_index)
+
+    def add_filters_to_exporter(self, logger_index: int, full_names: 'Iterable'):
+        """Add messages and symbols to exporter filter by their full names.
+
+        Args:
+            logger_index (int): indicates logger
+            full_names (Iterable): full names of messages and symbols
+        """
+        return self.application.configuration.add_filters_to_exporter(logger_index, full_names)
+
+    def start_export(self, logger_index: int):
+        """Starts the export/conversion of exporter.
+
+        Args:
+            logger_index (int): indicates logger
+        """
+        return self.application.configuration.start_export(logger_index)
+
+    def set_configuration_modified(self, modified: bool) -> None:
+        """Change status of configuration.
+
+        Args:
+            modified (bool): True if configuration is modified, False otherwise.
+        """
+        return self.application.configuration.set_configuration_modified(modified)
