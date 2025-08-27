@@ -1,7 +1,7 @@
 
 from typing import TYPE_CHECKING, Iterable
 if TYPE_CHECKING:
-    from py_canoe.core.conf_children.measurement_setup import Logging, ExporterSymbol, Message
+    from py_canoe.core.configuration_children.measurement_setup import Logging, ExporterSymbol, Message
 
 import gc
 import pythoncom

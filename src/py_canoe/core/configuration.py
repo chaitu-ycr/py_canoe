@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, Iterable
 if TYPE_CHECKING:
     from py_canoe.core.application import Application
-    from py_canoe.core.conf_children.measurement_setup import Logging, ExporterSymbol, Message
+    from py_canoe.core.configuration_children.measurement_setup import Logging, ExporterSymbol, Message
 import os
 import win32com.client
 
-from py_canoe.core.conf_children.measurement_setup import MeasurementSetup
+from py_canoe.core.configuration_children.measurement_setup import MeasurementSetup
 from py_canoe.utils.common import DoEventsUntil, logger, wait
 
 TEST_MODULE_START_EVENT_TIMEOUT = 5  # seconds
