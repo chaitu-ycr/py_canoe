@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING, Iterable, Union
 if TYPE_CHECKING:
     from py_canoe.core.application import Application
     from py_canoe.core.configuration_children.measurement_setup import Logging, ExporterSymbol, Message
@@ -434,19 +434,14 @@ class Databases:
     def count(self) -> int:
         return self.com_object.Count
 
-    def fetch_databases(self) -> dict:
-        databases = dict()
-        for index in range(1, self.count + 1):
-            db_com_obj = self.com_object.Item(index)
-            db_inst = Database(db_com_obj)
-            databases[db_inst.name] = db_inst
-        return databases
+    def item(self, index: int) -> 'Database':
+        return Database(self.com_object.Item(index))
 
-    def add(self, full_name: str) -> object:
-        return self.com_object.Add(full_name)
+    def add(self, full_name: str) -> 'Database':
+        return Database(self.com_object.Add(full_name))
 
-    def add_network(self, database_name: str, network_name: str) -> object:
-        return self.com_object.AddNetwork(database_name, network_name)
+    def add_network(self, database_name: str, network_name: str) -> 'Database':
+        return Database(self.com_object.AddNetwork(database_name, network_name))
 
     def remove(self, index: int) -> None:
         self.com_object.Remove(index)
@@ -767,37 +762,27 @@ class Configuration:
         except Exception as e:
             logger.error(f'🧐❌ failed to stop all test environments. {e}')
 
-    def fetch_databases(self) -> dict:
-        try:
-            databases_instance = Databases(self.com_object.GeneralSetup.DatabaseSetup.Databases)
-            return databases_instance.fetch_databases()
-        except Exception as e:
-            logger.error(f"❌ Error fetching databases: {e}")
-            return {}
-
-    def add_database(self, database_file: str, database_network: str, database_channel: int) -> bool:
+    def add_database(self, database_file: str, database_channel: int, database_network: Union[str, None]=None) -> bool:
         try:
             if self.app.measurement.running:
                 logger.warning("⚠️ Cannot add database while measurement is running. Please stop the measurement first.")
                 return False
             else:
                 databases = Databases(self.com_object.GeneralSetup.DatabaseSetup.Databases)
-                databases_info = databases.fetch_databases()
-                if database_file in [database.full_name for database in databases_info.values()]:
+                databases_info = {databases.item(index).full_name: databases.item(index) for index in range(1, databases.count + 1)}
+                if database_file in databases_info.keys():
                     logger.warning(f'⚠️ database "{database_file}" already added')
                     return False
                 else:
-                    databases.add_network(database_file, database_network)
-                    wait(1)
-                    databases_info = databases.fetch_databases()
-                    for database in databases_info.values():
-                        if database.full_name == database_file:
-                            database.channel = database_channel
-                            wait(1)
-                            logger.info(f'📢 database "{database_file}" added to network "{database_network}" and channel "{database_channel}"')
-                            return True
-                    logger.warning(f'⚠️ unable to add database "{database_file}"')
-                    return False
+                    if database_network:
+                        database = databases.add_network(database_file, database_network)
+                    else:
+                        database = databases.add(database_file)
+                    wait(0.5)
+                    database.channel = database_channel
+                    wait(0.5)
+                    logger.info(f'📢 database "{database_file}" added successfully to channel {database_channel}')
+                    return True
         except Exception as e:
             logger.error(f"❌ Error adding database '{database_file}': {e}")
             return False
@@ -809,13 +794,14 @@ class Configuration:
                 return False
             else:
                 databases = Databases(self.com_object.GeneralSetup.DatabaseSetup.Databases)
-                if database_file not in [database.full_name for database in databases.fetch_databases().values()]:
+                databases_info = {databases.item(index).full_name: databases.item(index) for index in range(1, databases.count + 1)}
+                if database_file not in databases_info.keys():
                     logger.warning(f'⚠️ database "{database_file}" not available to remove')
                     return False
                 else:
                     for index in range(1, databases.count + 1):
-                        database = databases.com_object.Item(index)
-                        if (database.FullName == database_file) and (database.Channel == database_channel):
+                        database = databases.item(index)
+                        if (database.full_name == database_file) and (database.channel == database_channel):
                             databases.remove(index)
                             wait(1)
                             logger.info(f'📢 database "{database_file}" removed from channel "{database_channel}"')
