@@ -781,7 +781,7 @@ class Configuration:
                     wait(0.5)
                     database.channel = database_channel
                     wait(0.5)
-                    logger.info(f'📢 database "{database_file}" added to network "{database_network}" and channel "{database_channel}"')
+                    logger.info(f'📢 database "{database_file}" added successfully to channel {database_channel}')
                     return True
         except Exception as e:
             logger.error(f"❌ Error adding database '{database_file}': {e}")
