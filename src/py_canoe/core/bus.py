@@ -1,42 +1,13 @@
 from typing import Union
 
+from py_canoe.core.child_elements.channels import Channels
+from py_canoe.core.child_elements.databases import Databases
+from py_canoe.core.child_elements.nodes import Nodes
+from py_canoe.core.child_elements.ports import Ports
+from py_canoe.core.child_elements.replay_collection import ReplayCollection
+from py_canoe.core.child_elements.security_configuration import SecurityConfiguration
+from py_canoe.core.child_elements.signals import Signal
 from py_canoe.utils.common import logger
-
-
-class Signal:
-    def __init__(self, bus, channel: int, message: str, signal: str, source_address: int = None, destination_address: int = None):
-        if source_address and destination_address:
-            self.com_object = bus.com_object.GetJ1939Signal(channel, message, signal, source_address, destination_address)
-        else:
-            self.com_object = bus.com_object.GetSignal(channel, message, signal)
-
-    @property
-    def full_name(self) -> str:
-        return self.com_object.FullName
-
-    @property
-    def is_online(self) -> bool:
-        return self.com_object.IsOnline
-
-    @property
-    def raw_value(self) -> int:
-        return self.com_object.RawValue
-
-    @raw_value.setter
-    def raw_value(self, value: int):
-        self.com_object.RawValue = value
-
-    @property
-    def state(self) -> int:
-        return self.com_object.State
-
-    @property
-    def value(self) -> Union[int, float]:
-        return self.com_object.Value
-
-    @value.setter
-    def value(self, value: Union[int, float]):
-        self.com_object.Value = value
 
 
 class Bus:
@@ -78,6 +49,14 @@ class Bus:
         self.com_object.SetBaudrate(value)
 
     @property
+    def channels(self) -> 'Channels':
+        return Channels(self.com_object.Channels)
+
+    @property
+    def databases(self) -> 'Databases':
+        return Databases(self.com_object.Databases)
+
+    @property
     def name(self) -> str:
         return self.com_object.Name
 
@@ -85,11 +64,31 @@ class Bus:
     def name(self, name: str):
         self.com_object.Name = name
 
+    @property
+    def nodes(self) -> 'Nodes':
+        return Nodes(self.com_object.Nodes)
+
+    @property
+    def ports(self) -> 'Ports':
+        return Ports(self.com_object.Port)
+
+    @property
+    def ports_of_channel(self) -> 'Ports':
+        return Ports(self.com_object.PortsOfChannel)
+
+    @property
+    def replay_collection(self) -> 'ReplayCollection':
+        return ReplayCollection(self.com_object.ReplayCollection)
+
+    @property
+    def security_configuration(self) -> 'SecurityConfiguration':
+        return SecurityConfiguration(self.com_object.SecurityConfiguration)
+
     def get_signal(self, channel: int, message: str, signal: str) -> Signal:
-        return Signal(self, channel, message, signal)
+        return Signal(self.com_object.GetSignal(channel, message, signal))
 
     def get_j1939_signal(self, channel: int, message: str, signal: str, source_address: int, destination_address: int) -> Signal:
-        return Signal(self, channel, message, signal, source_address, destination_address)
+        return Signal(self.com_object.GetJ1939Signal(channel, message, signal, source_address, destination_address))
 
     def get_bus_databases_info(self, bus: str = 'CAN') -> dict:
         try:

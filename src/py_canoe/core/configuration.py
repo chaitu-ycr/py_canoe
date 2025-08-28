@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING, Iterable, Union
 if TYPE_CHECKING:
     from py_canoe.core.application import Application
-    from py_canoe.core.configuration_children.measurement_setup import Logging, ExporterSymbol, Message
+    from py_canoe.core.child_elements.measurement_setup import Logging, ExporterSymbol, Message
 import os
 import win32com.client
 
-from py_canoe.core.configuration_children.measurement_setup import MeasurementSetup
+from py_canoe.core.child_elements.measurement_setup import MeasurementSetup
+from py_canoe.core.child_elements.databases import Databases
+from py_canoe.core.child_elements.replay_collection import ReplayCollection
 from py_canoe.utils.common import DoEventsUntil, logger, wait
 
 TEST_MODULE_START_EVENT_TIMEOUT = 5  # seconds
@@ -395,58 +397,6 @@ class TestSetup:
         return TestEnvironments(self.com_object)
 
 
-class Database:
-    """The Database object represents the assigned database of the CANoe application."""
-    def __init__(self, database_com_obj):
-        self.com_object = win32com.client.Dispatch(database_com_obj)
-
-    @property
-    def channel(self) -> int:
-        return self.com_object.Channel
-
-    @channel.setter
-    def channel(self, channel: int) -> None:
-        self.com_object.Channel = channel
-
-    @property
-    def full_name(self) -> str:
-        return self.com_object.FullName
-
-    @full_name.setter
-    def full_name(self, full_name: str) -> None:
-        self.com_object.FullName = full_name
-
-    @property
-    def name(self) -> str:
-        return self.com_object.Name
-
-    @property
-    def path(self) -> str:
-        return self.com_object.Path
-
-
-class Databases:
-    """The Databases object represents the assigned databases of CANoe."""
-    def __init__(self, databases_com_obj):
-        self.com_object = win32com.client.Dispatch(databases_com_obj)
-
-    @property
-    def count(self) -> int:
-        return self.com_object.Count
-
-    def item(self, index: int) -> 'Database':
-        return Database(self.com_object.Item(index))
-
-    def add(self, full_name: str) -> 'Database':
-        return Database(self.com_object.Add(full_name))
-
-    def add_network(self, database_name: str, network_name: str) -> 'Database':
-        return Database(self.com_object.AddNetwork(database_name, network_name))
-
-    def remove(self, index: int) -> None:
-        self.com_object.Remove(index)
-
-
 class ConfigurationEvents:
     def __init__(self):
         self.CONFIGURATION_CLOSED = False
@@ -589,13 +539,13 @@ class Configuration:
 
     def set_replay_block_file(self, block_name: str, recording_file_path: str) -> bool:
         try:
-            replay_collection_obj = self.com_object.SimulationSetup.ReplayCollection
+            replay_collection_obj = ReplayCollection(self.com_object.SimulationSetup.ReplayCollection)
             replay_blocks_obj_dict = dict()
-            for i in range(1, replay_collection_obj.Count + 1):
-                replay_block_obj = win32com.client.Dispatch(replay_collection_obj.Item(i))
-                replay_blocks_obj_dict[replay_block_obj.Name] = replay_block_obj
+            for i in range(1, replay_collection_obj.count + 1):
+                replay_block_obj = replay_collection_obj.item(i)
+                replay_blocks_obj_dict[replay_block_obj.name] = replay_block_obj
             if block_name in replay_blocks_obj_dict:
-                replay_blocks_obj_dict[block_name].Path = recording_file_path
+                replay_blocks_obj_dict[block_name].path = recording_file_path
                 logger.info(f"📢 Replay block path for '{block_name}' set to '{recording_file_path}'")
                 return True
             else:
@@ -607,17 +557,17 @@ class Configuration:
 
     def control_replay_block(self, block_name: str, start_stop: bool) -> bool:
         try:
-            replay_collection_obj = self.com_object.SimulationSetup.ReplayCollection
+            replay_collection_obj = ReplayCollection(self.com_object.SimulationSetup.ReplayCollection)
             replay_blocks_obj_dict = dict()
-            for i in range(1, replay_collection_obj.Count + 1):
-                replay_block_obj = win32com.client.Dispatch(replay_collection_obj.Item(i))
-                replay_blocks_obj_dict[replay_block_obj.Name] = replay_block_obj
+            for i in range(1, replay_collection_obj.count + 1):
+                replay_block_obj = replay_collection_obj.item(i)
+                replay_blocks_obj_dict[replay_block_obj.name] = replay_block_obj
             if block_name in replay_blocks_obj_dict:
                 if start_stop:
-                    replay_blocks_obj_dict[block_name].Start()
+                    replay_blocks_obj_dict[block_name].start()
                     logger.info(f"📢 Replay block '{block_name}' started")
                 else:
-                    replay_blocks_obj_dict[block_name].Stop()
+                    replay_blocks_obj_dict[block_name].stop()
                     logger.info(f"📢 Replay block '{block_name}' stopped")
                 return True
             else:
@@ -629,13 +579,13 @@ class Configuration:
 
     def enable_disable_replay_block(self, block_name: str, enable_disable: bool) -> bool:
         try:
-            replay_collection_obj = self.com_object.SimulationSetup.ReplayCollection
+            replay_collection_obj = ReplayCollection(self.com_object.SimulationSetup.ReplayCollection)
             replay_blocks_obj_dict = dict()
-            for i in range(1, replay_collection_obj.Count + 1):
-                replay_block_obj = win32com.client.Dispatch(replay_collection_obj.Item(i))
-                replay_blocks_obj_dict[replay_block_obj.Name] = replay_block_obj
+            for i in range(1, replay_collection_obj.count + 1):
+                replay_block_obj = replay_collection_obj.item(i)
+                replay_blocks_obj_dict[replay_block_obj.name] = replay_block_obj
             if block_name in replay_blocks_obj_dict:
-                replay_blocks_obj_dict[block_name].Enabled = enable_disable
+                replay_blocks_obj_dict[block_name].enabled = enable_disable
                 logger.info(f"📢 Replay block '{block_name}' {'enabled' if enable_disable else 'disabled'}")
                 return True
             else:

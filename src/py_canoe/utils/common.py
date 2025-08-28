@@ -1,29 +1,27 @@
+# import os
+import sys
 import time
 import logging
 import pythoncom
 from datetime import datetime
 
-def create_console_handler(level=logging.DEBUG, fmt="%(asctime)s [PY_CANOE] [%(levelname)-4.8s] %(message)s"):
-    """Create a console logging handler."""
-    handler = logging.StreamHandler()
-    handler.setLevel(level)
-    handler.setFormatter(logging.Formatter(fmt))
-    return handler
-
-def create_file_handler(filename='py_canoe.log', level=logging.DEBUG, fmt="%(asctime)s [PY_CANOE] [%(levelname)-4.8s] %(message)s"):
-    """Create a file logging handler."""
-    handler = logging.FileHandler(filename, encoding='utf-8')
-    handler.setLevel(level)
-    handler.setFormatter(logging.Formatter(fmt))
-    return handler
-
 def setup_logger(name='py_canoe', filename='py_canoe.log'):
     """Set up and return a logger with console and file handlers."""
+    # os.makedirs(os.path.dirname(filename), exist_ok=True)
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
-    if not logger.handlers:
-        logger.addHandler(create_console_handler())
-        logger.addHandler(create_file_handler(filename=filename))
+    logger.setLevel(logging.INFO)
+    fmt = "%(asctime)s [PY_CANOE] [%(levelname)-4.8s] %(message)s"
+    if not any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(logging.Formatter(fmt))
+        logger.addHandler(console_handler)
+    if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
+        file_handler = logging.FileHandler(filename, mode='w', encoding='utf-8')
+        file_handler.setLevel(logging.INFO)
+        file_handler.setFormatter(logging.Formatter(fmt))
+        logger.addHandler(file_handler)
+    logger.propagate = False
     return logger
 
 logger = setup_logger()
