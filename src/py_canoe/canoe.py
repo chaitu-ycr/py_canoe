@@ -1,4 +1,3 @@
-
 from typing import TYPE_CHECKING, Iterable
 if TYPE_CHECKING:
     from py_canoe.core.configuration_children.measurement_setup import Logging, ExporterSymbol, Message
@@ -782,7 +781,7 @@ class CANoe:
         """
         return self.application.ui.write.disable_output_file(tab_index)
 
-    def add_database(self, database_file: str, database_network: str, database_channel: int) -> bool:
+    def add_database(self, database_file: str, database_channel: int, database_network: Union[str, None]=None) -> bool:
         """adds database file to a network channel
 
         Args:
@@ -790,7 +789,7 @@ class CANoe:
             database_network (str): network name on which you want to add this database.
             database_channel (int): channel name on which you want to add this database.
         """
-        return self.application.configuration.add_database(database_file, database_network, database_channel)
+        return self.application.configuration.add_database(database_file, database_channel, database_network)
 
     def remove_database(self, database_file: str, database_channel: int) -> bool:
         """remove database file from a channel
