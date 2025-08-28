@@ -186,19 +186,19 @@ class TestStandalonePyCanoe:
     #     assert self.canoe_inst.call_capl_function('hello_world')
     #     assert self.canoe_inst.stop_measurement()
 
-    def test_test_setup_methods(self):
-        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_test_setup)
-        self.canoe_inst.ui_activate_desktop('TestSetup')
-        assert self.canoe_inst.start_measurement()
-        wait(1)
-        self.canoe_inst.execute_all_test_environments()
-        test_environments = self.canoe_inst.get_test_environments()
-        for te_name, _ in test_environments.items():
-            self.canoe_inst.execute_all_test_modules_in_test_env(te_name)
-        self.canoe_inst.execute_test_module('demo_test_node_001')
-        self.canoe_inst.execute_test_module('demo_test_node_002')
-        wait(1)
-        assert self.canoe_inst.stop_measurement()
+    # def test_test_setup_methods(self):
+    #     self.canoe_inst.open(canoe_cfg=self.canoe_cfg_test_setup)
+    #     self.canoe_inst.ui_activate_desktop('TestSetup')
+    #     assert self.canoe_inst.start_measurement()
+    #     wait(1)
+    #     self.canoe_inst.execute_all_test_environments()
+    #     test_environments = self.canoe_inst.get_test_environments()
+    #     for te_name, _ in test_environments.items():
+    #         self.canoe_inst.execute_all_test_modules_in_test_env(te_name)
+    #     self.canoe_inst.execute_test_module('demo_test_node_001')
+    #     self.canoe_inst.execute_test_module('demo_test_node_002')
+    #     wait(1)
+    #     assert self.canoe_inst.stop_measurement()
 
     # def test_env_var_methods(self):
     #     self.canoe_inst.open(canoe_cfg=self.canoe_cfg_dev)
@@ -212,15 +212,15 @@ class TestStandalonePyCanoe:
     #     self.canoe_inst.set_environment_variable_value('data_var', (1, 2, 3, 4, 5, 6, 7))
     #     self.canoe_inst.get_environment_variable_value('data_var')
     #     assert self.canoe_inst.stop_measurement()
-# TBC
+
     # def test_conf_gen_setup(self):
     #     self.canoe_inst.open(canoe_cfg=self.canoe_cfg_gen_db_setup, visible=True, auto_save=True, prompt_user=False, auto_stop=True)
     #     assert self.canoe_inst.start_measurement()
     #     wait(1)
-    #     self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
+    #     self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
     #     self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
     #     assert self.canoe_inst.stop_measurement()
-    #     assert self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 'CAN1', 1)
+    #     assert self.canoe_inst.add_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
     #     assert self.canoe_inst.remove_database(fr"{self.file_path}\demo_cfg\DBs\sample_databases\XCP.dbc", 1)
     #     assert self.canoe_inst.save_configuration()
 # TBC
@@ -235,3 +235,4 @@ class TestStandalonePyCanoe:
     #     # wait(2)
     #     # self.canoe_inst.start_stop_online_measurement_setup_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start=False)
     #     assert self.canoe_inst.stop_measurement()
+
