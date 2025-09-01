@@ -2,8 +2,8 @@ from typing import Union
 import win32com.client
 
 from py_canoe.core.capl import CaplFunction
-from py_canoe.utils.common import DoEventsUntil
-from py_canoe.utils.common import logger
+from py_canoe.helpers.common import DoEventsUntil
+from py_canoe.helpers.common import logger, wait
 
 
 class MeasurementEvents:
@@ -94,6 +94,7 @@ class Measurement:
             status = DoEventsUntil(lambda: self.measurement_events.STOP, timeout, "CANoe Measurement Stop")
             if status:
                 logger.info('📢 Measurement Stopped 🧍')
+            wait(1)  # Allow 1 second buffer
             return status
         except Exception as e:
             logger.error(f"❌ Error stopping CANoe measurement: {e}")

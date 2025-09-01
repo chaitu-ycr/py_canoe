@@ -1,9 +1,9 @@
 import win32com.client
 from typing import Union
 
-from py_canoe.utils.common import DoEventsUntil
-from py_canoe.utils.common import logger
-from py_canoe.utils.common import wait
+from py_canoe.helpers.common import DoEventsUntil
+from py_canoe.helpers.common import logger
+from py_canoe.helpers.common import wait
 
 DIAGNOSTIC_RESPONSE_TIMEOUT_VALUE = 300 # 5 minutes
 

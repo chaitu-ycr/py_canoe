@@ -7,7 +7,7 @@ from py_canoe.core.child_elements.ports import Ports
 from py_canoe.core.child_elements.replay_collection import ReplayCollection
 from py_canoe.core.child_elements.security_configuration import SecurityConfiguration
 from py_canoe.core.child_elements.signals import Signal
-from py_canoe.utils.common import logger
+from py_canoe.helpers.common import logger
 
 
 class Bus:

@@ -2,7 +2,7 @@
 import win32com.client
 from typing import Union
 
-from py_canoe.utils.common import DoEventsUntil, logger
+from py_canoe.helpers.common import DoEventsUntil, logger
 
 ENV_VAR_CHANGE_TIMEOUT = 1
 

@@ -10,7 +10,7 @@ from py_canoe.core.networks import Networks
 from py_canoe.core.system import System
 from py_canoe.core.ui import Ui
 from py_canoe.core.version import Version
-from py_canoe.utils.common import DoEventsUntil, logger
+from py_canoe.helpers.common import DoEventsUntil, logger
 
 
 class ApplicationEvents:

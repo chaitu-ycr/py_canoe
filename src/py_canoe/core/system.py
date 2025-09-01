@@ -1,8 +1,8 @@
 import win32com.client
 from typing import Union
 
-from py_canoe.utils.common import DoEventsUntil
-from py_canoe.utils.common import logger
+from py_canoe.helpers.common import DoEventsUntil
+from py_canoe.helpers.common import logger
 
 
 class VariablesFile:
@@ -315,7 +315,7 @@ class System:
         return VariablesFiles(self.com_object.VariablesFiles)
 
 
-    def add_system_variable(self, sys_var_name: str, value: Union[int, float, str], read_only: bool = False) -> Union[object, None]:
+    def add_variable(self, sys_var_name: str, value: Union[int, float, str], read_only: bool = False) -> Union[object, None]:
         new_var_com_obj = None
         try:
             parts = sys_var_name.split('::')
@@ -342,7 +342,7 @@ class System:
             logger.error(f"❌ Error defining System Variable '{sys_var_name}': {e}")
             return None
 
-    def remove_system_variable(self, sys_var_name: str) -> bool:
+    def remove_variable(self, sys_var_name: str) -> bool:
         try:
             parts = sys_var_name.split('::')
             if len(parts) < 2:
@@ -364,7 +364,7 @@ class System:
             logger.error(f"❌ Error removing System Variable '{sys_var_name}': {e}")
             return False
 
-    def get_system_variable_value(self, sys_var_name: str, return_symbolic_name=False) -> Union[int, float, str, None]:
+    def get_variable_value(self, sys_var_name: str, return_symbolic_name=False) -> Union[int, float, str, None]:
         try:
             parts = sys_var_name.split('::')
             if len(parts) < 2:
@@ -385,7 +385,7 @@ class System:
             logger.error(f"❌ Error retrieving System Variable '{sys_var_name}': {e}")
             return None
 
-    def set_system_variable_value(self, sys_var_name: str, value: Union[int, float, str], timeout: Union[int, float] = 1) -> bool:
+    def set_variable_value(self, sys_var_name: str, value: Union[int, float, str], timeout: Union[int, float] = 1) -> bool:
         try:
             parts = sys_var_name.split('::')
             if len(parts) < 2:
@@ -407,7 +407,7 @@ class System:
             logger.error(f"❌ Error setting System Variable '{sys_var_name}': {e}")
             return False
 
-    def set_system_variable_array_values(self, sys_var_name: str, value: tuple, index: int = 0, timeout: Union[int, float] = 1) -> bool:
+    def set_variable_array_values(self, sys_var_name: str, value: tuple, index: int = 0, timeout: Union[int, float] = 1) -> bool:
         try:
             parts = sys_var_name.split('::')
             if len(parts) < 2:
@@ -428,3 +428,29 @@ class System:
         except Exception as e:
             logger.error(f"❌ Error setting System Variable Array '{sys_var_name}': {e}")
             return False
+
+    def get_namespaces(self) -> Union[dict['str': 'Namespace'], None]:
+        try:
+            namespaces_dict = {}
+            namespaces = self.namespaces
+            for index in range(1, namespaces.count + 1):
+                namespace = namespaces.item(index)
+                namespaces_dict[namespace.name] = namespace
+            logger.info(f"📢 total {namespaces.count} system root namespaces found.")
+            return namespaces_dict
+        except Exception as e:
+            logger.error(f"❌ Error getting system namespaces: {e}")
+            return None
+
+    def get_variables_files(self) -> Union[dict['str': 'VariablesFile'], None]:
+        try:
+            variables_files_dict = {}
+            variables_files = self.variables_files
+            for index in range(1, variables_files.count + 1):
+                variables_file = variables_files.item(index)
+                variables_files_dict[variables_file.full_name] = variables_file
+            logger.info(f"📢 total {variables_files.count} system variables files found.")
+            return variables_files_dict
+        except Exception as e:
+            logger.error(f"❌ Error getting system variables files: {e}")
+            return None

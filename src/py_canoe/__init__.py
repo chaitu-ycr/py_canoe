@@ -1,2 +1,2 @@
 from py_canoe.canoe import CANoe
-from py_canoe.utils.common import wait
+from py_canoe.helpers.common import wait

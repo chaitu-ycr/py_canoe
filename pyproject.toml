@@ -28,7 +28,6 @@ dev = [
     "pytest-sugar",
     "pytest-clarity",
     "pytest-cov",
-    "pytest-xdist",
     "pytest-watch",
     "mkdocs-puml",
     "mkdocs-exclude",

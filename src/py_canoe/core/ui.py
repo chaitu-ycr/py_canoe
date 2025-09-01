@@ -1,6 +1,6 @@
 from typing import Union
 
-from py_canoe.utils.common import logger
+from py_canoe.helpers.common import logger
 
 
 class Write:
