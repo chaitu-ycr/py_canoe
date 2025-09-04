@@ -236,6 +236,24 @@ canoe_inst.execute_test_module('demo_test_node_002')
 canoe_inst.stop_measurement()
 ```
 
+### execute tests using vtest module
+
+```python
+canoe_inst.open(canoe_cfg=r'tests\demo_cfg\demo_test_setup.cfg')
+canoe_inst.start_measurement()
+# list test environments
+tes = canoe_inst.vtest.list_test_environments()
+# list test modules
+tms = canoe_inst.vtest.list_test_modules(tes[0])
+# run test module
+canoe_inst.vtest.run_test_module(tms[0])
+# run test environment
+canoe_inst.vtest.run_test_environment(tes[0])
+# run all tests
+canoe_inst.vtest.run_all_tests()
+canoe_inst.stop_measurement()
+```
+
 ### get/set environment variable value
 
 ```python

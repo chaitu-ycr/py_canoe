@@ -235,3 +235,19 @@ class TestStandalonePyCanoe:
         wait(1)
         assert self.canoe_inst.start_stop_online_logging_block(fr'{self.demo_cfg_dir}\Logs\demo_online_setup_log.blf', start_stop=False)
         assert self.canoe_inst.stop_measurement()
+
+    def test_vtest_class_methods(self):
+        self.canoe_inst.open(canoe_cfg=self.canoe_cfg_test_setup)
+        self.canoe_inst.ui_activate_desktop('TestSetup')
+        assert self.canoe_inst.start_measurement()
+        wait(1)
+        test_environments = self.canoe_inst.vtest.list_test_environments()
+        assert test_environments == ['demo_test_environment_001', 'demo_test_environment_002']
+        for te_name in test_environments:
+            test_modules = self.canoe_inst.vtest.list_test_modules(te_name)
+            assert test_modules == [f'{te_name}'.replace('environment', 'node')]
+        self.canoe_inst.vtest.run_test_module('demo_test_node_001')
+        self.canoe_inst.vtest.run_test_environment('demo_test_environment_002')
+        self.canoe_inst.vtest.run_all_tests()
+        wait(1)
+        assert self.canoe_inst.stop_measurement()

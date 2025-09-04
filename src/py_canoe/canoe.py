@@ -8,11 +8,13 @@ from typing import Union
 from py_canoe.core.application import Application
 from py_canoe.core.capl import CompileResult
 from py_canoe.helpers.common import logger, update_logger_file_path
+from py_canoe.vtest import VTest
 
 
 class CANoe:
     def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
         self.application: Application = None
+        self._vtest: VTest = None
         try:
             pythoncom.CoInitialize()
             if py_canoe_log_dir:
@@ -883,3 +885,15 @@ class CANoe:
             dict: The version information.
         """
         return self.application.version.get_canoe_version_info()
+
+    @property
+    def vtest(self) -> VTest:
+        """
+        returns vtest object.
+
+        Returns:
+            VTest: vtest object.
+        """
+        if self._vtest is None:
+            self._vtest = VTest(self)
+        return self._vtest
