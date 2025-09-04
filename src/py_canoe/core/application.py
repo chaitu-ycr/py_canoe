@@ -75,6 +75,15 @@ class Application:
 
     def _launch_application(self):
         try:
+            # We use gencache.EnsureDispatch to connect to the CANoe COM object.
+            # This is preferred over Dispatch or DispatchEx for a few reasons:
+            # 1. It connects to a running instance of CANoe if one exists, and
+            #    starts a new instance if one is not running. This is the desired
+            #    behavior for both attaching to an existing session and starting a new one.
+            # 2. It enables early binding by generating a static proxy in the gencache,
+            #    which can improve performance.
+            # DispatchEx is not used because it would always start a new instance,
+            # which is not what we want for the 'attach' functionality.
             self.com_object = win32com.client.gencache.EnsureDispatch("CANoe.Application")
             self.application_events = win32com.client.WithEvents(self.com_object, ApplicationEvents)
             self.measurement = Measurement(self)
