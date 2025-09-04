@@ -1,7 +1,7 @@
 from typing import Union
 
 from py_canoe.core.child_elements.channels import Channels
-from py_canoe.core.child_elements.databases import Databases
+from py_canoe.core.child_elements.database_setup import Databases
 from py_canoe.core.child_elements.nodes import Nodes
 from py_canoe.core.child_elements.ports import Ports
 from py_canoe.core.child_elements.replay_collection import ReplayCollection

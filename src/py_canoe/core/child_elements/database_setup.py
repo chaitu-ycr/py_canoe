@@ -1,6 +1,15 @@
 import win32com.client
 
 
+class DatabaseSetup:
+    def __init__(self, database_setup_com_object) -> None:
+        self.com_object = win32com.client.Dispatch(database_setup_com_object)
+
+    @property
+    def databases(self) -> 'Databases':
+        return Databases(self.com_object.Databases)
+
+
 class Databases:
     """The Databases object represents the assigned databases of CANoe."""
     def __init__(self, databases_com_obj):

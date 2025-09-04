@@ -5,8 +5,9 @@ if TYPE_CHECKING:
 import os
 import win32com.client
 
+from py_canoe.core.child_elements.general_setup import GeneralSetup
 from py_canoe.core.child_elements.measurement_setup import MeasurementSetup
-from py_canoe.core.child_elements.databases import Databases
+from py_canoe.core.child_elements.database_setup import Databases
 from py_canoe.core.child_elements.replay_collection import ReplayCollection
 from py_canoe.helpers.common import DoEventsUntil, logger, wait
 
@@ -52,6 +53,10 @@ class Configuration:
         return self.com_object.FullName
 
     @property
+    def general_setup(self) -> 'GeneralSetup':
+        return GeneralSetup(self.com_object.GeneralSetup)
+
+    @property
     def mode(self) -> int:
         return self.com_object.Mode
 
@@ -70,6 +75,10 @@ class Configuration:
     @property
     def name(self) -> str:
         return self.com_object.Name
+
+    @property
+    def offline_setup(self) -> 'MeasurementSetup':
+        return MeasurementSetup(self.com_object.OfflineSetup)
 
     @property
     def online_setup(self) -> 'MeasurementSetup':
