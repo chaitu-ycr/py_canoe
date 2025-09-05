@@ -5,6 +5,10 @@ if TYPE_CHECKING:
 import os
 import win32com.client
 
+from py_canoe.core.child_elements.c_libraries import CLibraries
+from py_canoe.core.child_elements.communication_setup import CommunicationSetup
+from py_canoe.core.child_elements.distributed_mode import DistributedMode
+from py_canoe.core.child_elements.fdx_files import FDXFiles
 from py_canoe.core.child_elements.general_setup import GeneralSetup
 from py_canoe.core.child_elements.measurement_setup import MeasurementSetup
 from py_canoe.core.child_elements.database_setup import Databases
@@ -34,7 +38,7 @@ class Configuration:
         self.app = app
         self.bus_types = self.app.bus_types
         self.com_object = win32com.client.Dispatch(self.app.com_object.Configuration)
-        self.configuration_events: ConfigurationEvents = win32com.client.WithEvents(self.com_object, ConfigurationEvents)
+        # self.configuration_events: ConfigurationEvents = win32com.client.WithEvents(self.com_object, ConfigurationEvents)
         self.configuration_test_setup = lambda: self.test_setup
         self.__test_setup_environments = self.configuration_test_setup().test_environments.fetch_all_test_environments()
         self.__test_modules = list()
@@ -45,8 +49,32 @@ class Configuration:
                 self.__test_modules.append({'name': tm_name, 'object': tm_inst, 'environment': te_name})
 
     @property
+    def c_libraries(self) -> 'CLibraries':
+        return CLibraries(self.com_object.CLibraries)
+
+    @property
     def comment(self) -> str:
         return self.com_object.Comment
+
+    @property
+    def communication_setup(self) -> 'CommunicationSetup':
+        return CommunicationSetup(self.com_object.CommunicationSetup)
+
+    @property
+    def distributed_mode(self) -> 'DistributedMode':
+        return DistributedMode(self.com_object.DistributedMode)
+
+    @property
+    def fdx_enabled(self) -> bool:
+        return self.com_object.FDXEnabled
+
+    @fdx_enabled.setter
+    def fdx_enabled(self, enabled: bool):
+        self.com_object.FDXEnabled = enabled
+
+    @property
+    def fdx_files(self) -> 'FDXFiles':
+        return FDXFiles(self.com_object.FDXFiles)
 
     @property
     def full_name(self) -> str:
@@ -55,6 +83,8 @@ class Configuration:
     @property
     def general_setup(self) -> 'GeneralSetup':
         return GeneralSetup(self.com_object.GeneralSetup)
+    
+    # GlobalTcpIpStackSetting
 
     @property
     def mode(self) -> int:
@@ -75,6 +105,8 @@ class Configuration:
     @property
     def name(self) -> str:
         return self.com_object.Name
+    
+    # NETTargetFramework
 
     @property
     def offline_setup(self) -> 'MeasurementSetup':
@@ -99,6 +131,27 @@ class Configuration:
     @property
     def test_setup(self) -> 'TestSetup':
         return TestSetup(self.com_object)
+    
+    # Sensor
+
+    # SimulationSetup
+
+    # StandaloneMode
+
+    # StartValueList
+
+    # SymbolMappings
+
+    # TestConfigurations
+
+    # TestSetup
+
+    # UserFiles
+
+    # VTSystem
+
+    def compile_and_verify(self) -> bool:
+        self.com_object.CompileAndVerify()
 
     def save(self) -> bool:
         try:

@@ -2,8 +2,8 @@ import win32com.client
 
 
 class DiagnosticsSetup:
-    def __init__(self, diagnostics_setup_com_object):
-        self.com_object = win32com.client.Dispatch(diagnostics_setup_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def diag_descriptions(self) -> 'DiagDescriptions':
@@ -11,8 +11,8 @@ class DiagnosticsSetup:
 
 
 class DiagDescriptions:
-    def __init__(self, diag_descriptions_com_object):
-        self.com_object = win32com.client.Dispatch(diag_descriptions_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -38,8 +38,8 @@ class DiagDescriptions:
 
 
 class DiagDescription:
-    def __init__(self, diag_description_com_object):
-        self.com_object = win32com.client.Dispatch(diag_description_com_object)
+    def __init__(self, com_object):
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def additional_descriptions(self) -> 'AdditionalDescriptions':
@@ -142,8 +142,8 @@ class DiagDescription:
 
 
 class AdditionalDescriptions:
-    def __init__(self, additional_descriptions_com_object):
-        self.com_object = win32com.client.Dispatch(additional_descriptions_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -163,8 +163,8 @@ class AdditionalDescriptions:
 
 
 class AdditionalDescription:
-    def __init__(self, additional_description_com_object):
-        self.com_object = win32com.client.Dispatch(additional_description_com_object)
+    def __init__(self, com_object):
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def diag_variants(self) -> 'DiagVariants':
@@ -216,8 +216,8 @@ class AdditionalDescription:
 
 
 class DiagVariants:
-    def __init__(self, diag_variants_com_object):
-        self.com_object = win32com.client.Dispatch(diag_variants_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -228,8 +228,8 @@ class DiagVariants:
 
 
 class DiagVariant:
-    def __init__(self, diag_variant_com_object):
-        self.com_object = win32com.client.Dispatch(diag_variant_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def name(self) -> str:
@@ -240,8 +240,8 @@ class DiagVariant:
         return self.com_object.Qualifier
 
 class InterpretationOrder:
-    def __init__(self, interpretation_order_com_object):
-        self.com_object = win32com.client.Dispatch(interpretation_order_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:

@@ -2,8 +2,8 @@ import win32com.client
 
 
 class VisualSequenceSetup:
-    def __init__(self, visual_sequence_setup_com_object):
-        self.com_object = win32com.client.Dispatch(visual_sequence_setup_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def visual_sequences(self) -> 'VisualSequences':
@@ -11,8 +11,8 @@ class VisualSequenceSetup:
 
 
 class VisualSequences:
-    def __init__(self, visual_sequences_com_object):
-        self.com_object = win32com.client.Dispatch(visual_sequences_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -29,8 +29,8 @@ class VisualSequences:
 
 
 class VisualSequence:
-    def __init__(self, visual_sequence_com_object):
-        self.com_object = win32com.client.Dispatch(visual_sequence_com_object)
+    def __init__(self, com_object):
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def name(self) -> str:

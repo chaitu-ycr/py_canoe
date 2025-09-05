@@ -16,8 +16,8 @@ class GeneralSetup:
     """
     The MeasurementSetup object rRepresents the general settings of a CANoe configuration.
     """
-    def __init__(self, general_setup_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(general_setup_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def ccp_setup(self) -> 'CCPSetup':

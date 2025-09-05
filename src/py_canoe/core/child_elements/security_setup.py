@@ -2,8 +2,8 @@ import win32com.client
 
 
 class SecuritySetup:
-    def __init__(self, security_setup_com_object):
-        self.com_object = win32com.client.Dispatch(security_setup_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def tls_observer_security_configuration(self) -> 'SecurityConfiguration':
@@ -11,8 +11,8 @@ class SecuritySetup:
 
 
 class SecurityConfiguration:
-    def __init__(self, security_configuration_com_object):
-        self.com_object = win32com.client.Dispatch(security_configuration_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def security_active(self) -> bool:

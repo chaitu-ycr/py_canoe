@@ -5,8 +5,8 @@ class McECUs:
     """
     The McECUs object represents the collection of all configured CCP/XCP ECUs.
     """
-    def __init__(self, ecus_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(ecus_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -29,8 +29,8 @@ class McECU:
     """
     The McECU object represents a CCP / an XCP ECU.
     """
-    def __init__(self, ecu_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(ecu_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def active(self) -> bool:
@@ -231,8 +231,8 @@ class McCANSettings:
     """
     The McCANSettings object contains all CAN related XCP/CCP settings.
     """
-    def __init__(self, can_settings_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(can_settings_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def app_channel(self) -> int:
@@ -271,8 +271,8 @@ class McEthernetSettings:
     """
     The McEthernetSettings object contains all Ethernet related XCP/CCP settings.
     """
-    def __init__(self, ethernet_settings_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(ethernet_settings_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def host(self) -> str:
@@ -291,8 +291,8 @@ class McFlexRaySettings:
     """
     The McFlexRaySettings object contains all FlexRay related XCP/CCP settings.
     """
-    def __init__(self, flexray_settings_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(flexray_settings_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def additional_buffer_count(self) -> int:
@@ -319,8 +319,8 @@ class McMeasurementGroups:
     """
     The McMeasurementGroups object represents all sets of parameters and their measurement settings that can be activated for CCP/XCP measurements.
     """
-    def __init__(self, measurement_groups_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(measurement_groups_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def count(self) -> int:
@@ -340,8 +340,8 @@ class McMeasurementGroup:
     """
     The McMeasurementGroup object represents a set of parameters and their measurement settings that can be activated for CCP/XCP measurements.
     """
-    def __init__(self, measurement_group_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(measurement_group_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def active(self) -> bool:
@@ -373,8 +373,8 @@ class McParameters:
     """
     The McParameters object represents all parameters of the database.
     """
-    def __init__(self, parameters_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(parameters_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def count(self) -> int:
@@ -388,8 +388,8 @@ class McParameter:
     """
     The McParameter object represents a parameter of the database.
     """
-    def __init__(self, parameter_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(parameter_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def auto_read(self) -> bool:

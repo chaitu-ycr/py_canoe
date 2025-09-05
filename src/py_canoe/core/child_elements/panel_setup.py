@@ -5,8 +5,8 @@ class PanelSetup:
     """
     The PanelSetup object represents the panel settings of a CANoe configuration.
     """
-    def __init__(self, panel_setup_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(panel_setup_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = com_object
 
     def panels(self, type: int) -> 'Panels':
         return Panels(self.com_object.Panels(type))
@@ -16,8 +16,8 @@ class PanelSetup:
 
 
 class Panels:
-    def __init__(self, panels_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(panels_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -34,8 +34,8 @@ class Panels:
 
 
 class Panel:
-    def __init__(self, panel_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(panel_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def full_name(self) -> str:

@@ -4,8 +4,8 @@ class MacrosSetup:
     """
     The MacrosSetup object represents the macros settings of a CANoe configuration.
     """
-    def __init__(self, macros_setup_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(macros_setup_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = com_object
 
     @property
     def macros(self) -> 'Macros':
@@ -16,8 +16,8 @@ class MacrosSetup:
 
 
 class Macros:
-    def __init__(self, macros_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(macros_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -31,8 +31,8 @@ class Macros:
 
 
 class Macro:
-    def __init__(self, macro_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(macro_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def name(self) -> str:

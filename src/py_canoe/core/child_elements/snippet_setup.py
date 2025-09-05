@@ -2,8 +2,8 @@ import win32com.client
 
 
 class SnippetSetup:
-    def __init__(self, snippet_setup_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(snippet_setup_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def snippet_files(self) -> 'SnippetFiles':
@@ -11,8 +11,8 @@ class SnippetSetup:
 
 
 class SnippetFiles:
-    def __init__(self, snippet_files_com_object):
-        self.com_object = win32com.client.Dispatch(snippet_files_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -24,13 +24,13 @@ class SnippetFiles:
     def add(self, file_name: str, full_name: str) -> 'SnippetFile':
         return SnippetFile(self.com_object.Add(file_name, full_name))
 
-    def remove(self, index: int) -> None:
+    def remove(self, index: int):
         self.com_object.Remove(index)
 
 
 class SnippetFile:
-    def __init__(self, snippet_file_com_object):
-        self.com_object = win32com.client.Dispatch(snippet_file_com_object)
+    def __init__(self, com_object):
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def full_name(self) -> str:
@@ -42,8 +42,8 @@ class SnippetFile:
 
 
 class Snippets:
-    def __init__(self, snippets_com_object):
-        self.com_object = win32com.client.Dispatch(snippets_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def count(self) -> int:
@@ -54,8 +54,8 @@ class Snippets:
 
 
 class Snippet:
-    def __init__(self, snippet_com_object):
-        self.com_object = win32com.client.Dispatch(snippet_com_object)
+    def __init__(self, com_object):
+        self.com_object = win32com.client.Dispatch(com_object)
 
     @property
     def name(self) -> str:
