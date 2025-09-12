@@ -1,7 +1,6 @@
 import win32com.client
 
 from py_canoe.core.child_elements.test_modules import TestModules
-from py_canoe.core.child_elements.test_setup_folders import TestSetupFolders
 
 
 class TestSetupFolderExt:
@@ -22,7 +21,8 @@ class TestSetupFolderExt:
         return self.com_object.Name
 
     @property
-    def folders(self) -> 'TestSetupFolders':
+    def folders(self):
+        from py_canoe.core.child_elements.test_setup_folders import TestSetupFolders
         return TestSetupFolders(self.com_object.Folders)
 
     @property

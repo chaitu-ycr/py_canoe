@@ -1,5 +1,4 @@
 from py_canoe.core.child_elements.variables import Variables
-from py_canoe.core.child_elements.namespaces import Namespaces
 
 
 class Namespace:
@@ -14,8 +13,9 @@ class Namespace:
     def name(self):
         return self.com_object.Name
 
-    def variables(self) -> Variables:
+    def variables(self) -> 'Variables':
         return Variables(self.com_object.Variables)
 
-    def namespaces(self) -> 'Namespaces':
+    def namespaces(self):
+        from py_canoe.core.child_elements.namespaces import Namespaces
         return Namespaces(self.com_object.Namespaces)

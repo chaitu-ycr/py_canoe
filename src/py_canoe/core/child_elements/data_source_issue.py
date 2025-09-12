@@ -1,7 +1,5 @@
 import win32com.client
 
-from py_canoe.core.child_elements.data_source import DataSource
-
 
 class DataSourceIssue:
     """
@@ -15,7 +13,8 @@ class DataSourceIssue:
         return self.com_object.Description
 
     @property
-    def emitter(self) -> 'DataSource':
+    def emitter(self):
+        from py_canoe.core.child_elements.data_source import DataSource
         return DataSource(self.com_object.Emitter)
 
     @property

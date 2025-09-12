@@ -1,9 +1,8 @@
 from typing import Union
 import win32com.client
 
-from py_canoe.helpers import logger, DoEventsUntil
+from py_canoe.helpers.common import logger, DoEventsUntil
 from py_canoe.core.child_elements.encodings import Encodings
-from py_canoe.core.child_elements.variables import Variables
 from py_canoe.core.child_elements.variable_events import VariableEvents
 
 
@@ -71,7 +70,8 @@ class Variable:
         return self.com_object.MemberName
 
     @property
-    def members(self) -> 'Variables':
+    def members(self):
+        from py_canoe.core.child_elements.variables import Variables
         return Variables(self.com_object.Members)
 
     @property

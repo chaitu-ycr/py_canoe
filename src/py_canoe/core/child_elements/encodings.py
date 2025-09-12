@@ -1,4 +1,4 @@
-from py_canoe.core.child_elements.encodings import Encoding
+from py_canoe.core.child_elements.encoding import Encoding
 
 
 class Encodings:
@@ -9,5 +9,5 @@ class Encodings:
     def count(self):
         return self.com_object.Count
 
-    def item(self, index: int) -> Encoding:
+    def item(self, index: int) -> 'Encoding':
         return Encoding(self.com_object.Item(index))

@@ -2,7 +2,12 @@ from typing import TYPE_CHECKING, Iterable
 if TYPE_CHECKING:
     from py_canoe.core.child_elements.measurement_setup import Logging, ExporterSymbol, Message
 
+import re
+import sys
+import shutil
+import win32com
 import pythoncom
+from pathlib import Path
 from typing import Union
 
 from py_canoe.core.application import Application
@@ -11,12 +16,14 @@ from py_canoe.helpers.common import logger, update_logger_file_path
 
 
 class CANoe:
-    def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple()):
+    def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple(), clean_gen_py_cache=False):
         self.application: Application = None
         try:
             pythoncom.CoInitialize()
             if py_canoe_log_dir:
                 update_logger_file_path(logger, py_canoe_log_dir)
+            if clean_gen_py_cache:
+                self._clean_gen_py_cache()
         except pythoncom.com_error:
             logger.warning("⚠️ COM already initialized in this thread.")
         except Exception as e:
@@ -41,6 +48,23 @@ class CANoe:
             logger.error(f"❌ Error during COM uninitialization: {e}.")
         finally:
             self.application = None
+    
+    def _clean_gen_py_cache():
+        try:
+            # Delete the gen_py cache directory
+            gen_py_path = Path(win32com.__gen_path__)
+            if gen_py_path.exists() and gen_py_path.is_dir():
+                shutil.rmtree(gen_py_path)
+                logger.info("🧹 Cleared win32com gen_py cache.")
+            else:
+                logger.info("ℹ️ win32com gen_py cache directory does not exist.")
+            # Remove all cached win32com.gen_py modules from sys.modules
+            for module_name in list(sys.modules.keys()):
+                if re.match(r'win32com\.gen_py\..+', module_name):
+                    del sys.modules[module_name]
+                    logger.info(f"🧹 Removed cached module: {module_name}")
+        except Exception as e:
+            logger.error(f"❌ Error clearing win32com gen_py cache: {e}")
 
     def _reset_application(self):
         try:

@@ -9,7 +9,7 @@ class Namespaces:
     def count(self):
         return self.com_object.Count
 
-    def item(self, index: int) -> Namespace:
+    def item(self, index: int) -> 'Namespace':
         return Namespace(self.com_object.Item(index))
 
     def add(self, name: str):

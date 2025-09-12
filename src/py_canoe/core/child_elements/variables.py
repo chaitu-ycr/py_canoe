@@ -10,7 +10,7 @@ class Variables:
     def count(self):
         return self.com_object.Count
 
-    def item(self, index: int) -> Variable:
+    def item(self, index: int) -> 'Variable':
         return Variable(self.com_object.Item(index))
 
     def add(self, name: str):
