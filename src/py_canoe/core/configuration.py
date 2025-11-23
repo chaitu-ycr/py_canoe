@@ -5,13 +5,16 @@ if TYPE_CHECKING:
 import os
 import win32com.client
 
+from py_canoe.core.child_elements.c_libraries import CLibraries
+from py_canoe.core.child_elements.communication_setup import CommunicationSetup
+from py_canoe.core.child_elements.distributed_mode import DistributedMode
+from py_canoe.core.child_elements.fdx_files import FDXFiles
 from py_canoe.core.child_elements.general_setup import GeneralSetup
 from py_canoe.core.child_elements.measurement_setup import MeasurementSetup
 from py_canoe.core.child_elements.database_setup import Databases
 from py_canoe.core.child_elements.replay_collection import ReplayCollection
-from py_canoe.helpers.common import DoEventsUntil, logger, wait
-
-TEST_MODULE_START_EVENT_TIMEOUT = 5  # seconds
+from py_canoe.core.child_elements.test_setup import TestSetup
+from py_canoe.helpers.common import logger, wait
 
 
 class ConfigurationEvents:
@@ -34,7 +37,7 @@ class Configuration:
         self.app = app
         self.bus_types = self.app.bus_types
         self.com_object = win32com.client.Dispatch(self.app.com_object.Configuration)
-        self.configuration_events: ConfigurationEvents = win32com.client.WithEvents(self.com_object, ConfigurationEvents)
+        # self.configuration_events: ConfigurationEvents = win32com.client.WithEvents(self.com_object, ConfigurationEvents)
         self.configuration_test_setup = lambda: self.test_setup
         self.__test_setup_environments = self.configuration_test_setup().test_environments.fetch_all_test_environments()
         self.__test_modules = list()
@@ -45,8 +48,32 @@ class Configuration:
                 self.__test_modules.append({'name': tm_name, 'object': tm_inst, 'environment': te_name})
 
     @property
+    def c_libraries(self) -> 'CLibraries':
+        return CLibraries(self.com_object.CLibraries)
+
+    @property
     def comment(self) -> str:
         return self.com_object.Comment
+
+    @property
+    def communication_setup(self) -> 'CommunicationSetup':
+        return CommunicationSetup(self.com_object.CommunicationSetup)
+
+    @property
+    def distributed_mode(self) -> 'DistributedMode':
+        return DistributedMode(self.com_object.DistributedMode)
+
+    @property
+    def fdx_enabled(self) -> bool:
+        return self.com_object.FDXEnabled
+
+    @fdx_enabled.setter
+    def fdx_enabled(self, enabled: bool):
+        self.com_object.FDXEnabled = enabled
+
+    @property
+    def fdx_files(self) -> 'FDXFiles':
+        return FDXFiles(self.com_object.FDXFiles)
 
     @property
     def full_name(self) -> str:
@@ -55,6 +82,8 @@ class Configuration:
     @property
     def general_setup(self) -> 'GeneralSetup':
         return GeneralSetup(self.com_object.GeneralSetup)
+    
+    # GlobalTcpIpStackSetting
 
     @property
     def mode(self) -> int:
@@ -75,6 +104,8 @@ class Configuration:
     @property
     def name(self) -> str:
         return self.com_object.Name
+    
+    # NETTargetFramework
 
     @property
     def offline_setup(self) -> 'MeasurementSetup':
@@ -98,7 +129,28 @@ class Configuration:
 
     @property
     def test_setup(self) -> 'TestSetup':
-        return TestSetup(self.com_object)
+        return TestSetup(self.com_object.TestSetup)
+    
+    # Sensor
+
+    # SimulationSetup
+
+    # StandaloneMode
+
+    # StartValueList
+
+    # SymbolMappings
+
+    # TestConfigurations
+
+    # TestSetup
+
+    # UserFiles
+
+    # VTSystem
+
+    def compile_and_verify(self) -> bool:
+        self.com_object.CompileAndVerify()
 
     def save(self) -> bool:
         try:
@@ -455,385 +507,3 @@ class Configuration:
 
     def set_configuration_modified(self, modified: bool) -> None:
         self.modified = modified
-
-
-class TestSetup:
-    """The TestSetup object represents CANoe's test setup."""
-    def __init__(self, conf_com_obj):
-        self.com_object = win32com.client.Dispatch(conf_com_obj.TestSetup)
-
-    def save_all(self, prompt_user=False) -> None:
-        self.com_object.SaveAll(prompt_user)
-
-    @property
-    def test_environments(self) -> 'TestEnvironments':
-        return TestEnvironments(self.com_object)
-
-
-class TestEnvironments:
-    """The TestEnvironments object represents the test environments within CANoe's test setup."""
-    def __init__(self, test_setup_com_obj):
-        self.com_object = win32com.client.Dispatch(test_setup_com_obj.TestEnvironments)
-
-    @property
-    def count(self) -> int:
-        return self.com_object.Count
-
-    def add(self, name: str) -> 'TestEnvironment':
-        return TestEnvironment(self.com_object.Add(name))
-
-    def remove(self, index: int, prompt_user=False) -> None:
-        self.com_object.Remove(index, prompt_user)
-
-    def fetch_all_test_environments(self) -> dict['str': 'TestEnvironment']:
-        test_environments = dict()
-        for index in range(1, self.count + 1):
-            te_inst = TestEnvironment(self.com_object.Item(index))
-            test_environments[te_inst.name] = te_inst
-        return test_environments
-
-
-class TestEnvironment:
-    """The TestEnvironment object represents a test environment within CANoe's test setup."""
-    def __init__(self, test_environment_com_obj):
-        self.com_object = win32com.client.Dispatch(test_environment_com_obj)
-        self.__test_modules = TestModules(self.com_object)
-        self.__test_setup_folders = TestSetupFolders(self.com_object)
-        self.__all_test_modules = {}
-        self.__all_test_setup_folders = {}
-
-    @property
-    def enabled(self) -> bool:
-        return self.com_object.Enabled
-
-    @enabled.setter
-    def enabled(self, value: bool) -> None:
-        self.com_object.Enabled = value
-
-    @property
-    def full_name(self) -> str:
-        return self.com_object.FullName
-
-    @property
-    def name(self) -> str:
-        return self.com_object.Name
-
-    @property
-    def path(self) -> str:
-        return self.com_object.Path
-
-    def execute_all(self) -> None:
-        self.com_object.ExecuteAll()
-
-    def save(self, name: str, prompt_user=False) -> None:
-        self.com_object.Save(name, prompt_user)
-
-    def save_as(self, name: str, major: int, minor: int, prompt_user=False) -> None:
-        self.com_object.SaveAs(name, major, minor, prompt_user)
-
-    def stop_sequence(self) -> None:
-        self.com_object.StopSequence()
-
-    def update_all_test_setup_folders(self, tsfs_instance=None):
-        if tsfs_instance is None:
-            tsfs_instance = self.__test_setup_folders
-        if tsfs_instance.count > 0:
-            test_setup_folders = tsfs_instance.fetch_test_setup_folders()
-            for tsf_name, tsf_inst in test_setup_folders.items():
-                self.__all_test_setup_folders[tsf_name] = tsf_inst
-                if tsf_inst.test_modules.count > 0:
-                    self.__all_test_modules.update(tsf_inst.test_modules.fetch_test_modules())
-                if tsf_inst.folders.count > 0:
-                    tsfs_instance = tsf_inst.folders
-                    self.update_all_test_setup_folders(tsfs_instance)
-
-    def get_all_test_modules(self):
-        self.update_all_test_setup_folders()
-        self.__all_test_modules.update(self.__test_modules.fetch_test_modules())
-        return self.__all_test_modules
-
-
-class TestSetupFolders:
-    """The TestSetupFolders object represents the folders in a test environment or in a test setup folder."""
-    def __init__(self, test_env_com_obj) -> None:
-        self.com_object = test_env_com_obj.Folders
-
-    @property
-    def count(self) -> int:
-        return self.com_object.Count
-
-    def add(self, full_name: str) -> 'TestSetupFolderExt':
-        return TestSetupFolderExt(self.com_object.Add(full_name))
-
-    def remove(self, index: int, prompt_user=False) -> None:
-        self.com_object.Remove(index, prompt_user)
-
-    def fetch_test_setup_folders(self) -> dict:
-        test_setup_folders = dict()
-        for index in range(1, self.count + 1):
-            tsf_com_obj = self.com_object.Item(index)
-            tsf_inst = TestSetupFolderExt(tsf_com_obj)
-            test_setup_folders[tsf_inst.name] = tsf_inst
-        return test_setup_folders
-
-
-class TestSetupFolderExt:
-    """The TestSetupFolderExt object represents a directory in CANoe's test setup."""
-    def __init__(self, test_setup_folder_ext_com_obj) -> None:
-        self.com_object = win32com.client.Dispatch(test_setup_folder_ext_com_obj)
-
-    @property
-    def enabled(self) -> bool:
-        return self.com_object.Enabled
-
-    @enabled.setter
-    def enabled(self, enabled: bool):
-        self.com_object.Enabled = enabled
-
-    @property
-    def name(self) -> str:
-        return self.com_object.Name
-
-    @property
-    def folders(self) -> 'TestSetupFolders':
-        return TestSetupFolders(self.com_object)
-
-    @property
-    def test_modules(self) -> 'TestModules':
-        return TestModules(self.com_object)
-
-    def execute_all(self):
-        self.com_object.ExecuteAll()
-
-    def stop_sequence(self):
-        self.com_object.StopSequence()
-
-
-class TestModules:
-    def __init__(self, test_env_com_obj) -> None:
-        self.com_object = test_env_com_obj.TestModules
-
-    @property
-    def count(self) -> int:
-        return self.com_object.Count
-
-    def add(self, full_name: str) -> 'TestModule':
-        return TestModule(self.com_object.Add(full_name))
-
-    def remove(self, index: int, prompt_user=False) -> None:
-        self.com_object.Remove(index, prompt_user)
-
-    def fetch_test_modules(self) -> dict['str': 'TestModule']:
-        test_modules = dict()
-        for index in range(1, self.count + 1):
-            tm_inst = TestModule(self.com_object.Item(index))
-            test_modules[tm_inst.name] = tm_inst
-        return test_modules
-
-
-class TestModuleEvents:
-    """test module events object."""
-    def __init__(self):
-        self.TM_STARTED = False
-        self.TM_PAUSED = False
-        self.TM_STOPPED = False
-        self.TM_STOP_REASON = -1
-        self.VALUE_TABLE_STOP_REASON = {
-            0: "TestModuleEnd: The test module was executed completely",
-            1: "UserAbortion: The test module was stopped by the user",
-            2: "GeneralError: The test module was stopped by measurement stop"
-        }
-        self.TM_REPORT_GENERATED = False
-        self.TEST_REPORT_INFORMATION = dict()
-        self.TC_FAIL = False
-
-    def OnStart(self):
-        self.TM_STARTED = True
-
-    def OnPause(self):
-        self.TM_PAUSED = True
-
-    def OnStop(self, reason):
-        self.TM_STOP_REASON = reason
-        self.TM_STOPPED = True
-
-    def OnReportGenerated(self, success, sourceFullName, generatedFullName):
-        self.TEST_REPORT_INFORMATION = {
-            "success": success,
-            "source_full_name": sourceFullName,
-            "generated_full_name": generatedFullName
-        }
-        self.TM_REPORT_GENERATED = True
-
-    def OnVerdictFail(self):
-        self.TC_FAIL = True
-
-
-class TestModule:
-    """The TestModule object represents a test module in CANoe's test setup."""
-
-    def __init__(self, test_module):
-        self.com_object = win32com.client.Dispatch(test_module)
-        self.test_module_events: TestModuleEvents = win32com.client.WithEvents(self.com_object, TestModuleEvents)
-        self.VALUE_TABLE_VERDICT = {
-            0: "NotAvailable",
-            1: "Passed",
-            2: "Failed",
-            3: "None",
-            4: "Inconclusive",
-            5: "ErrorInTestSystem"
-        }
-        self.VALUE_TABLE_VERDICT_IMPACT = {
-            0: "NoImpact",
-            1: "EndTestCaseOnFail",
-            2: "EndTestModuleOnFail"
-        }
-
-    @property
-    def name(self) -> str:
-        return self.com_object.Name
-
-    @property
-    def full_name(self) -> str:
-        return self.com_object.FullName
-
-    @property
-    def path(self) -> str:
-        return self.com_object.Path
-
-    @property
-    def number_of_executions(self) -> int:
-        return self.com_object.NumberOfExecutions
-
-    @number_of_executions.setter
-    def number_of_executions(self, value: int):
-        self.com_object.NumberOfExecutions = value
-
-    @property
-    def randomize_each_cycle(self) -> bool:
-        return self.com_object.RandomizeEachCycle
-
-    @randomize_each_cycle.setter
-    def randomize_each_cycle(self, value: bool):
-        self.com_object.RandomizeEachCycle = value
-
-    @property
-    def start_on_env_var(self) -> str:
-        return self.com_object.StartOnEnvVar
-
-    @start_on_env_var.setter
-    def start_on_env_var(self, value: str):
-        self.com_object.StartOnEnvVar = value
-
-    @property
-    def start_on_key(self) -> str:
-        return self.com_object.StartOnKey
-
-    @start_on_key.setter
-    def start_on_key(self, value: str):
-        self.com_object.StartOnKey = value
-
-    @property
-    def start_on_measurement(self) -> bool:
-        return self.com_object.StartOnMeasurement
-
-    @start_on_measurement.setter
-    def start_on_measurement(self, value: bool):
-        self.com_object.StartOnMeasurement = value
-
-    @property
-    def start_on_sys_var(self) -> str:
-        return self.com_object.StartOnSysVar
-
-    @start_on_sys_var.setter
-    def start_on_sys_var(self, value: str):
-        self.com_object.StartOnSysVar = value
-
-    @property
-    def test_cases_executed_in_random_order(self) -> bool:
-        return self.com_object.TestCasesExecutedInRandomOrder
-
-    @test_cases_executed_in_random_order.setter
-    def test_cases_executed_in_random_order(self, value: bool):
-        self.com_object.TestCasesExecutedInRandomOrder = value
-
-    @property
-    def test_state_sys_var(self) -> str:
-        return self.com_object.TestStateSysVar
-
-    @test_state_sys_var.setter
-    def test_state_sys_var(self, value: str):
-        self.com_object.TestStateSysVar = value
-
-    @property
-    def verdict(self) -> int:
-        return self.com_object.Verdict
-
-    @property
-    def verdict_impact(self) -> int:
-        return self.com_object.VerdictImpact
-
-    @verdict_impact.setter
-    def verdict_impact(self, value: int):
-        self.com_object.VerdictImpact = value
-
-    def _init_tm_event_variables(self):
-        self.test_module_events.TM_STARTED = False
-        self.test_module_events.TM_PAUSED = False
-        self.test_module_events.TM_STOPPED = False
-        self.test_module_events.TM_STOP_REASON = -1
-        self.test_module_events.TM_REPORT_GENERATED = False
-        self.test_module_events.TEST_REPORT_INFORMATION = dict()
-        self.test_module_events.TC_FAIL = False
-
-    def start(self):
-        self._init_tm_event_variables()
-        self.com_object.Start()
-        status = DoEventsUntil(lambda: self.test_module_events.TM_STARTED, TEST_MODULE_START_EVENT_TIMEOUT, "Test Module Start")
-        if status:
-            logger.info(f'🧪🏃‍➡️ started executing test module ({self.name})...')
-
-    def wait_for_completion(self) -> bool:
-        return_value = False
-        if self.test_module_events.TM_STARTED:
-            logger.info(f'🧪🥱 waiting for test module ({self.name}) to complete...')
-            while not self.test_module_events.TM_STOPPED:
-                wait(0.01)
-            logger.info(f'🧪🧍 test module ({self.name}) execution completed with stop reason 👉 {self.test_module_events.VALUE_TABLE_STOP_REASON[self.test_module_events.TM_STOP_REASON]}')
-            return_value = True
-        else:
-            logger.warning(f'🧪⚠️ Test Module ({self.name}) is not started. Start the Test Module first.')
-        return return_value
-
-    def pause(self) -> bool:
-        if self.test_module_events.TM_STARTED:
-            self.com_object.Pause()
-            logger.info(f'🧪🥱 pausing test module ({self.name}). please wait...')
-            while not self.test_module_events.TM_PAUSED:
-                wait(0.01)
-            logger.info(f'🧪⏸️ paused test module ({self.name}).')
-            return True
-        else:
-            logger.warning(f'🧪⚠️ Test Module ({self.name}) is not started. Start the Test Module first.')
-            return False
-
-    def resume(self) -> None:
-        self.com_object.Resume()
-
-    def stop(self) -> bool:
-        if self.test_module_events.TM_STARTED:
-            self.com_object.Stop()
-            logger.info(f'🧪🥱 stopping test module ({self.name}). please wait...')
-            while not self.test_module_events.TM_STOPPED:
-                wait(0.01)
-            logger.info(f'🧪⏹️ stopped test module ({self.name}).')
-            return True
-        else:
-            logger.warning(f'🧪⚠️ Test Module ({self.name}) is not started. Start the Test Module first.')
-            return False
-
-    def reload(self) -> None:
-        self.com_object.Reload()
-
-    def set_execution_time(self, days: int, hours: int, minutes: int):
-        self.com_object.SetExecutionTime(days, hours, minutes)

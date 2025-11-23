@@ -1,7 +1,7 @@
 import win32com.client
 
 from py_canoe.core.child_elements.ccp_setup import CCPSetup
-from py_canoe.core.child_elements.channels import CanController
+from py_canoe.core.child_elements.can_controller import CanController
 from py_canoe.core.child_elements.database_setup import DatabaseSetup
 from py_canoe.core.child_elements.diagnostics_setup import DiagnosticsSetup
 from py_canoe.core.child_elements.macros_setup import MacrosSetup
@@ -16,8 +16,8 @@ class GeneralSetup:
     """
     The MeasurementSetup object rRepresents the general settings of a CANoe configuration.
     """
-    def __init__(self, general_setup_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(general_setup_com_object)
+    def __init__(self, com_object):
+        self.com_object = com_object
 
     @property
     def ccp_setup(self) -> 'CCPSetup':

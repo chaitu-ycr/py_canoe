@@ -7,8 +7,8 @@ class CCPSetup:
     """
     The CCPSetup object represents the CCP settings of a CANoe configuration.
     """
-    def __init__(self, ccp_setup_com_object) -> None:
-        self.com_object = win32com.client.Dispatch(ccp_setup_com_object)
+    def __init__(self, com_object) -> None:
+        self.com_object = com_object
 
     @property
     def ecus(self) -> 'McECUs':
