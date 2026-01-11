@@ -4,6 +4,7 @@ import time
 import logging
 import pythoncom
 from datetime import datetime
+from pathlib import Path
 
 def check_if_path_exists(path: str, create_if_not_exist: bool=False) -> bool:
     """Check if a given path exists. Optionally create it if it doesn't."""
@@ -35,7 +36,7 @@ def setup_logger(name='py_canoe', filename='py_canoe.log'):
     logger.propagate = False
     return logger
 
-def update_logger_file_path(logger: logging.Logger, log_dir_path: str):
+def update_logger_file_path(logger: logging.Logger, log_dir_path: str | Path) -> None:
     """Update the file handler of an existing logger to a new file path."""
     new_filename = os.path.join(log_dir_path, 'py_canoe.log')
     if check_if_path_exists(os.path.dirname(new_filename), create_if_not_exist=True):

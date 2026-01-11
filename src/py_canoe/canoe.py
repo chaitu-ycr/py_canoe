@@ -7,6 +7,7 @@ import sys
 import shutil
 import win32com
 import pythoncom
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Union
 
@@ -16,7 +17,7 @@ from py_canoe.helpers.common import logger, update_logger_file_path
 
 
 class CANoe:
-    def __init__(self, py_canoe_log_dir='', user_capl_functions=tuple(), clean_gen_py_cache=False):
+    def __init__(self, py_canoe_log_dir: str | Path = "", user_capl_functions: Sequence[str] = tuple(), clean_gen_py_cache: bool = False) -> None:
         self.application: Application = None
         try:
             pythoncom.CoInitialize()
@@ -49,7 +50,7 @@ class CANoe:
         finally:
             self.application = None
     
-    def _clean_gen_py_cache():
+    def _clean_gen_py_cache() -> None:
         try:
             # Delete the gen_py cache directory
             gen_py_path = Path(win32com.__gen_path__)
@@ -88,7 +89,7 @@ class CANoe:
         self.application = Application()
         return self.application.new(auto_save, prompt_user, timeout)
 
-    def open(self, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, auto_stop=True, timeout=30) -> bool:
+    def open(self, canoe_cfg: str | Path, visible: bool = True, auto_save: bool = True, prompt_user: bool = False, auto_stop: bool = True, timeout: int = 30) -> bool:
         """
         Loads a configuration.
 
@@ -108,7 +109,7 @@ class CANoe:
         self.application.user_capl_functions = self.user_capl_functions
         return self.application.open(canoe_cfg, visible, auto_save, prompt_user, timeout)
 
-    def quit(self, timeout=30) -> bool:
+    def quit(self, timeout: int = 30) -> bool:
         """
         Quits the application.
 
@@ -606,7 +607,7 @@ class CANoe:
         """
         return self.application.environment.set_environment_variable_value(env_var_name, value)
 
-    def start_measurement(self, timeout=30) -> bool:
+    def start_measurement(self, timeout: int = 30) -> bool:
         """
         Starts the measurement.
 
@@ -618,7 +619,7 @@ class CANoe:
         """
         return self.application.measurement.start(timeout)
 
-    def stop_measurement(self, timeout=30) -> bool:
+    def stop_measurement(self, timeout: int = 30) -> bool:
         """
         Stops the measurement.
 
@@ -774,7 +775,7 @@ class CANoe:
         """
         return self.application.system.add_variable(sys_var_name, value, read_only)
 
-    def get_system_variable_value(self, sys_var_name: str, return_symbolic_name=False) -> Union[int, float, str, None]:
+    def get_system_variable_value(self, sys_var_name: str, return_symbolic_name: bool = False) -> Union[int, float, str, None]:
         """
         Gets the value of a system variable.
 
@@ -899,7 +900,7 @@ class CANoe:
         """
         return self.application.ui.write.disable_output_file(tab_index)
 
-    def get_canoe_version_info(self) -> dict:
+    def get_canoe_version_info(self) -> dict[str, str | int]:
         """
         Gets the version information of the CANoe application.
 

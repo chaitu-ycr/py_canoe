@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import win32com.client
 import win32com.client.gencache
 
@@ -14,21 +16,21 @@ from py_canoe.helpers.common import DoEventsUntil, logger
 
 
 class ApplicationEvents:
-    def __init__(self):
+    def __init__(self) -> None:
         self.OPENED: bool = False
         self.QUIT: bool = False
         self.CANOE_CFG_FULLNAME: str = ""
 
-    def OnOpen(self, fullname: str):
+    def OnOpen(self, fullname: str) -> None:
         self.CANOE_CFG_FULLNAME = fullname
         self.OPENED = True
 
-    def OnQuit(self):
+    def OnQuit(self) -> None:
         self.QUIT = True
 
 
 class Application:
-    def __init__(self):
+    def __init__(self) -> None:
         self.bus_types = {'CAN': 1, 'J1939': 2, 'TTP': 4, 'LIN': 5, 'MOST': 6, 'Kline': 14}
         self.com_object = None
         self.application_events = None
@@ -60,10 +62,10 @@ class Application:
         return self.com_object.Visible
 
     @visible.setter
-    def visible(self, visible: bool):
+    def visible(self, visible: bool) -> None:
         self.com_object.Visible = visible
 
-    def _common_between_pre_and_post_cfg_open(self):
+    def _common_between_pre_and_post_cfg_open(self) -> None:
         self.bus = Bus(self)
         self.capl = Capl(self)
         self.configuration = Configuration(self)
@@ -73,7 +75,7 @@ class Application:
         self.ui = Ui(self)
         self.version = Version(self)
 
-    def _launch_application(self):
+    def _launch_application(self) -> None:
         try:
             # We use gencache.EnsureDispatch to connect to the CANoe COM object.
             # This is preferred over Dispatch or DispatchEx for a few reasons:
@@ -93,7 +95,8 @@ class Application:
         except Exception as e:
             logger.error(f"❌ Failed to launch CANoe application: {e}")
             raise
-    def _setup_post_configuration_loading(self):
+
+    def _setup_post_configuration_loading(self) -> None:
         try:
             self._common_between_pre_and_post_cfg_open()
             self.networks.fetch_diagnostic_devices()
@@ -101,7 +104,7 @@ class Application:
         except Exception as e:
             logger.error(f"❌ Error initializing objects after loading configuration: {e}")
 
-    def new(self, auto_save=False, prompt_user=False, timeout=5) -> bool:
+    def new(self, auto_save: bool = False, prompt_user: bool = False, timeout: int = 5) -> bool:
         """Create a new empty CANoe configuration."""
         self._launch_application()
         status = False
@@ -118,7 +121,7 @@ class Application:
         finally:
             return status
 
-    def open(self, canoe_cfg: str, visible=True, auto_save=True, prompt_user=False, timeout=5) -> bool:
+    def open(self, canoe_cfg: str | Path, visible: bool = True, auto_save: bool = True, prompt_user: bool = False, timeout: int = 5) -> bool:
         """Open an existing CANoe configuration."""
         self._launch_application()
         status = False
@@ -136,7 +139,7 @@ class Application:
         finally:
             return status
 
-    def quit(self, timeout=5) -> bool:
+    def quit(self, timeout: int = 5) -> bool:
         """Quit CANoe and clean up COM references."""
         status = False
         try:
