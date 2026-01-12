@@ -35,7 +35,7 @@ class Version:
     def patch(self):
         return self.com_object.Patch
 
-    def get_canoe_version_info(self) -> dict:
+    def get_canoe_version_info(self) -> dict[str, str | int]:
             try:
                 version_info = {
                     'full_name': self.full_name,
