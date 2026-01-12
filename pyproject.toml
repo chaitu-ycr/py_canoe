@@ -1,6 +1,6 @@
 [project]
 name = "py_canoe"
-version = "26.0.0"
+version = "26.0.1"
 description = "Python 🐍 Package for accessing Vector CANoe 🛶 Tool"
 license = { file = "LICENSE" }
 readme = "README.md"
