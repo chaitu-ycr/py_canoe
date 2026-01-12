@@ -1,6 +1,4 @@
-# This workflow will upload a Python Package to PyPI when a release is created
-
-name: Publish to PyPi
+name: Publish to PyPI
 
 on:
   release:
@@ -11,20 +9,29 @@ permissions:
   contents: read
 
 jobs:
-  publish-release-build:
+  build-and-publish:
     runs-on: windows-latest
+    # Recommended: Use a GitHub Environment for PyPI
+    environment: release 
+    permissions:
+      id-token: write  # Required for Trusted Publishing (OIDC)
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.11"
+          enable-cache: true
+          # optional: pin a specific uv version
+          # version: "0.5.x"
 
-      - name: Build release distributions
-        run: |
-          python -m pip install poetry
-          python -m poetry build
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Build distributions
+        # --no-sources ensures we don't accidentally bundle local dev paths
+        run: uv build --no-sources
 
       - name: Upload distributions
         uses: actions/upload-artifact@v4
@@ -32,7 +39,7 @@ jobs:
           name: release-dists
           path: dist/
 
-      - name: Publish to PyPi
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
-        run: python -m poetry publish
+      - name: Publish to PyPI
+        # Using uv publish handles the upload without needing manual tokens
+        # provided you have set up Trusted Publishing on PyPI.
+        run: uv publish
