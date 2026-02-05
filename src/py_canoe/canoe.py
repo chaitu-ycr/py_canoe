@@ -49,7 +49,8 @@ class CANoe:
             logger.error(f"❌ Error during COM uninitialization: {e}.")
         finally:
             self.application = None
-    
+
+    @staticmethod
     def _clean_gen_py_cache() -> None:
         try:
             # Delete the gen_py cache directory
